@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 9,
-  "updatedAt": "2026-10-22T19:48:22.194Z",
+  "revision": 10,
+  "updatedAt": "2026-10-22T19:52:57.965Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -593,136 +593,183 @@
       "id": "venue-0",
       "name": "Matadero Lab",
       "area": "Cultura joven",
-      "source": "Espacios/Informe de lugares.md",
+      "source": "Espacios/Informe de lugares.md · dirección recogida en Informe de lugares",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Paseo de Recaredo, s/n · IES Sefarad, 45002 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Paseo%20de%20Recaredo%2C%20s%2Fn%20%C2%B7%20IES%20Sefarad%2C%2045002%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Matadero%20Lab%20Toledo%20fotos"
     },
     {
       "id": "venue-1",
       "name": "Círculo de Arte de Toledo",
       "area": "Centro histórico",
-      "source": "Espacios/Informe de lugares.md",
+      "source": "Espacios/Informe de lugares.md · dirección publicada por Turismo de Toledo",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Plaza de San Vicente, 2, 45001 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Plaza%20de%20San%20Vicente%2C%202%2C%2045001%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=C%C3%ADrculo%20de%20Arte%20de%20Toledo%20Toledo%20fotos",
+      "photoUrl": "https://mice.castillalamancha.es/sites/default/files/2020-12/circulo_02.jpg"
     },
     {
       "id": "venue-2",
       "name": "Real Fundación de Toledo · Roca Tarpeya",
       "area": "Judería",
-      "source": "Espacios/Lugares Chatgpt.md",
+      "source": "Espacios/Lugares Chatgpt.md · sede Roca Tarpeya de la Real Fundación de Toledo",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Plaza de Victorio Macho, 2, 45002 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Plaza%20de%20Victorio%20Macho%2C%202%2C%2045002%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Real%20Fundaci%C3%B3n%20de%20Toledo%20%C2%B7%20Roca%20Tarpeya%20Toledo%20fotos"
     },
     {
       "id": "venue-3",
       "name": "UCLM · Fábrica de Armas",
       "area": "Campus universitario",
-      "source": "Espacios/Lugares Comet.md",
+      "source": "Espacios/Lugares Comet.md · Campus Tecnológico Fábrica de Armas de la UCLM",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Avenida de Carlos III, s/n, 45071 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Avenida%20de%20Carlos%20III%2C%20s%2Fn%2C%2045071%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=UCLM%20%C2%B7%20F%C3%A1brica%20de%20Armas%20Toledo%20fotos"
     },
     {
       "id": "venue-4",
       "name": "Biblioteca de Castilla-La Mancha",
       "area": "Alcázar",
-      "source": "Espacios/Lugares Comet.md",
+      "source": "Espacios/Lugares Comet.md · dirección institucional de la Biblioteca",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Cuesta de Carlos V, s/n · Alcázar de Toledo, 45001 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cuesta%20de%20Carlos%20V%2C%20s%2Fn%20%C2%B7%20Alc%C3%A1zar%20de%20Toledo%2C%2045001%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Biblioteca%20de%20Castilla-La%20Mancha%20Toledo%20fotos"
     },
     {
       "id": "venue-5",
       "name": "Mezquita de Tornerías",
       "area": "Centro histórico",
-      "source": "Espacios/Lugares Chatgpt.md",
+      "source": "Espacios/Lugares Chatgpt.md · dirección recogida en Informe de lugares",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle Tornerías, 27, 45001 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20Torner%C3%ADas%2C%2027%2C%2045001%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Mezquita%20de%20Torner%C3%ADas%20Toledo%20fotos"
     },
     {
       "id": "venue-6",
       "name": "Sala Thalía",
       "area": "Benquerencia",
-      "source": "Espacios/Lugares Comet 2.md",
+      "source": "Espacios/Lugares Comet 2.md · dirección recogida en Informe de lugares",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle Río Bullaque, 23, 45007 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20R%C3%ADo%20Bullaque%2C%2023%2C%2045007%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Sala%20Thal%C3%ADa%20Toledo%20fotos",
+      "photoUrl": "https://www.elpoligono.es/media/elpoligono/images/2024/04/18/2024041813075462790.jpg"
     },
     {
       "id": "venue-7",
       "name": "Colegio de Arquitectos",
       "area": "Centro histórico",
-      "source": "Espacios/Lugares Chatgpt.md",
+      "source": "Espacios/Lugares Chatgpt.md · dirección recogida en Informe de lugares",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle Santa Úrsula, 11, 45002 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20Santa%20%C3%9Arsula%2C%2011%2C%2045002%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Colegio%20de%20Arquitectos%20Toledo%20fotos"
     },
     {
       "id": "venue-8",
       "name": "Cámara de Comercio · Vivero",
       "area": "Dinamarca",
-      "source": "Espacios/Lugares Comet.md",
+      "source": "Espacios/Lugares Comet.md · Vivero de Empresas de la Cámara de Comercio",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle Dinamarca, 4, 45005 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20Dinamarca%2C%204%2C%2045005%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=C%C3%A1mara%20de%20Comercio%20%C2%B7%20Vivero%20Toledo%20fotos"
     },
     {
       "id": "venue-9",
       "name": "El Patio de los Ángeles",
       "area": "Centro histórico",
-      "source": "Espacios/Lugares Chatgpt.md",
+      "source": "Espacios/Lugares Chatgpt.md · dirección publicada por El Patio de los Ángeles",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Plaza Padre Juan de Mariana, 8, 45002 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Plaza%20Padre%20Juan%20de%20Mariana%2C%208%2C%2045002%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=El%20Patio%20de%20los%20%C3%81ngeles%20Toledo%20fotos"
     },
     {
       "id": "venue-10",
       "name": "Hotel Beatriz",
       "area": "Toledo",
-      "source": "Espacios/Informe de lugares.md",
+      "source": "Espacios/Informe de lugares.md · dirección del Hotel Beatriz Toledo Auditorium & Spa",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Carretera de Ávila, km 2,750, 45005 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Carretera%20de%20%C3%81vila%2C%20km%202%2C750%2C%2045005%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Hotel%20Beatriz%20Toledo%20fotos"
     },
     {
       "id": "venue-11",
       "name": "Eurostars Palacio Buenavista",
       "area": "Buenavista",
-      "source": "Espacios/Informe de lugares.md",
+      "source": "Espacios/Informe de lugares.md · dirección del Eurostars Palacio Buenavista",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle de los Concilios de Toledo, 1, 45005 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20de%20los%20Concilios%20de%20Toledo%2C%201%2C%2045005%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Eurostars%20Palacio%20Buenavista%20Toledo%20fotos"
     },
     {
       "id": "venue-12",
       "name": "Sala Pícaro",
       "area": "Centro histórico",
-      "source": "Espacios/Informe Claude.md",
+      "source": "Espacios/Informe Claude.md · dirección publicada por Sala Pícaro y Turismo de Toledo",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle Cadenas, 6, 45001 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20Cadenas%2C%206%2C%2045001%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Sala%20P%C3%ADcaro%20Toledo%20fotos"
     },
     {
       "id": "venue-13",
       "name": "Venta de Aires",
       "area": "Toledo",
-      "source": "Espacios/Informe Claude.md",
+      "source": "Espacios/Informe Claude.md · dirección publicada por Turismo de Toledo",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Paseo del Circo Romano, 35, 45004 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Paseo%20del%20Circo%20Romano%2C%2035%2C%2045004%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Venta%20de%20Aires%20Toledo%20fotos"
     },
     {
       "id": "venue-14",
       "name": "Sala Next Level",
       "area": "Toledo",
-      "source": "Espacios/Informe Claude.md",
+      "source": "Espacios/Informe Claude.md · dirección publicada por Next Level Toledo",
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
-      "url": ""
+      "url": "",
+      "address": "Calle Rojas, 5, 45002 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%20Rojas%2C%205%2C%2045002%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Sala%20Next%20Level%20Toledo%20fotos"
     },
     {
       "id": "claustro-santo-tome",
@@ -730,8 +777,11 @@
       "area": "Toledo",
       "status": "Confirmado",
       "notes": "Sede del Thinkglao del 29 de octubre de 2026 a las 20:00 con Laura Rodríguez Rivero.",
-      "source": "Información facilitada por Pablo",
-      "url": ""
+      "source": "Información facilitada por Pablo · dirección de la ficha oficial del encuentro",
+      "url": "",
+      "address": "Plaza del Conde, 4, 45002 Toledo",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Plaza%20del%20Conde%2C%204%2C%2045002%20Toledo",
+      "photosUrl": "https://www.google.com/search?tbm=isch&q=Claustro%20Santo%20Tom%C3%A9%20Toledo%20fotos"
     }
   ],
   "resources": [
