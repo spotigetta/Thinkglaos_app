@@ -36,6 +36,7 @@ export type EventInfo = {
 export type EventTask = Task & {
   eventId: string;
   due?: string;
+  scheduledDate?: string;
   completedSteps?: number[];
   updatedAt?: string;
 };

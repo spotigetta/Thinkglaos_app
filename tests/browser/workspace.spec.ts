@@ -634,6 +634,43 @@ test("La línea temporal avanza con la hora real del día del encuentro", async 
   expect(writes).toBe(0);
 });
 
+test("La cronología separa preparación, encuentro y seguimiento sin fingir la hora del evento", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-10-22T15:00:00Z") });
+  await page.clock.pauseAt(new Date("2026-10-22T15:00:00Z"));
+  await network(page);
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Línea temporal", exact: true })
+    .last()
+    .click();
+  await expect(page.locator(".timeline-now")).toHaveCount(0);
+  await expect(
+    page.locator(".timeline-task").filter({ hasText: "Recibir Mercadona" }),
+  ).toContainText("17:30–17:45");
+  await expect(
+    page.locator(".timeline-task").filter({ hasText: "Kit del embajador" }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("navigation", { name: "Días del plan" })
+    .getByRole("button", { name: "28 oct" })
+    .click();
+  await expect(
+    page.locator(".timeline-task").filter({ hasText: "Kit del embajador" }),
+  ).toBeVisible();
+  await expect(
+    page.locator(".timeline-task").filter({ hasText: "Recibir Mercadona" }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("navigation", { name: "Días del plan" })
+    .getByRole("button", { name: "22 oct" })
+    .click();
+  await expect(page.locator(".timeline-now")).toHaveCount(1);
+  await expect(page.getByTestId("madrid-clock")).toHaveText("17:00:00");
+  expect(writes).toBe(0);
+});
+
 test("Modo montaje pausa, cambia escenas, carga música y permite salir", async ({
   page,
 }) => {

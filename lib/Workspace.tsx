@@ -1969,6 +1969,7 @@ function TaskEditor({
     notes: task?.notes.join("\n") || "",
     due: task?.due || "",
     time: task?.time || "",
+    scheduledDate: task?.scheduledDate || "",
     isImportant: task?.isImportant || false,
   });
   return (
@@ -2022,6 +2023,13 @@ function TaskEditor({
             </select>
           </Field>
         </div>
+        <Field label="Día de realización (línea temporal)">
+          <input
+            type="date"
+            value={value.scheduledDate}
+            onChange={(e) => set({ ...value, scheduledDate: e.target.value })}
+          />
+        </Field>
         <Field label="Hora o franja">
           <input
             value={value.time}
@@ -2085,6 +2093,9 @@ function TaskDetail({
     <Modal title={task.title} onClose={onClose}>
       <div className="detail-meta">
         {task.time && <span className="tag">{task.time}</span>}
+        {task.scheduledDate && (
+          <span className="tag">{dateLabel(task.scheduledDate)}</span>
+        )}
         <span className="tag">{task.phase}</span>
         {task.isImportant && <span className="tag critical">Clave</span>}
         <span className={"tag " + (task.isDone ? "success" : "")}>

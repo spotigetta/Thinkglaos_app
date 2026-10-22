@@ -13,9 +13,22 @@ export function Timeline({
   const [now, setNow] = useState(() => new Date());
   const [top, setTop] = useState(0);
   const root = useRef<HTMLDivElement>(null);
-  const slots = timelineSlots(tasks);
+  const [selectedDate, setSelectedDate] = useState("");
+  const date = selectedDate || event?.date || "";
+  const dates = [
+    ...new Set([
+      event?.date || "",
+      ...tasks.map((t) => t.scheduledDate || event?.date || ""),
+    ]),
+  ]
+    .filter(Boolean)
+    .sort();
+  const dayTasks = tasks.filter(
+    (t) => (t.scheduledDate || event?.date || "") === date,
+  );
+  const slots = timelineSlots(dayTasks);
   const clock = madridClock(now);
-  const today = clock.date === event?.date;
+  const today = clock.date === date;
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
@@ -37,7 +50,7 @@ export function Timeline({
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => observer.disconnect();
-  }, [clock.minutes, tasks]);
+  }, [clock.minutes, tasks, date]);
   return (
     <section className="timeline-view">
       <header className="timeline-clock">
@@ -49,10 +62,12 @@ export function Timeline({
         </div>
         <p>
           {today
-            ? "Hoy es el encuentro"
+            ? date === event?.date
+              ? "Hoy es el encuentro"
+              : "Preparación de hoy"
             : event?.date && clock.date < event.date
-              ? "Próximo encuentro: " +
-                new Date(event.date + "T12:00:00").toLocaleDateString("es-ES", {
+              ? "Plan del " +
+                new Date(date + "T12:00:00").toLocaleDateString("es-ES", {
                   day: "numeric",
                   month: "long",
                 })
@@ -60,7 +75,9 @@ export function Timeline({
           <span>
             {today
               ? "El punto luminoso avanza con la hora real."
-              : "La hora real se muestra arriba; el recorrido corresponde al día del evento."}
+              : "Hoy es " +
+                clock.date.split("-").reverse().join("/") +
+                ". El marcador se activará en la fecha seleccionada."}
           </span>
         </p>
         <button
@@ -79,6 +96,26 @@ export function Timeline({
           {today ? "Ir a ahora" : "Ver la tarde"}
         </button>
       </header>
+      <nav className="timeline-days" aria-label="Días del plan">
+        {dates.map((day) => (
+          <button
+            key={day}
+            aria-pressed={day === date}
+            onClick={() => setSelectedDate(day)}
+          >
+            {new Date(day + "T12:00:00").toLocaleDateString("es-ES", {
+              day: "numeric",
+              month: "short",
+            })}
+            {day === event?.date ? " · Encuentro" : ""}
+          </button>
+        ))}
+      </nav>
+      <p className="timeline-plan-note">
+        Horas propuestas para organizarnos, basadas en la última edición. Inicio
+        público: {event?.start}; fin: {event?.end}. La entrega de pizzas debe
+        confirmarse con el proveedor.
+      </p>
       <div className="branch-timeline" ref={root}>
         {today && slots.some((s) => s.minutes !== null) && (
           <div
@@ -134,7 +171,7 @@ export function Timeline({
             </div>
           </details>
         ))}
-        {!tasks.length && (
+        {!dayTasks.length && (
           <p className="empty">No hay tareas con estos filtros.</p>
         )}
       </div>
