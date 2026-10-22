@@ -20,7 +20,7 @@ El tablero es público por decisión del propietario: usar nombres visibles o al
 | gh-pages | Aplicación compilada. Pages publica desde esta rama y su carpeta raíz, sin workflow de Actions propio. |
 | data     | data/state.json y uploads/: datos editados desde ordenador y móvil.                                    |
 
-Cada edición se muestra al instante y se guarda automáticamente en data mediante la API de GitHub, sin desplegar Pages. La app consulta al entrar, al volver al primer plano, al recuperar conexión y cada 15 segundos. GitHub puede tardar algunos segundos; no es una conexión en tiempo real por sockets.
+Cada edición se muestra al instante y se guarda automáticamente en data mediante la API de GitHub, sin desplegar Pages. La app consulta el estado actual al entrar, al volver al primer plano y al recuperar conexión. Con cuenta conectada comprueba cada 15 segundos. La consulta pública combina comprobaciones de fondo cada 15 segundos con una lectura de la API cada 75 segundos para respetar su límite anónimo; el botón de sincronización fuerza esta lectura actual. Nunca se sustituye una revisión nueva por una respuesta antigua de caché. GitHub puede tardar algunos segundos; no es una conexión en tiempo real por sockets.
 
 Los cambios se encolan por entidad y campo, con identificadores estables. Antes de guardar se lee el SHA actual; ante conflicto se relee y aplica la cola al estado nuevo. Se conservan ediciones de campos distintos; si dos personas modifican el mismo campo, gana la última escritura aplicada. Una edición de una tarjeta eliminada no la recupera. Las operaciones confirmadas no se repiten.
 

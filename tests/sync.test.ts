@@ -167,3 +167,38 @@ test("Un conflicto SHA se relee y conserva una edición remota", async () => {
     globalThis.fetch = original;
   }
 });
+
+test("La caché pública antigua nunca sustituye la lectura actual y refrescar fuerza la API", async () => {
+  const original = globalThis.fetch;
+  let authoritativeReads = 0;
+  const current = seed();
+  current.revision = 8;
+  current.tasks[0].title = "Última revisión";
+  globalThis.fetch = async (url) => {
+    if (String(url).includes("api.github.com")) {
+      authoritativeReads++;
+      return new Response(
+        JSON.stringify({
+          content: Buffer.from(JSON.stringify(current)).toString("base64"),
+          sha: "new",
+        }),
+        { status: 200 },
+      );
+    }
+    return new Response(JSON.stringify(seed()), { status: 200 });
+  };
+  try {
+    const engine = new SyncEngine(
+      () => {},
+      () => {},
+    );
+    await engine.poll();
+    assert.equal(engine.state.tasks[0].title, "Última revisión");
+    await engine.poll();
+    assert.equal(engine.state.tasks[0].title, "Última revisión");
+    await engine.poll(true);
+    assert.equal(authoritativeReads, 2);
+  } finally {
+    globalThis.fetch = original;
+  }
+});

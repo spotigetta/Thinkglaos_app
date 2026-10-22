@@ -345,17 +345,20 @@ export default function Workspace() {
     const refresh = () => {
         if (document.visibilityState === "visible") void sync.poll();
       },
+      resume = () => {
+        if (document.visibilityState === "visible") void sync.poll(true);
+      },
       timer = setInterval(refresh, 15000);
-    window.addEventListener("focus", refresh);
-    window.addEventListener("online", refresh);
-    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("focus", resume);
+    window.addEventListener("online", resume);
+    document.addEventListener("visibilitychange", resume);
     setLegacy(!!localStorage.getItem("thinkglao_app_state_v1"));
     return () => {
       active = false;
       clearInterval(timer);
-      window.removeEventListener("focus", refresh);
-      window.removeEventListener("online", refresh);
-      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("focus", resume);
+      window.removeEventListener("online", resume);
+      document.removeEventListener("visibilitychange", resume);
     };
   }, []);
   useEffect(() => {
@@ -724,7 +727,7 @@ export default function Workspace() {
           <div className="topbar-actions">
             <button
               className={"sync-state " + (error ? "offline" : "")}
-              onClick={() => void sync.poll()}
+              onClick={() => void sync.poll(true)}
               title={error || "Comprobar cambios del equipo"}
             >
               {error ? <WifiOff size={15} /> : <span className="live-dot" />}
@@ -827,7 +830,7 @@ export default function Workspace() {
                   ? "Los cambios siguen guardados en este dispositivo."
                   : "Se muestra la última copia disponible."}
               </span>
-              <button onClick={() => void sync.poll()}>Reintentar</button>
+              <button onClick={() => void sync.poll(true)}>Reintentar</button>
             </div>
           )}
           {view === "board" && (

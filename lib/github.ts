@@ -91,7 +91,8 @@ export class SyncEngine {
     private emit: (state: State, status: string, error?: string) => void,
     private persist: (owner: string, ops: Operation[]) => void,
   ) {}
-  async poll() {
+  private publicCheckedAt = 0;
+  async poll(force = false) {
     if (this.busy) return;
     this.busy = true;
     let retryDelay = 50;
@@ -135,7 +136,19 @@ export class SyncEngine {
       } else if (this.token) {
         this.state = (await readState(this.token)).state;
       } else {
-        // Raw reads avoid the anonymous REST limit; a fresh URL bypasses stale CDN copies.
+        // Branch-name raw URLs may lag behind a commit even with a fresh query string.
+        // Always use Contents on entry/focus/manual refresh, and periodically thereafter.
+        if (
+          force ||
+          !this.publicCheckedAt ||
+          Date.now() - this.publicCheckedAt >= 75000
+        ) {
+          this.state = (await readState()).state;
+          this.publicCheckedAt = Date.now();
+          this.emit(this.state, "Al día");
+          return;
+        }
+        // Cheap public background reads supplement the authoritative checks.
         const response = await fetch(
           `https://raw.githubusercontent.com/${REPO}/${DATA_BRANCH}/${DATA_PATH}?t=${Date.now()}`,
           { cache: "no-store", signal: AbortSignal.timeout(15000) },
@@ -153,7 +166,7 @@ export class SyncEngine {
           if (!validState(next)) throw Error("Datos compartidos no válidos");
           this.rawCache = next;
           this.etag = response.headers.get("etag") || "";
-          this.state = next;
+          if (next.revision >= this.state.revision) this.state = next;
         }
       }
       this.emit(
