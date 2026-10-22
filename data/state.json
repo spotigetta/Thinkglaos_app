@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 4,
-  "updatedAt": "2026-10-22T16:25:18.395Z",
+  "revision": 5,
+  "updatedAt": "2026-10-22T16:27:45.820Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -598,5 +598,41 @@
       "url": ""
     }
   ],
-  "resources": []
+  "resources": [
+    {
+      "id": "original-video-Intro-Explicar-thunder",
+      "name": "Intro Explicar + thunder",
+      "kind": "Vídeo de sesión",
+      "url": "https://github.com/spotigetta/Thinkglaos_app/releases/download/videos-originales-2026-10/Intro-Explicar-thunder.mp4",
+      "notes": "Archivo original sin recomprimir · 48.4 MiB · Disponible en GitHub Releases."
+    },
+    {
+      "id": "original-video-Intro-Explicar-un-thinkglao",
+      "name": "Intro Explicar un thinkglao",
+      "kind": "Vídeo de sesión",
+      "url": "https://github.com/spotigetta/Thinkglaos_app/releases/download/videos-originales-2026-10/Intro-Explicar-un-thinkglao.mp4",
+      "notes": "Archivo original sin recomprimir · 29.9 MiB · Disponible en GitHub Releases."
+    },
+    {
+      "id": "original-video-Thinkglaos-Inicio---Thunderstruck",
+      "name": "Thinkglaos Inicio - Thunderstruck",
+      "kind": "Vídeo de sesión",
+      "url": "https://github.com/spotigetta/Thinkglaos_app/releases/download/videos-originales-2026-10/Thinkglaos-Inicio---Thunderstruck.mp4",
+      "notes": "Archivo original sin recomprimir · 22.4 MiB · Disponible en GitHub Releases."
+    },
+    {
+      "id": "original-video-Audio-Manolo-Lama-Promo-Thinkglaos",
+      "name": "Audio Manolo Lama Promo Thinkglaos",
+      "kind": "Vídeo promocional",
+      "url": "https://github.com/spotigetta/Thinkglaos_app/releases/download/videos-originales-2026-10/Audio-Manolo-Lama-Promo-Thinkglaos.mp4",
+      "notes": "Archivo original sin recomprimir · 0.9 MiB · Disponible en GitHub Releases."
+    },
+    {
+      "id": "original-video-Promo-Partners-y-Anfitriones",
+      "name": "Promo Partners y Anfitriones",
+      "kind": "Vídeo promocional",
+      "url": "https://github.com/spotigetta/Thinkglaos_app/releases/download/videos-originales-2026-10/Promo-Partners-y-Anfitriones.mp4",
+      "notes": "Archivo original sin recomprimir · 113.7 MiB · Disponible en GitHub Releases."
+    }
+  ]
 }
