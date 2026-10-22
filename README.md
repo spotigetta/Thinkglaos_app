@@ -81,3 +81,9 @@ Publicación:
     git -C .pages-worktree push -u origin gh-pages
 
 scripts/github-admin.mjs usa las credenciales del gestor Git, solo en memoria, para configurar Pages, consultar su estado e inicializar la rama de datos sin sobrescribir una existente. prepare:data no modifica el tablero compartido ni sustituye un seed.json existente.
+
+Vista móvil y plan operativo (octubre 2026): cuatro fases — Organizar, Esa tarde, Durante y Fin. Tarjetas breves con hora y responsable; las instrucciones y listas se abren en el detalle. Las horas de montaje son propuestas, salvo el horario oficial del encuentro 20:00–23:30. La hora de cada tarea se puede editar. Más agrupa las secciones secundarias en móvil.
+
+Descubrir muestra carteles oficiales en un carrusel con desplazamiento y enlaces a los encuentros, al canal de Shorts y a vídeos completos. Es una selección consultada el 22/10/2026, no un feed en directo. Las frases son textos originales de la aplicación, sin atribuciones inventadas.
+
+scripts/update-operating-plan.ts migra los datos compartidos mediante SHA y copia local de seguridad, mantiene responsables, estados y checks asociados a instrucciones idénticas, y conserva las instrucciones anteriores en los detalles. No modifica documentos fuente. El tablero utiliza la rama data y no necesita desplegar la interfaz para sincronizar las tareas.

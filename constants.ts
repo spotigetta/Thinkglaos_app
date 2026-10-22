@@ -150,7 +150,7 @@ export const INITIAL_TASKS: Task[] = [
   // --- PRE THINKGLAO (PROTOCOL) ---
   {
     id: generateId(),
-    phase: Phase.PRE_EVENT,
+    phase: Phase.AFTERNOON_BEFORE,
     title: "Decisiones Previas",
     originalRole: Role.AMBASSADOR,
     assignedTo: Role.AMBASSADOR,
@@ -163,7 +163,7 @@ export const INITIAL_TASKS: Task[] = [
   },
   {
     id: generateId(),
-    phase: Phase.PRE_EVENT,
+    phase: Phase.AFTERNOON_BEFORE,
     title: "Setup Lector QR",
     originalRole: Role.VOLUNTEER_QR,
     assignedTo: Role.VOLUNTEER_QR,
@@ -178,7 +178,7 @@ export const INITIAL_TASKS: Task[] = [
   },
   {
     id: generateId(),
-    phase: Phase.PRE_EVENT,
+    phase: Phase.AFTERNOON_BEFORE,
     title: "Gestión de Cola",
     originalRole: Role.VOLUNTEER_SUPPORT,
     assignedTo: Role.VOLUNTEER_SUPPORT,
@@ -191,7 +191,7 @@ export const INITIAL_TASKS: Task[] = [
   },
   {
     id: generateId(),
-    phase: Phase.PRE_EVENT,
+    phase: Phase.AFTERNOON_BEFORE,
     title: "Escaneo de Entradas",
     originalRole: Role.VOLUNTEER_QR,
     assignedTo: Role.VOLUNTEER_QR,
@@ -204,7 +204,7 @@ export const INITIAL_TASKS: Task[] = [
   },
   {
     id: generateId(),
-    phase: Phase.PRE_EVENT,
+    phase: Phase.AFTERNOON_BEFORE,
     title: "Gestión Sin Entrada / Incidencias",
     originalRole: Role.AMBASSADOR,
     assignedTo: Role.AMBASSADOR,

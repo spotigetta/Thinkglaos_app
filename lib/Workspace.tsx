@@ -72,6 +72,9 @@ import { Messages } from "./Messages";
 import "../index.css";
 import "../original-soft.css";
 import "../motion.css";
+import "../mobile.css";
+import { normalizePhase } from "./plan";
+import { Discover, Phrase } from "./Discover";
 const CACHE = "thinkglaos-state-v3",
   QUEUE = "thinkglaos-queue-v3",
   AUTH = "thinkglaos-auth-v3";
@@ -88,10 +91,9 @@ const uid = () => crypto.randomUUID(),
   phases = Object.values(Phase),
   roles = Object.values(Role);
 const phaseNames: Record<Phase, string> = {
-  [Phase.WEEK_BEFORE]: "Preparar el terreno",
-  [Phase.AFTERNOON_BEFORE]: "Montarlo todo",
-  [Phase.PRE_EVENT]: "Abrir las puertas",
-  [Phase.DURING]: "Vivir el Thinkglao",
+  [Phase.WEEK_BEFORE]: "Trabajos previos",
+  [Phase.AFTERNOON_BEFORE]: "Montaje y entradas",
+  [Phase.DURING]: "Cuidar el encuentro",
   [Phase.POST_EVENT]: "Cerrar el círculo",
 };
 const dateLabel = (date: string) =>
@@ -414,7 +416,7 @@ export default function Workspace() {
     ];
   const filtered = tasks.filter(
     (t) =>
-      (phase === "ALL" || t.phase === phase) &&
+      (phase === "ALL" || normalizePhase(t.phase) === phase) &&
       (assignee === "ALL" || t.assignedTo === assignee) &&
       (!pendingOnly || !t.isDone) &&
       normalize([t.title, t.assignedTo, ...t.notes].join(" ")).includes(
@@ -619,7 +621,7 @@ export default function Workspace() {
       >
         <div className="task-top">
           <span className={"tag " + (task.isImportant ? "critical" : "")}>
-            {task.isImportant ? "Clave" : "Operativa"}
+            {task.time || (task.isImportant ? "Clave" : "Sin hora")}
           </span>
           {canEdit ? (
             <button
@@ -817,6 +819,7 @@ export default function Workspace() {
   }
   const tabs = [
     ["board", "Plan de trabajo", LayoutDashboard],
+    ["discover", "Descubrir", BookOpen],
     ["workflow", "Flujo", GitMerge],
     ["team", "Equipo", Users],
     ["venues", "Espacios", MapPin],
@@ -916,6 +919,8 @@ export default function Workspace() {
                     <br />
                     <em>Un gran equipo.</em>
                   </>
+                ) : view === "discover" ? (
+                  <>Descubrir Thinkglaos</>
                 ) : view === "workflow" ? (
                   <>
                     Cada cosa,<em> a su tiempo.</em>
@@ -993,6 +998,7 @@ export default function Workspace() {
               <button onClick={() => void sync.poll(true)}>Reintentar</button>
             </div>
           )}
+          {view === "discover" && <Discover />}
           {view === "board" && (
             <>
               <MissionControl
@@ -1199,50 +1205,76 @@ export default function Workspace() {
                   )}
                 </div>
               </div>
-              <div className="filters">
-                <label className="searchbox">
-                  <Search size={17} />
-                  <input
-                    placeholder="Buscar tarea, instrucción o persona…"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                </label>
-                <select
-                  aria-label="Filtrar por fase"
-                  value={phase}
-                  onChange={(e) => setPhase(e.target.value)}
-                >
-                  <option value="ALL">Todas las fases</option>
-                  {phases.map((p) => (
-                    <option key={p}>{p}</option>
-                  ))}
-                </select>
-                <select
-                  aria-label="Filtrar por responsable"
-                  value={assignee}
-                  onChange={(e) => setAssignee(e.target.value)}
-                >
-                  <option value="ALL">Todo el equipo</option>
-                  {people.map((p) => (
-                    <option key={p}>{p}</option>
-                  ))}
-                </select>
-                <label className="filter-toggle">
-                  <input
-                    type="checkbox"
-                    checked={pendingOnly}
-                    onChange={(e) => setPendingOnly(e.target.checked)}
-                  />
-                  Solo pendientes
-                </label>
+              <div className="phase-pills" aria-label="Las cuatro fases">
+                {phases.map((p, i) => (
+                  <button
+                    key={p}
+                    className={phase === p ? "active" : ""}
+                    onClick={() => {
+                      setPhase(phase === p ? "ALL" : p);
+                      setCollapsed([]);
+                    }}
+                  >
+                    <b>{i + 1}</b>
+                    {p === Phase.DURING ? "Durante" : p}
+                  </button>
+                ))}
               </div>
+              <details className="filter-drawer">
+                <summary>Buscar y filtrar</summary>
+                <div className="filters">
+                  <label className="searchbox">
+                    <Search size={17} />
+                    <input
+                      placeholder="Buscar tarea, instrucción o persona…"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </label>
+                  <select
+                    aria-label="Filtrar por fase"
+                    value={phase}
+                    onChange={(e) => setPhase(e.target.value)}
+                  >
+                    <option value="ALL">Todas las fases</option>
+                    {phases.map((p) => (
+                      <option key={p}>{p}</option>
+                    ))}
+                  </select>
+                  <select
+                    aria-label="Filtrar por responsable"
+                    value={assignee}
+                    onChange={(e) => setAssignee(e.target.value)}
+                  >
+                    <option value="ALL">Todo el equipo</option>
+                    {people.map((p) => (
+                      <option key={p}>{p}</option>
+                    ))}
+                  </select>
+                  <label className="filter-toggle">
+                    <input
+                      type="checkbox"
+                      checked={pendingOnly}
+                      onChange={(e) => setPendingOnly(e.target.checked)}
+                    />
+                    Solo pendientes
+                  </label>
+                </div>
+              </details>
             </>
           )}
           {view === "board" && (
             <div className="board">
               {phases.map((p, index) => {
-                const list = filtered.filter((t) => t.phase === p);
+                const list = filtered
+                  .filter((t) => normalizePhase(t.phase) === p)
+                  .sort((a, b) =>
+                    (
+                      a.time?.match(/\d{2}:\d{2}/)?.[0] || "00:00"
+                    ).localeCompare(
+                      b.time?.match(/\d{2}:\d{2}/)?.[0] || "00:00",
+                    ),
+                  );
                 return (
                   list.length > 0 && (
                     <section key={p} className="phase-section">
@@ -1297,7 +1329,9 @@ export default function Workspace() {
                       <h2>{phaseNames[p]}</h2>
                       <small>{p}</small>
                     </header>
-                    {filtered.filter((t) => t.phase === p).map(card)}
+                    {filtered
+                      .filter((t) => normalizePhase(t.phase) === p)
+                      .map(card)}
                   </section>
                 ))}
               </div>
@@ -1759,21 +1793,59 @@ export default function Workspace() {
         </main>
       </div>
       <nav className="mobile-nav" aria-label="Secciones móvil">
-        {tabs.map(([id, name, Icon]) => (
-          <button
-            key={id}
-            className={view === id ? "active" : ""}
-            onClick={() => {
-              navigate(id);
-              setQuery("");
-            }}
-          >
-            <Icon size={20} />
-            <span>
-              {id === "board" ? "Plan" : id === "library" ? "Manual" : name}
-            </span>
-          </button>
-        ))}
+        {tabs
+          .filter(([id]) =>
+            ["board", "team", "discover", "assistant"].includes(id),
+          )
+          .map(([id, name, Icon]) => (
+            <button
+              key={id}
+              className={view === id ? "active" : ""}
+              onClick={() => {
+                navigate(id);
+                setQuery("");
+              }}
+            >
+              <Icon size={20} />
+              <span>
+                {id === "board" ? "Plan" : id === "library" ? "Manual" : name}
+              </span>
+            </button>
+          ))}
+        <button
+          aria-label="Más secciones"
+          onClick={() =>
+            setModal(
+              <Modal title="Más" onClose={() => setModal(null)}>
+                <div className="more-sections">
+                  {tabs
+                    .filter(
+                      ([id]) =>
+                        !["board", "team", "discover", "assistant"].includes(
+                          id,
+                        ),
+                    )
+                    .map(([id, name, Icon]) => (
+                      <button
+                        className="btn"
+                        key={id}
+                        onClick={() => {
+                          navigate(id);
+                          setModal(null);
+                        }}
+                      >
+                        <Icon size={18} />
+                        {name}
+                      </button>
+                    ))}
+                </div>
+              </Modal>,
+            )
+          }
+        >
+          <BookOpen size={20} />
+          <span>Más</span>
+        </button>
       </nav>
       {celebration > 0 && (
         <div key={celebration} className="completion-burst" aria-hidden="true">
@@ -1806,10 +1878,11 @@ function TaskEditor({
 }) {
   const [value, set] = useState({
     title: task?.title || "",
-    phase: task?.phase || Phase.WEEK_BEFORE,
+    phase: task ? normalizePhase(task.phase) : Phase.WEEK_BEFORE,
     assignedTo: task?.assignedTo || Role.UNASSIGNED,
     notes: task?.notes.join("\n") || "",
     due: task?.due || "",
+    time: task?.time || "",
     isImportant: task?.isImportant || false,
   });
   return (
@@ -1863,6 +1936,13 @@ function TaskEditor({
             </select>
           </Field>
         </div>
+        <Field label="Hora o franja">
+          <input
+            value={value.time}
+            placeholder="17:30"
+            onChange={(e) => set({ ...value, time: e.target.value })}
+          />
+        </Field>
         <Field label="Fecha límite (opcional)">
           <input
             type="date"
@@ -1918,6 +1998,7 @@ function TaskDetail({
   return (
     <Modal title={task.title} onClose={onClose}>
       <div className="detail-meta">
+        {task.time && <span className="tag">{task.time}</span>}
         <span className="tag">{task.phase}</span>
         {task.isImportant && <span className="tag critical">Clave</span>}
         <span className={"tag " + (task.isDone ? "success" : "")}>

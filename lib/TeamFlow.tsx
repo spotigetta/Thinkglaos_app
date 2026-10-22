@@ -378,6 +378,11 @@ export function MissionControl({
             )}
           </div>
           <div className="personal-actions">
+            {canEdit && (
+              <button className="btn quiet" onClick={onAdd}>
+                Sumar al equipo
+              </button>
+            )}
             {next && (
               <button className="btn primary" onClick={() => onTask(next)}>
                 {person ? "Ver qué tengo que hacer" : "Ver el siguiente paso"}

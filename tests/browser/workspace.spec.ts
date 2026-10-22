@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+﻿import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs";
 let remote = JSON.parse(fs.readFileSync("public/data/seed.json", "utf8"));
 let writes = 0;
@@ -377,7 +377,7 @@ test("Reducir movimiento mantiene la navegación y las acciones, sin animaciones
   await page.emulateMedia({ reducedMotion: "reduce" });
   await network(page);
   await page.goto("/");
-  await expect(page.locator(".hype-window")).toBeVisible();
+  await expect(page.locator(".phase-pills")).toBeVisible();
   expect(
     await page
       .locator(".orbital-art")
@@ -395,4 +395,22 @@ test("Reducir movimiento mantiene la navegación y las acciones, sin animaciones
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+});
+test("Móvil muestra cuatro fases, horas y descubrimiento sin perder secciones", async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
+  await network(page);
+  await page.goto('/');
+  await expect(page.locator('.phase-pills button')).toHaveCount(4);
+  await page.locator('.phase-pills button').nth(1).click();
+  await expect(page.locator('.task-card').filter({hasText:'19:30'}).first()).toBeVisible();
+  await page.getByRole('navigation',{name:'Secciones móvil'}).getByRole('button',{name:'Descubrir',exact:true}).click();
+  await expect(page.locator('.short-card')).toHaveCount(7);
+  await expect(page.getByRole('link',{name:'▶ Shorts',exact:true})).toHaveAttribute('href','https://www.youtube.com/@ItsTimeToThink/shorts');
+  const phrase=await page.locator('.phrase span').innerText();
+  await page.getByRole('button',{name:'Otra frase'}).click();
+  await expect(page.locator('.phrase span')).not.toHaveText(phrase);
+  await page.getByRole('button',{name:'Más secciones'}).click();
+  await page.getByRole('dialog').getByRole('button',{name:'Manual y material',exact:true}).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

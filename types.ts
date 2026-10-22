@@ -1,9 +1,8 @@
 export enum Phase {
-  WEEK_BEFORE = "1 Semana Antes",
-  AFTERNOON_BEFORE = "La Tarde de Antes",
-  PRE_EVENT = "Protocolo de Entradas",
+  WEEK_BEFORE = "Organizar",
+  AFTERNOON_BEFORE = "Esa tarde",
   DURING = "Durante el Thinkglao",
-  POST_EVENT = "Post-Thinkglao",
+  POST_EVENT = "Fin",
 }
 
 export enum Role {
@@ -27,6 +26,7 @@ export interface Task {
   isDone: boolean;
   notes: string[];
   isImportant?: boolean; // For key risks or critical steps
+  time?: string;
   aiAdvice?: string; // Cache for AI response
 }
 

@@ -14,7 +14,13 @@ test("Cinco textos para los destinatarios pedidos usan el evento actual, sin inv
   assert.match(templates[0].text, /Laura Rodríguez Rivero/);
   assert.match(templates[0].text, /Claustro Santo Tomé/);
   assert.match(templates[1].text, /barra libre de cerveza/);
-  assert.doesNotMatch(templates[0].text, /entrada gratuita|http/);
+  assert.doesNotMatch(templates[0].text, /entrada gratuita/);
+  assert.ok(templates[0].text.includes(state.events[0].ticketsURL));
+  state.events[0].ticketsURL = "";
+  assert.doesNotMatch(
+    whatsappTemplates(state, state.events[0].id)[0].text,
+    /https?:/,
+  );
   state.events[0].date = "2026-11-12";
   assert.match(
     whatsappTemplates(state, state.events[0].id)[0].text,
