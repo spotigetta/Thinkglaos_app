@@ -26,7 +26,16 @@ git(["rm", "-rf", "--ignore-unmatch", "."], target);
 for (const entry of fs.readdirSync(target))
   if (entry !== ".git")
     fs.rmSync(path.join(target, entry), { recursive: true, force: true });
-fs.cpSync(path.join(root, "dist"), target, { recursive: true });
+// Copy explicitly: fs.cpSync can exit silently on some Windows Node builds.
+function copyDirectory(source, destination) {
+  fs.mkdirSync(destination, { recursive: true });
+  for (const item of fs.readdirSync(source, { withFileTypes: true })) {
+    const from = path.join(source, item.name), to = path.join(destination, item.name);
+    if (item.isDirectory()) copyDirectory(from, to);
+    else fs.copyFileSync(from, to);
+  }
+}
+copyDirectory(path.join(root, "dist"), target);
 git(["add", "."], target);
 try {
   execFileSync("git", ["diff", "--cached", "--quiet"], { cwd: target });
