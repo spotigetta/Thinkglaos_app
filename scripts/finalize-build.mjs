@@ -15,6 +15,8 @@ const files = [
   "./data/seed.json",
   "./media/youtube.json",
   "./media/audio-manolo-whatsapp.mp3",
+  "./books/el-secreto-de-la-salsa.pdf",
+  ...fs.readdirSync("dist/montage").map((name) => "./montage/" + name),
 ];
 let sw = fs
   .readFileSync("public/sw.js", "utf8")

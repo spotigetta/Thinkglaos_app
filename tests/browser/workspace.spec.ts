@@ -58,7 +58,12 @@ test("Voluntario consulta todas las secciones, instrucciones y fuentes sin escri
     page.getByRole("dialog").getByRole("checkbox").first(),
   ).toBeDisabled();
   await page.getByRole("button", { name: "Cerrar", exact: true }).click();
-  for (const name of ["Flujo", "Equipo", "Espacios", "Manual y material"])
+  for (const name of [
+    "Línea temporal",
+    "Equipo",
+    "Espacios",
+    "Manual y material",
+  ])
     await page
       .getByRole("navigation", { name: "Secciones", exact: true })
       .getByRole("button", { name, exact: true })
@@ -547,5 +552,151 @@ test("Inicio orienta al voluntario, filtra sus tareas y comparte el MP3", async 
     .getByRole("tab", { name: "Material del equipo", exact: true })
     .click();
   await expect(page.locator(".team-media video").first()).toBeVisible();
+  expect(writes).toBe(0);
+});
+
+test("El voluntario lee el PDF completo y retoma la última página", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page);
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Libro del voluntario", exact: true })
+    .click();
+  await expect(page.locator(".book-canvas")).toHaveAttribute(
+    "aria-busy",
+    "false",
+  );
+  await expect(
+    page.getByLabel("Página del libro").locator("option"),
+  ).toHaveCount(81);
+  await page
+    .getByRole("button", { name: "Roles de la noche", exact: true })
+    .click();
+  await expect(page.locator(".book-canvas")).toHaveAttribute(
+    "aria-busy",
+    "false",
+  );
+  await expect(page.getByLabel("Página del libro")).toHaveValue("77");
+  await expect(page.locator(".book-reader>details")).toContainText(
+    "Roles del equipo",
+  );
+  await page.getByRole("button", { name: "Ampliar zoom del libro" }).click();
+  await expect(page.locator(".book-canvas")).toHaveAttribute(
+    "aria-busy",
+    "false",
+  );
+  await page
+    .getByRole("navigation", { name: "Secciones móvil" })
+    .getByRole("button", { name: "Plan", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Libro del voluntario", exact: true })
+    .click();
+  await expect(page.getByLabel("Página del libro")).toHaveValue("77");
+  expect(writes).toBe(0);
+});
+
+test("La línea temporal avanza con la hora real del día del encuentro", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-10-29T16:29:30Z") });
+  await network(page);
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Línea temporal", exact: true })
+    .last()
+    .click();
+  await expect(page.getByTestId("madrid-clock")).toHaveText("17:29:30");
+  await expect(page.locator(".timeline-now")).toHaveCount(1);
+  const before = await page
+    .locator(".timeline-now")
+    .evaluate((el) => parseFloat((el as HTMLElement).style.top));
+  await page.clock.fastForward(70000);
+  await expect(page.getByTestId("madrid-clock")).toHaveText("17:30:40");
+  await expect
+    .poll(() =>
+      page
+        .locator(".timeline-now")
+        .evaluate((el) => parseFloat((el as HTMLElement).style.top)),
+    )
+    .toBeGreaterThan(before);
+  await page.getByRole("button", { name: "Ir a ahora", exact: true }).click();
+  await page
+    .locator(".timeline-task")
+    .filter({ hasText: "Recibir Mercadona" })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "Guardar inmediatamente",
+  );
+  expect(writes).toBe(0);
+});
+
+test("Modo montaje pausa, cambia escenas, carga música y permite salir", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.clock.install();
+  await network(page);
+  await page.goto("/");
+  await page.route("https://www.itstimetothink.org/**", (r) =>
+    r.fulfill({
+      body: "<html><body>ITTT</body></html>",
+      contentType: "text/html",
+    }),
+  );
+  await page.getByRole("button", { name: "Modo montaje", exact: true }).click();
+  await expect(
+    page.getByRole("dialog", { name: "Modo montaje Thinkglao", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".montage-photo-panel img")).toHaveAttribute(
+    "src",
+    "./montage/photo-1.jpg",
+  );
+  await page
+    .getByRole("button", { name: "Pausar escenas", exact: true })
+    .click();
+  await page.clock.fastForward(25000);
+  await expect(page.locator(".montage-photo-panel img")).toHaveAttribute(
+    "src",
+    "./montage/photo-1.jpg",
+  );
+  await page
+    .getByRole("button", { name: "Reanudar escenas", exact: true })
+    .click();
+  await page.clock.fastForward(22000);
+  await expect(page.locator(".montage-photo-panel img")).toHaveAttribute(
+    "src",
+    "./montage/photo-2.jpg",
+  );
+  await page.getByLabel("Elegir música para el montaje").setInputFiles({
+    name: "musica.mp3",
+    mimeType: "audio/mpeg",
+    buffer: fs.readFileSync("public/media/audio-manolo-whatsapp.mp3"),
+  });
+  await expect(page.locator(".montage-music audio")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Pantalla completa", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        document.fullscreenElement?.classList.contains("montage-screen"),
+      ),
+    )
+    .toBe(true);
+  await page
+    .getByRole("button", { name: "Web en directo", exact: true })
+    .click();
+  await expect(page.locator(".montage-live iframe")).toHaveAttribute(
+    "src",
+    "https://www.itstimetothink.org/thinkglaos",
+  );
+  await page
+    .getByRole("button", { name: "Salir del modo montaje", exact: true })
+    .click();
+  await expect(page.locator(".montage-screen")).toHaveCount(0);
+  await expect(page.locator(".start-here")).toBeVisible();
   expect(writes).toBe(0);
 });

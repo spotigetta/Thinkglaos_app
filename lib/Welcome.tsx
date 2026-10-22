@@ -23,9 +23,11 @@ export function volunteerExplanation(state: State, eventId: string) {
 export function VolunteerGuide({
   state,
   eventId,
+  onBook,
 }: {
   state: State;
   eventId: string;
+  onBook?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const text = volunteerExplanation(state, eventId);
@@ -38,6 +40,16 @@ export function VolunteerGuide({
         Tu misión: ayudar a que el encuentro sea cómodo y cercano. Cada persona
         tiene una parte concreta.
       </p>
+      {onBook && (
+        <button className="book-invite" onClick={onBook}>
+          <BookOpen />
+          <span>
+            <b>El secreto de la salsa</b>
+            <small>Lee el libro del voluntario · 81 páginas</small>
+          </span>
+          <ArrowRight size={18} />
+        </button>
+      )}
       <ol>
         {[
           ["Antes", "Acordamos tareas, compras, material y lugar."],
@@ -98,6 +110,8 @@ export function StartHere({
   canEdit,
   onGuide,
   onVideos,
+  onBook,
+  onMontage,
 }: {
   state: State;
   eventId: string;
@@ -110,6 +124,8 @@ export function StartHere({
   canEdit: boolean;
   onGuide: () => void;
   onVideos: () => void;
+  onBook: () => void;
+  onMontage: () => void;
 }) {
   const event = state.events.find((e) => e.id === eventId);
   const mine = state.tasks.filter(
@@ -198,6 +214,16 @@ export function StartHere({
           <Play />
           <b>Vídeos</b>
           <small>Ver y compartir</small>
+        </button>
+      </div>
+      <div className="start-tools">
+        <button onClick={onBook}>
+          <BookOpen size={16} />
+          Libro del voluntario
+        </button>
+        <button onClick={onMontage}>
+          <Play size={16} />
+          Modo montaje
         </button>
       </div>
       {person && (

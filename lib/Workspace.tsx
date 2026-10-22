@@ -3,6 +3,9 @@ import { flushSync } from "react-dom";
 import { AssignPerson, RosterForm } from "./TeamFlow";
 import { StartHere, VolunteerGuide } from "./Welcome";
 import { InlineMedia, mediaKind } from "./Media";
+import { Timeline } from "./Timeline";
+import { Montage } from "./Montage";
+const BookReader = React.lazy(() => import("./BookReader"));
 import { whatsappTemplates } from "./communications";
 import {
   LayoutDashboard,
@@ -76,6 +79,7 @@ import "../original-soft.css";
 import "../motion.css";
 import "../mobile.css";
 import "../welcome.css";
+import "../event-experience.css";
 import { normalizePhase } from "./plan";
 import { Discover, Phrase } from "./Discover";
 const CACHE = "thinkglaos-state-v3",
@@ -301,6 +305,7 @@ export default function Workspace() {
     [error, setError] = useState(""),
     [identity, setIdentity] = useState<Identity | null>(null),
     [view, setView] = useState("board"),
+    [montage, setMontage] = useState(false),
     [eventId, setEventId] = useState(""),
     [phase, setPhase] = useState("ALL"),
     [assignee, setAssignee] = useState("ALL"),
@@ -823,7 +828,8 @@ export default function Workspace() {
   const tabs = [
     ["board", "Plan de trabajo", LayoutDashboard],
     ["discover", "Vídeos", Play],
-    ["workflow", "Flujo", GitMerge],
+    ["workflow", "Línea temporal", GitMerge],
+    ["book", "Libro del voluntario", BookOpen],
     ["team", "Equipo", Users],
     ["venues", "Espacios", MapPin],
     ["library", "Manual y material", BookOpen],
@@ -924,6 +930,8 @@ export default function Workspace() {
                   </>
                 ) : view === "discover" ? (
                   <>Descubrir Thinkglaos</>
+                ) : view === "book" ? (
+                  <>El secreto de la salsa</>
                 ) : view === "workflow" ? (
                   <>
                     Cada cosa,<em> a su tiempo.</em>
@@ -1002,6 +1010,11 @@ export default function Workspace() {
             </div>
           )}
           {view === "discover" && <Discover resources={state.resources} />}
+          {view === "book" && (
+            <React.Suspense fallback={<p role="status">Abriendo el libro…</p>}>
+              <BookReader />
+            </React.Suspense>
+          )}
           {view === "board" && (
             <>
               <StartHere
@@ -1011,11 +1024,20 @@ export default function Workspace() {
                       title="Tu primera vez en Thinkglao"
                       onClose={() => setModal(null)}
                     >
-                      <VolunteerGuide state={state} eventId={eventId} />
+                      <VolunteerGuide
+                        state={state}
+                        eventId={eventId}
+                        onBook={() => {
+                          setModal(null);
+                          navigate("book");
+                        }}
+                      />
                     </Modal>,
                   )
                 }
                 onVideos={() => navigate("discover")}
+                onBook={() => navigate("book")}
+                onMontage={() => setMontage(true)}
                 state={state}
                 eventId={eventId}
                 person={
@@ -1182,12 +1204,18 @@ export default function Workspace() {
                         ? "Mis tareas"
                         : "Plan del equipo"
                       : view === "workflow"
-                        ? "Las fases del encuentro"
+                        ? "Línea temporal"
                         : "Reparto del equipo"}
                   </h2>
                   <span>{filtered.length}</span>
                 </div>
                 <div className="toolbar-actions">
+                  {view === "board" && (
+                    <Button kind="quiet" onClick={() => navigate("workflow")}>
+                      <Clock size={16} />
+                      Línea temporal
+                    </Button>
+                  )}
                   {view === "board" && assignee !== "ALL" && (
                     <Button
                       kind="quiet"
@@ -1213,7 +1241,7 @@ export default function Workspace() {
                       Nueva tarea
                     </Button>
                   )}
-                  {view !== "board" && (
+                  {view === "team" && (
                     <div className="zoom-tools">
                       <Button
                         title="Reducir"
@@ -1349,22 +1377,7 @@ export default function Workspace() {
             </div>
           )}
           {view === "workflow" && (
-            <div className="flow-scroll">
-              <div className="flow" style={{ zoom }}>
-                {phases.map((p, i) => (
-                  <section key={p}>
-                    <header>
-                      <span>0{i + 1}</span>
-                      <h2>{phaseNames[p]}</h2>
-                      <small>{p}</small>
-                    </header>
-                    {filtered
-                      .filter((t) => normalizePhase(t.phase) === p)
-                      .map(card)}
-                  </section>
-                ))}
-              </div>
-            </div>
+            <Timeline tasks={filtered} event={event} onTask={detail} />
           )}
           {view === "team" && (
             <>
@@ -1606,6 +1619,13 @@ export default function Workspace() {
                 </span>
               </div>
               <div className="doc-grid">
+                <button className="doc-card" onClick={() => navigate("book")}>
+                  <BookOpen />
+                  <small>LIBRO DEL VOLUNTARIO</small>
+                  <h3>El secreto de la salsa</h3>
+                  <p>Leer · 81 páginas · descubre tu papel en ITTT.</p>
+                  <ArrowUpRight />
+                </button>
                 {knowledge.documents.map((doc) => (
                   <button
                     className="doc-card"
@@ -1933,6 +1953,13 @@ export default function Workspace() {
         </div>
       )}
       {modal}
+      {montage && (
+        <Montage
+          event={event}
+          tasks={tasks}
+          onClose={() => setMontage(false)}
+        />
+      )}
     </div>
   );
 }
