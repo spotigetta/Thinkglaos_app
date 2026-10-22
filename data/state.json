@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 7,
-  "updatedAt": "2026-10-22T19:45:28.180Z",
+  "revision": 8,
+  "updatedAt": "2026-10-22T19:46:15.352Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -19,7 +19,7 @@
       "speaker": "Laura Rodríguez Rivero",
       "capacity": 80,
       "ticketsURL": "https://www.itstimetothink.org/event-details/thinkglao-con-laura-rodriguez-rivero",
-      "notes": "Horario oficial: 29 octubre 2026 de 20:00 a 23:30. Claustro Santo Tom?, Pl. del Conde, 4, Toledo. Montaje desde 17:30 y QR listo 19:30: propuesta basada en la experiencia anterior; resto de preparaci?n orientativo. Material anterior con Pablo Ram?rez."
+      "notes": "Horario oficial: 29 octubre 2026 de 20:00 a 23:30. Claustro Santo Tomé, Pl. del Conde, 4, Toledo. Montaje desde 17:30 y QR listo 19:30: propuesta basada en la experiencia anterior; resto de preparación orientativo. Material anterior con Pablo Ramírez."
     }
   ],
   "tasks": [
@@ -55,7 +55,7 @@
       "notes": [
         "Alinear ponente, espacio y equipo. Explicar los 18 minutos y el turno de preguntas."
       ],
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "planning-2",
@@ -69,7 +69,7 @@
       "notes": [
         "Confirmar puerta QR, apoyo, logística, contenido y responsable de material."
       ],
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "planning-3",
@@ -83,7 +83,7 @@
       "notes": [
         "Coordinar con ITTT los datos del evento y probar el enlace de entradas."
       ],
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "manual-001",
@@ -99,7 +99,7 @@
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "manual-002",
@@ -113,7 +113,7 @@
         "Avisar cuando llegue todo."
       ],
       "eventId": "toledo-proxima",
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "manual-003",
@@ -127,7 +127,7 @@
         "Enviar WhatsApp a ITTT: Entradas, Dirección, Contacto, Fecha."
       ],
       "eventId": "toledo-proxima",
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "manual-004",
@@ -178,7 +178,7 @@
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "D?as previos"
+      "time": "Días previos"
     },
     {
       "id": "manual-007",
@@ -381,7 +381,7 @@
         "NO moverse durante charla."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00?23:30"
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-018",
@@ -395,7 +395,7 @@
         "Recordar: 18 min + preguntas + pizzas."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00?23:30"
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-019",
@@ -410,7 +410,7 @@
         "Presentar ponente."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00?23:30"
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-020",
@@ -425,7 +425,7 @@
         "Avisar embajador."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00?23:30"
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-021",
@@ -441,7 +441,7 @@
         "Espacio impecable."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00?23:30"
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-022",
