@@ -1328,9 +1328,9 @@ export default function Workspace() {
                 )}
               </div>
               <p className="muted">
-                Vídeos, material de sesión, documentos y notas. Los vídeos
-                originales siguen en la carpeta local; añade aquí su enlace
-                cuando estén alojados.
+                Vídeos, material de sesión, documentos y notas. Los vídeos de
+                sesión y promoción están disponibles en su calidad original, sin
+                recomprimir, para abrirlos o descargarlos desde GitHub.
               </p>
               <div className="resource-list">
                 {state.resources.map((r) => (

@@ -42,14 +42,14 @@ Sin conexión se conserva la última copia y la cola local. Se indica «Guardado
 
 npm run prepare:data inventaría los once Markdown y conserva copias íntegras en .local/source-documents, ignorada por Git. Publica el inventario con hashes y contexto operativo revisado, junto al manual completo del ZIP. Los informes contienen fechas pasadas, propuestas contradictorias y estimaciones: los espacios se importan como Por validar. Las cifras de expansión del manual son históricas.
 
-El ZIP original sigue en la carpeta superior. Los componentes anteriores se conservan localmente en .local/original-components. Los vídeos y fotografías no se han subido automáticamente.
+El ZIP original sigue en la carpeta superior. Los componentes anteriores se conservan localmente en .local/original-components. Las fotografías personales no se publican. Los cinco vídeos de sesión y promoción se publican, por petición del propietario, en [GitHub Releases](https://github.com/spotigetta/Thinkglaos_app/releases/tag/videos-originales-2026-10) como archivos originales sin conversión ni recompresión. `media/videos.json` registra sus enlaces, tamaños y huellas SHA-256 verificadas contra GitHub.
 
 ## Configuración pendiente del equipo
 
 1. Invitar a los embajadores como colaboradores de escritura en Settings → Collaborators. Cada uno conecta su token limitado al repositorio desde su dispositivo. Los voluntarios no necesitan token.
 2. Completar fecha, espacio, ponente y nombres visibles reales. Los nombres iniciales son puestos de trabajo.
 3. Para IA generativa, añadir una clave activa en Preguntas → Configurar IA, en cada sesión. La búsqueda documental funciona sin clave. Una clave compartida requeriría un servicio privado: una web pública de Pages no puede ocultarla.
-4. Añadir los enlaces de vídeos de sesión/promoción cuando se decida su alojamiento. Hay vídeos de más de 100 MB que permanecen en el archivo local.
+4. Los vídeos originales ya están enlazados en Manual y material. Para volver a publicar y verificar este material, ejecutar `node scripts/publish-videos.mjs`: reutiliza los archivos idénticos, comprueba sus huellas y conserva los demás recursos del tablero.
 
 ## Desarrollo y despliegue
 
