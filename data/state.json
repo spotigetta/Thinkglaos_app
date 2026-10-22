@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
-  "revision": 2,
-  "updatedAt": "2026-10-22T16:21:31.730Z",
+  "revision": 3,
+  "updatedAt": "2026-10-22T16:25:14.400Z",
   "appliedOps": [
-    "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd"
+    "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
+    "4d69152e-fed2-4277-931a-51bf1dc30718"
   ],
   "events": [
     {
@@ -413,6 +414,20 @@
         "Enviar a contacto de ITTT (consultar en archivo privado)."
       ],
       "eventId": "toledo-proxima"
+    },
+    {
+      "title": "Verificación temporal 1792686310878",
+      "phase": "1 Semana Antes",
+      "assignedTo": "Sin asignar",
+      "notes": [
+        "Prueba técnica temporal. Se elimina al terminar."
+      ],
+      "due": "",
+      "isImportant": false,
+      "eventId": "toledo-proxima",
+      "isDone": false,
+      "originalRole": "Embajador",
+      "id": "b8af9861-d15b-4573-8235-f97d98f9b06f"
     }
   ],
   "members": [
