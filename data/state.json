@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 8,
-  "updatedAt": "2026-10-22T19:46:15.352Z",
+  "revision": 9,
+  "updatedAt": "2026-10-22T19:48:22.194Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -150,7 +150,7 @@
     },
     {
       "id": "manual-005",
-      "phase": "Organizar",
+      "phase": "Esa tarde",
       "title": "Recibir Mercadona",
       "originalRole": "Voluntario Apoyo",
       "assignedTo": "Voluntario Apoyo",
@@ -422,14 +422,17 @@
       "notes": [
         "Esperar repartidor.",
         "Recoger y llevar a mesa.",
-        "Avisar embajador."
+        "Avisar embajador.",
+        "Confirmar hora de entrega con el proveedor.",
+        "Dejar un responsable atento al teléfono y a la puerta.",
+        "Recibir y colocar las pizzas en las mesas."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30"
+      "time": "Durante · entrega por confirmar"
     },
     {
       "id": "manual-021",
-      "phase": "Durante el Thinkglao",
+      "phase": "Fin",
       "title": "Recogida y Limpieza",
       "originalRole": "Todos",
       "assignedTo": "Todos",
@@ -511,21 +514,6 @@
         "Reponer comida y bebida: que siempre haya.",
         "Comprobar que el ponente esté cómodo.",
         "Estar pendientes de que todos estén cómodos."
-      ],
-      "eventId": "toledo-proxima",
-      "assignedTo": "Sin asignar",
-      "originalRole": "Equipo",
-      "isDone": false
-    },
-    {
-      "id": "operativa-pizzas",
-      "phase": "Durante el Thinkglao",
-      "title": "Recibir las pizzas",
-      "time": "Durante · hora por confirmar",
-      "notes": [
-        "Confirmar hora de entrega con el proveedor.",
-        "Dejar un responsable atento al teléfono y a la puerta.",
-        "Recibir y colocar las pizzas en las mesas."
       ],
       "eventId": "toledo-proxima",
       "assignedTo": "Sin asignar",
