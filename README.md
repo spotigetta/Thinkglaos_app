@@ -87,3 +87,5 @@ Vista móvil y plan operativo (octubre 2026): cuatro fases — Organizar, Esa ta
 Descubrir muestra carteles oficiales en un carrusel con desplazamiento y enlaces a los encuentros, al canal de Shorts y a vídeos completos. Es una selección consultada el 22/10/2026, no un feed en directo. Las frases son textos originales de la aplicación, sin atribuciones inventadas.
 
 scripts/update-operating-plan.ts migra los datos compartidos mediante SHA y copia local de seguridad, mantiene responsables, estados y checks asociados a instrucciones idénticas, y conserva las instrucciones anteriores en los detalles. No modifica documentos fuente. El tablero utiliza la rama data y no necesita desplegar la interfaz para sincronizar las tareas.
+
+Los espacios incluyen dirección postal, mapa interactivo, ruta en Google Maps y acceso a una galería de fotos. Los embajadores pueden corregir esos campos y añadir una foto de portada desde el editor. `scripts/update-venues.ts` actualiza únicamente esos campos en la rama `data`, con copia previa en `.local/venues-before-maps.json`.

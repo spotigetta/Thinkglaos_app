@@ -1467,10 +1467,29 @@ export default function Workspace() {
                   )
                   .map((v, i) => (
                     <article className="venue-card" key={v.id}>
-                      <div className={"venue-art variant-" + (i % 4)}>
-                        <MapPin size={38} />
-                        <span>TOLEDO / ESPACIOS</span>
-                      </div>
+                      {v.photoUrl ? (
+                        <div className="venue-photo">
+                          <img
+                            src={v.photoUrl}
+                            alt={"Vista de " + v.name}
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : (
+                        <iframe
+                          className="venue-map"
+                          title={"Mapa de " + v.name}
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          src={
+                            "https://www.google.com/maps?q=" +
+                            encodeURIComponent(
+                              v.address || v.name + ", Toledo",
+                            ) +
+                            "&output=embed"
+                          }
+                        />
+                      )}
                       <div className="venue-body">
                         <span
                           className={
@@ -1482,11 +1501,36 @@ export default function Workspace() {
                         </span>
                         <h3>{v.name}</h3>
                         <small>{v.area}</small>
+                        <address>
+                          <MapPin size={15} />
+                          {v.address ||
+                            "Ubicación exacta pendiente de confirmar"}
+                        </address>
                         <p>{v.notes}</p>
                         <small className="source">
                           Fuente: {v.source || "Equipo local"}
                         </small>
                         <footer>
+                          <SafeLink
+                            href={
+                              v.mapsUrl ||
+                              "https://www.google.com/maps/search/?api=1&query=" +
+                                encodeURIComponent(
+                                  v.address || v.name + ", Toledo",
+                                )
+                            }
+                          >
+                            Cómo llegar <MapPin size={14} />
+                          </SafeLink>
+                          <SafeLink
+                            href={
+                              v.photosUrl ||
+                              "https://www.google.com/search?tbm=isch&q=" +
+                                encodeURIComponent(v.name + " Toledo fotos")
+                            }
+                          >
+                            Fotos <ExternalLink size={14} />
+                          </SafeLink>
                           {v.url && (
                             <SafeLink href={v.url}>
                               Ver espacio <ExternalLink size={14} />
@@ -2215,6 +2259,10 @@ function RecordEditor({
             ["area", "Zona"],
             ["status", "Estado"],
             ["notes", "Condiciones y siguientes pasos"],
+            ["address", "Dirección postal"],
+            ["mapsUrl", "Enlace de Google Maps"],
+            ["photosUrl", "Galería de fotos"],
+            ["photoUrl", "Foto de portada (URL, opcional)"],
             ["source", "Fuente"],
             ["url", "Enlace"],
           ]
@@ -2281,7 +2329,7 @@ function RecordEditor({
             ) : (
               <input
                 required={id === "name"}
-                type={id === "url" ? "url" : "text"}
+                type={id.toLowerCase().includes("url") ? "url" : "text"}
                 value={value[id] || ""}
                 onChange={(e) => set({ ...value, [id]: e.target.value })}
               />

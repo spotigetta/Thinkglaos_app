@@ -396,21 +396,67 @@ test("Reducir movimiento mantiene la navegación y las acciones, sin animaciones
     ),
   ).toBe(true);
 });
-test("Móvil muestra cuatro fases, horas y descubrimiento sin perder secciones", async ({ page }) => {
-  await page.setViewportSize({width:390,height:844});
+test("Móvil muestra cuatro fases, horas y descubrimiento sin perder secciones", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await network(page);
-  await page.goto('/');
-  await expect(page.locator('.phase-pills button')).toHaveCount(4);
-  await page.locator('.phase-pills button').nth(1).click();
-  await expect(page.locator('.task-card').filter({hasText:'19:30'}).first()).toBeVisible();
-  await page.getByRole('navigation',{name:'Secciones móvil'}).getByRole('button',{name:'Descubrir',exact:true}).click();
-  await expect(page.locator('.short-card')).toHaveCount(7);
-  await expect(page.getByRole('link',{name:'▶ Shorts',exact:true})).toHaveAttribute('href','https://www.youtube.com/@ItsTimeToThink/shorts');
-  const phrase=await page.locator('.phrase span').innerText();
-  await page.getByRole('button',{name:'Otra frase'}).click();
-  await expect(page.locator('.phrase span')).not.toHaveText(phrase);
-  await page.getByRole('button',{name:'Más secciones'}).click();
-  await page.getByRole('dialog').getByRole('button',{name:'Manual y material',exact:true}).click();
-  await expect(page.getByRole('dialog')).toHaveCount(0);
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.goto("/");
+  await expect(page.locator(".phase-pills button")).toHaveCount(4);
+  await page.locator(".phase-pills button").nth(1).click();
+  await expect(
+    page.locator(".task-card").filter({ hasText: "19:30" }).first(),
+  ).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Secciones móvil" })
+    .getByRole("button", { name: "Descubrir", exact: true })
+    .click();
+  await expect(page.locator(".short-card")).toHaveCount(7);
+  await expect(
+    page.getByRole("link", { name: "▶ Shorts", exact: true }),
+  ).toHaveAttribute("href", "https://www.youtube.com/@ItsTimeToThink/shorts");
+  const phrase = await page.locator(".phrase span").innerText();
+  await page.getByRole("button", { name: "Otra frase" }).click();
+  await expect(page.locator(".phrase span")).not.toHaveText(phrase);
+  await page.getByRole("button", { name: "Más secciones" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Manual y material", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});
+
+test("Espacios muestra dirección, Maps y fotos en móvil", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page);
+  await page.route("https://www.google.com/maps**", (route) =>
+    route.fulfill({ body: "", contentType: "text/html" }),
+  );
+  await page.goto("/");
+  await page.getByRole("button", { name: "Más secciones" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Espacios", exact: true })
+    .click();
+  const claustro = page.locator(".venue-card").filter({
+    has: page.getByRole("heading", { name: "Claustro Santo Tomé" }),
+  });
+  await expect(claustro).toContainText("Plaza del Conde, 4");
+  await expect(
+    claustro.getByRole("link", { name: /Cómo llegar/ }),
+  ).toHaveAttribute("href", /google\.com\/maps/);
+  await expect(claustro.getByRole("link", { name: /Fotos/ })).toHaveAttribute(
+    "href",
+    /tbm=isch/,
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
 });

@@ -8,6 +8,10 @@ export type Venue = {
   notes: string;
   source: string;
   url: string;
+  address?: string;
+  mapsUrl?: string;
+  photosUrl?: string;
+  photoUrl?: string;
 };
 export type Resource = {
   id: string;
@@ -181,13 +185,11 @@ export function findKnowledge(
         kind: "Espacio candidato",
       })),
       ...docs.flatMap((doc) =>
-        doc.text
-          .split(/\n(?=#{1,3} )/)
-          .map((section) => ({
-            title: doc.title,
-            text: section,
-            kind: doc.kind,
-          })),
+        doc.text.split(/\n(?=#{1,3} )/).map((section) => ({
+          title: doc.title,
+          text: section,
+          kind: doc.kind,
+        })),
       ),
     ];
   return rows
