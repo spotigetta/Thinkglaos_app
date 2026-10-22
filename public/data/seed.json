@@ -1,0 +1,598 @@
+{
+  "schemaVersion": 1,
+  "revision": 0,
+  "updatedAt": "2026-10-22T16:05:42.017Z",
+  "appliedOps": [],
+  "events": [
+    {
+      "id": "toledo-proxima",
+      "name": "Próximo Thinkglao",
+      "city": "Toledo",
+      "date": "",
+      "start": "20:00",
+      "end": "23:00",
+      "venue": "",
+      "speaker": "",
+      "capacity": 80,
+      "ticketsURL": "",
+      "notes": "Fecha, espacio y ponente pendientes de confirmar. No se han importado las fechas históricas de enero/febrero de 2026 como eventos actuales."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "planning-0",
+      "eventId": "toledo-proxima",
+      "title": "Cerrar espacio y condiciones",
+      "phase": "1 Semana Antes",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "isImportant": true,
+      "notes": [
+        "Confirmar aforo, comida y bebida, suelo, música, seguro, acceso y cierre por escrito."
+      ]
+    },
+    {
+      "id": "planning-1",
+      "eventId": "toledo-proxima",
+      "title": "Confirmar ponente y fecha",
+      "phase": "1 Semana Antes",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "isImportant": true,
+      "notes": [
+        "Alinear ponente, espacio y equipo. Explicar los 18 minutos y el turno de preguntas."
+      ]
+    },
+    {
+      "id": "planning-2",
+      "eventId": "toledo-proxima",
+      "title": "Formar el equipo local",
+      "phase": "1 Semana Antes",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "isImportant": true,
+      "notes": [
+        "Confirmar puerta QR, apoyo, logística, contenido y responsable de material."
+      ]
+    },
+    {
+      "id": "planning-3",
+      "eventId": "toledo-proxima",
+      "title": "Cartel, landing y difusión",
+      "phase": "1 Semana Antes",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "isImportant": true,
+      "notes": [
+        "Coordinar con ITTT los datos del evento y probar el enlace de entradas."
+      ]
+    },
+    {
+      "id": "manual-001",
+      "phase": "1 Semana Antes",
+      "title": "Confirmar envío material ITTT",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Confirmar dirección de envío.",
+        "Verificar llegada 48h antes.",
+        "Preparar sitio para guardarlo."
+      ],
+      "isImportant": true,
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-002",
+      "phase": "1 Semana Antes",
+      "title": "Recepción de paquetes",
+      "originalRole": "Voluntario Apoyo",
+      "assignedTo": "Voluntario Apoyo",
+      "isDone": false,
+      "notes": [
+        "Estar disponible si embajador no puede.",
+        "Avisar cuando llegue todo."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-003",
+      "phase": "1 Semana Antes",
+      "title": "Pedido de Cerveza",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Calcular asistentes + 20% margen.",
+        "Enviar WhatsApp a ITTT: Entradas, Dirección, Contacto, Fecha."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-004",
+      "phase": "1 Semana Antes",
+      "title": "Pedido Mercadona",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Enviar datos a ITTT.",
+        "Franja entrega: 2-3 horas antes del evento.",
+        "Asegurar recepción."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-005",
+      "phase": "1 Semana Antes",
+      "title": "Confirmar recepción Mercadona",
+      "originalRole": "Voluntario Apoyo",
+      "assignedTo": "Voluntario Apoyo",
+      "isDone": false,
+      "notes": [
+        "Confirmar disponibilidad para recoger el pedido."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-006",
+      "phase": "1 Semana Antes",
+      "title": "Plan B: Mercadona fallido",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Llamar ITTT, pedir documento compra.",
+        "Hacer compra presencial."
+      ],
+      "isImportant": true,
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-007",
+      "phase": "1 Semana Antes",
+      "title": "Revisión física del material (Día antes)",
+      "originalRole": "Todos",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Tocar todo con la mano.",
+        "Encender cronómetro.",
+        "Montar mentalmente escenario.",
+        "Check: Roll up, Foam, Camisetas, Cronómetro, Tablas, Cubos, Cervezas, Altavoces, Cuchillos."
+      ],
+      "isImportant": true,
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-008",
+      "phase": "La Tarde de Antes",
+      "title": "Preparación Bebidas",
+      "originalRole": "Equipo",
+      "assignedTo": "Voluntario Apoyo",
+      "isDone": false,
+      "notes": [
+        "Recibir compra.",
+        "Llenar cubos con agua/hielo.",
+        "Enfriar cervezas.",
+        "Vermut: botella en cubitera, vasos ordenados."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-009",
+      "phase": "La Tarde de Antes",
+      "title": "Preparación Comida",
+      "originalRole": "Equipo",
+      "assignedTo": "Voluntario 3",
+      "isDone": false,
+      "notes": [
+        "Cortar fuet y quesos.",
+        "Montar tablas: Queso, Fuet, Picos, Nueces, Uvas."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-010",
+      "phase": "La Tarde de Antes",
+      "title": "Montaje Decoración y Escenario",
+      "originalRole": "Equipo",
+      "assignedTo": "Voluntario Logística",
+      "isDone": false,
+      "notes": [
+        "Ponerse camisetas ITTT.",
+        "Roll up en puerta (luego escenario).",
+        "Escenario: Bombilla, Alfombra, Cajas Damm, Cronómetro a 18:00.",
+        "Distribuir cubos de cerveza."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-011",
+      "phase": "La Tarde de Antes",
+      "title": "Verificación Espacio",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Sin sillas delante (solo suelo).",
+        "Sillas solo atrás (mayores).",
+        "Cronómetro visible para ponente.",
+        "Bombilla protagonista."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-012",
+      "phase": "Protocolo de Entradas",
+      "title": "Decisiones Previas",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Confirmar aforo.",
+        "Decidir venta en puerta.",
+        "Tener contacto ITTT a mano."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-013",
+      "phase": "Protocolo de Entradas",
+      "title": "Setup Lector QR",
+      "originalRole": "Voluntario QR",
+      "assignedTo": "Voluntario QR",
+      "isDone": false,
+      "notes": [
+        "Instalar Wix Owner.",
+        "Login correo ITTT.",
+        "Probar escáner.",
+        "Tener batería."
+      ],
+      "isImportant": true,
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-014",
+      "phase": "Protocolo de Entradas",
+      "title": "Gestión de Cola",
+      "originalRole": "Voluntario Apoyo",
+      "assignedTo": "Voluntario Apoyo",
+      "isDone": false,
+      "notes": [
+        "Controlar fila.",
+        "Redirigir dudas.",
+        "Guiar hacia dentro tras escaneo (sentarse delante)."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-015",
+      "phase": "Protocolo de Entradas",
+      "title": "Escaneo de Entradas",
+      "originalRole": "Voluntario QR",
+      "assignedTo": "Voluntario QR",
+      "isDone": false,
+      "notes": [
+        "Pedir QR a TODOS.",
+        "Validar en pantalla.",
+        "Avisar embajador si error."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-016",
+      "phase": "Protocolo de Entradas",
+      "title": "Gestión Sin Entrada / Incidencias",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Dirigir a web para compra si hay aforo.",
+        "Autorizar acceso tras compra.",
+        "Decidir cierre de puertas.",
+        "Resolver fallos técnicos app."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-017",
+      "phase": "Durante el Thinkglao",
+      "title": "Grabación Contenido",
+      "originalRole": "Voluntario Contenido",
+      "assignedTo": "Voluntario Contenido",
+      "isDone": false,
+      "notes": [
+        "Grabar inicio charla.",
+        "Planos generales público.",
+        "Grabar preguntas.",
+        "Foto ambiente.",
+        "NO moverse durante charla."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-018",
+      "phase": "Durante el Thinkglao",
+      "title": "Acogida Ponente",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Acompañar y tranquilizar.",
+        "Recordar: 18 min + preguntas + pizzas."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-019",
+      "phase": "Durante el Thinkglao",
+      "title": "Presentación Evento",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Presentar ITTT.",
+        "Mencionar colaboradores.",
+        "Presentar ponente."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-020",
+      "phase": "Durante el Thinkglao",
+      "title": "Recepción Pizzas",
+      "originalRole": "Voluntario Logística",
+      "assignedTo": "Voluntario Logística",
+      "isDone": false,
+      "notes": [
+        "Esperar repartidor.",
+        "Recoger y llevar a mesa.",
+        "Avisar embajador."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-021",
+      "phase": "Durante el Thinkglao",
+      "title": "Recogida y Limpieza",
+      "originalRole": "Todos",
+      "assignedTo": "Todos",
+      "isDone": false,
+      "notes": [
+        "Recoger basura.",
+        "Desmontar escenario.",
+        "Guardar material ITTT.",
+        "Espacio impecable."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-022",
+      "phase": "Post-Thinkglao",
+      "title": "Gestión Gastos",
+      "originalRole": "Embajador",
+      "assignedTo": "Embajador",
+      "isDone": false,
+      "notes": [
+        "Reunir tickets.",
+        "Enviar a contacto de ITTT (consultar en archivo privado).",
+        "Datos fiscales: Asociación Itstimetothink, NIF [consultar datos fiscales en el archivo privado]."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-023",
+      "phase": "Post-Thinkglao",
+      "title": "Inventario",
+      "originalRole": "Responsable Material",
+      "assignedTo": "Responsable Material",
+      "isDone": false,
+      "notes": [
+        "Revisar material ITTT.",
+        "Apuntar roturas/pérdidas.",
+        "Guardar material."
+      ],
+      "eventId": "toledo-proxima"
+    },
+    {
+      "id": "manual-024",
+      "phase": "Post-Thinkglao",
+      "title": "Envío Contenido",
+      "originalRole": "Voluntario Contenido",
+      "assignedTo": "Voluntario Contenido",
+      "isDone": false,
+      "notes": [
+        "Seleccionar lo mejor.",
+        "Enviar a contacto de ITTT (consultar en archivo privado)."
+      ],
+      "eventId": "toledo-proxima"
+    }
+  ],
+  "members": [
+    {
+      "id": "role-0",
+      "name": "Embajador",
+      "role": "Embajador",
+      "note": "Puesto por asignar a una persona"
+    },
+    {
+      "id": "role-1",
+      "name": "Voluntario Apoyo",
+      "role": "Voluntario Apoyo",
+      "note": "Puesto por asignar a una persona"
+    },
+    {
+      "id": "role-2",
+      "name": "Voluntario QR",
+      "role": "Voluntario QR",
+      "note": "Puesto por asignar a una persona"
+    },
+    {
+      "id": "role-3",
+      "name": "Voluntario Contenido",
+      "role": "Voluntario Contenido",
+      "note": "Puesto por asignar a una persona"
+    },
+    {
+      "id": "role-4",
+      "name": "Voluntario Logística",
+      "role": "Voluntario Logística",
+      "note": "Puesto por asignar a una persona"
+    },
+    {
+      "id": "role-5",
+      "name": "Voluntario 3",
+      "role": "Voluntario 3",
+      "note": "Puesto por asignar a una persona"
+    },
+    {
+      "id": "role-6",
+      "name": "Responsable Material",
+      "role": "Responsable Material",
+      "note": "Puesto por asignar a una persona"
+    }
+  ],
+  "venues": [
+    {
+      "id": "venue-0",
+      "name": "Matadero Lab",
+      "area": "Cultura joven",
+      "source": "Espacios/Informe de lugares.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-1",
+      "name": "Círculo de Arte de Toledo",
+      "area": "Centro histórico",
+      "source": "Espacios/Informe de lugares.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-2",
+      "name": "Real Fundación de Toledo · Roca Tarpeya",
+      "area": "Judería",
+      "source": "Espacios/Lugares Chatgpt.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-3",
+      "name": "UCLM · Fábrica de Armas",
+      "area": "Campus universitario",
+      "source": "Espacios/Lugares Comet.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-4",
+      "name": "Biblioteca de Castilla-La Mancha",
+      "area": "Alcázar",
+      "source": "Espacios/Lugares Comet.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-5",
+      "name": "Mezquita de Tornerías",
+      "area": "Centro histórico",
+      "source": "Espacios/Lugares Chatgpt.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-6",
+      "name": "Sala Thalía",
+      "area": "Benquerencia",
+      "source": "Espacios/Lugares Comet 2.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-7",
+      "name": "Colegio de Arquitectos",
+      "area": "Centro histórico",
+      "source": "Espacios/Lugares Chatgpt.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-8",
+      "name": "Cámara de Comercio · Vivero",
+      "area": "Dinamarca",
+      "source": "Espacios/Lugares Comet.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-9",
+      "name": "El Patio de los Ángeles",
+      "area": "Centro histórico",
+      "source": "Espacios/Lugares Chatgpt.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-10",
+      "name": "Hotel Beatriz",
+      "area": "Toledo",
+      "source": "Espacios/Informe de lugares.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-11",
+      "name": "Eurostars Palacio Buenavista",
+      "area": "Buenavista",
+      "source": "Espacios/Informe de lugares.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-12",
+      "name": "Sala Pícaro",
+      "area": "Centro histórico",
+      "source": "Espacios/Informe Claude.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-13",
+      "name": "Venta de Aires",
+      "area": "Toledo",
+      "source": "Espacios/Informe Claude.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    },
+    {
+      "id": "venue-14",
+      "name": "Sala Next Level",
+      "area": "Toledo",
+      "source": "Espacios/Informe Claude.md",
+      "status": "Por validar",
+      "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
+      "url": ""
+    }
+  ],
+  "resources": []
+}

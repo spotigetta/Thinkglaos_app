@@ -1,0 +1,208 @@
+import { test, expect, type Page } from "@playwright/test";
+import fs from "node:fs";
+let remote = JSON.parse(fs.readFileSync("public/data/seed.json", "utf8"));
+let writes = 0;
+async function network(page: Page, edit = true) {
+  await page.route("https://raw.githubusercontent.com/**", (route) =>
+    route.fulfill({ json: remote }),
+  );
+  await page.route("https://api.github.com/**", async (route) => {
+    const url = route.request().url();
+    if (url.includes("/user"))
+      return route.fulfill({ json: { login: "test-ambassador" } });
+    if (url.includes("/contents/")) {
+      if (route.request().method() === "PUT") {
+        writes++;
+        remote = JSON.parse(
+          Buffer.from(
+            route.request().postDataJSON().content,
+            "base64",
+          ).toString(),
+        );
+        return route.fulfill({ json: { content: { sha: "new" } } });
+      }
+      return route.fulfill({
+        json: {
+          sha: "test-" + writes,
+          content: Buffer.from(JSON.stringify(remote)).toString("base64"),
+        },
+      });
+    }
+    return route.fulfill({
+      json: url.includes("/issues") ? [] : { permissions: { push: edit } },
+    });
+  });
+}
+test.beforeEach(() => {
+  remote = JSON.parse(fs.readFileSync("public/data/seed.json", "utf8"));
+  writes = 0;
+});
+test("Voluntario consulta todas las secciones, instrucciones y fuentes sin escribir", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await network(page);
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Nueva tarea", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("button", {
+      name: "Ver detalle de Cerrar espacio y condiciones",
+      exact: true,
+    })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText("Confirmar aforo");
+  await expect(
+    page.getByRole("dialog").getByRole("checkbox").first(),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  for (const name of ["Flujo", "Equipo", "Espacios", "Manual y material"])
+    await page
+      .getByRole("navigation", { name: "Secciones", exact: true })
+      .getByRole("button", { name, exact: true })
+      .click();
+  await page
+    .getByRole("button", { name: /Manual completo de organización/ })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText("PREVIO A TODO");
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Secciones", exact: true })
+    .getByRole("button", { name: "Preguntas", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "¿Cómo preparamos las entradas QR?" })
+    .click();
+  await expect(page.getByText("Fuentes consultadas").first()).toBeVisible();
+  expect(writes).toBe(0);
+  expect(errors).toEqual([]);
+  await page.screenshot({
+    path: ".local/questions-desktop.png",
+    fullPage: true,
+  });
+});
+test("Embajador crea, edita y borra; el móvil consulta los cambios de la rama data", async ({
+  page,
+  browser,
+}) => {
+  await network(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: /Acceso de embajadores/ }).click();
+  await page.getByLabel("Token personal de GitHub").fill("test-token-not-real");
+  await page
+    .getByRole("button", { name: "Conectar cuenta", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Nueva tarea", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Nueva tarea", exact: true }).click();
+  await page
+    .getByLabel("Qué hay que hacer")
+    .fill("Prueba de sincronización móvil");
+  await page
+    .getByLabel("Instrucciones · una por línea")
+    .fill("Comprobar ambas pantallas");
+  await page
+    .getByRole("button", { name: "Guardar tarea", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      remote.tasks.some(
+        (t: { title: string }) => t.title === "Prueba de sincronización móvil",
+      ),
+    )
+    .toBe(true);
+  const mobile = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const phone = await mobile.newPage();
+  await network(phone);
+  await phone.goto("/");
+  await expect(
+    phone.getByRole("heading", {
+      name: "Prueba de sincronización móvil",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: "Ver detalle de Prueba de sincronización móvil",
+      exact: true,
+    })
+    .click();
+  await page.getByRole("button", { name: "Editar", exact: true }).click();
+  await page.getByLabel("Qué hay que hacer").fill("Prueba editada");
+  await page
+    .getByRole("button", { name: "Guardar tarea", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      remote.tasks.some((t: { title: string }) => t.title === "Prueba editada"),
+    )
+    .toBe(true);
+  await page
+    .getByRole("button", { name: "Ver detalle de Prueba editada", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Eliminar tarea", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Eliminar", exact: true }).click();
+  await expect
+    .poll(() =>
+      remote.tasks.some((t: { title: string }) => t.title === "Prueba editada"),
+    )
+    .toBe(false);
+  expect(writes).toBe(3);
+  await mobile.close();
+});
+test("La cuenta de lectura no se convierte en embajador y el móvil no tiene desbordamientos", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page, false);
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Conexión y permisos", exact: true })
+    .click();
+  await page.getByLabel("Token personal de GitHub").fill("read-only-token");
+  await page
+    .getByRole("button", { name: "Conectar cuenta", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Nueva tarea", exact: true }),
+  ).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({ path: ".local/mobile-plan.png", fullPage: true });
+  await page
+    .getByRole("navigation", { name: "Secciones móvil" })
+    .getByRole("button", { name: "Equipo", exact: true })
+    .click();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect(writes).toBe(0);
+});
+test("Escritorio muestra el plan de forma estable", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await network(page);
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: /Un gran equipo/ }),
+  ).toBeVisible();
+  await page.screenshot({ path: ".local/desktop-plan.png", fullPage: true });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

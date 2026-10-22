@@ -1,0 +1,809 @@
+# PREVIO A TODO
+
+(lugar, ponente, voluntarios, fecha + cómo explicar ITTT)
+
+## TAREAS
+
+### 1. Entender bien qué es ITTT (para contarlo a otros)
+
+- Tener claro el SPEECH para presentarse ante ponentes, voluntarios, espacios y asistentes:
+    IT’S TIME TO THINK es un movimiento cultural para fomentar el pensamiento crítico en jóvenes. Nació durante el COVID con charlas online muy seguidas y evolucionó a encuentros presenciales, los Thinkglaos.
+
+- Recordar los datos clave:
+
+    - Más de 5 años de eventos.
+
+    - En 2024 hubo salto internacional.
+
+    - Ahora mismo: 37 ciudades en 6 países.
+
+    - Objetivo 2025: 54 ciudades y 15 países.
+
+    - Ciudades fuera de España: Ciudad de México, Puebla, Buenos Aires, Múnich, Londres, Zúrich.
+
+- Tener presentes los formatos:
+
+    - Thinkglaos (formato estrella, con cervezas, ponente y charla en 18 minutos).
+
+    - In Crescendo.
+
+    - La 4ª Pared.
+
+    - Las Movidas.
+
+
+### 2. Definir el lugar
+
+- Buscar un espacio amplio y diáfano donde la gente pueda sentarse en el suelo:
+
+    - galería de arte
+
+    - coworking
+
+    - museo
+
+    - terraza
+
+    - bar grande
+
+- Comprobar:
+
+    - Aforo.
+
+    - Si se puede poner música.
+
+    - Si permiten mover sillas.
+
+    - Horas de apertura y cierre.
+
+    - Enchufes y dónde conectar altavoces y bombilla.
+
+- Confirmar por escrito:
+
+    - Fecha.
+
+    - Hora de acceso para montaje.
+
+    - Hora límite de salida.
+
+    - Si hay alguien del espacio de contacto directo.
+
+
+### 3. Elegir y cerrar ponente
+
+- Pensar qué tipo de tema puede hacer pensar a gente entre 22–35 años:
+    filosofía, empresa, arte, ciencia, tecnología, historia, fe, relaciones humanas, etc.
+
+- Contactar a la persona elegida, explicarle:
+
+    - qué es un Thinkglao
+
+    - duración: 18 minutos de charla + 45 de preguntas
+
+    - ambiento informal con cerveza, suelo y cercanía
+
+- Asegurar que el ponente:
+
+    - está cómodo con el formato
+
+    - puede la fecha propuesta
+
+    - entiende que la clave es hacer pensar, no hacer “charla corporativa”.
+
+
+### 4. Buscar y asegurar voluntarios
+
+- “Liar” a 3–4 amigos con ganas de:
+
+    - currar antes y durante el evento
+
+    - recibir pedidos
+
+    - montar y desmontar
+
+    - estar con la gente
+
+- Confirmar que:
+
+    - al menos 2 llegan pronto el día del evento
+
+    - uno se encarga de audiovisual / stories
+
+    - uno puede estar en la puerta con el QR
+
+    - alguien lleva el control general de tareas junto con el embajador.
+
+
+### 5. Fijar la fecha
+
+- Alinear:
+
+    - disponibilidad del ponente
+
+    - disponibilidad del espacio
+
+    - disponibilidad mínima del equipo local
+
+- Avisar a ITTT Central de la fecha elegida para que puedan planificar:
+
+    - cartel
+
+    - landing
+
+    - venta de entradas
+
+    - envío de material.
+
+
+---
+
+## NOTAS E INDICACIONES (PREVIO A TODO)
+
+- El objetivo de esta fase no es hacer nada operativo todavía, sino tener **una historia clara** y **un núcleo sólido**: lugar, ponente, equipo, fecha.
+
+- Cuanto mejor se cuente el SPEECH de ITTT, más fácil será:
+
+    - convencer al ponente
+
+    - conseguir espacio gratis o muy barato
+
+    - motivar voluntarios.
+
+- La atmósfera que se busca:
+    charlas pequeñas, cercanas, con gente sentada en el suelo, cerveza en la mano y cabeza encendida.
+
+
+---
+
+# 1 SEMANA ANTES
+
+## TAREAS
+
+### 1. Coordinar con el Staff Central (Madrid)
+
+- Enviar a la sede central estos datos para preparar cartel y landing:
+
+    - 1. Fecha y hora del Thinkglao.
+
+    - 2. Ubicación exacta del espacio (dirección completa).
+
+    - 3. Nombre del ponente.
+
+    - 4. Foto del ponente en buena calidad.
+
+- A partir de ahí, el Staff Central se encarga de:
+
+    1. Crear el evento en Wix y configurarlo (texto, imagen, lugar, horarios).
+
+    2. Definir tipos de entradas, precios, cupos y fechas de venta.
+
+    3. Generar y probar el link único de compra.
+
+    4. Publicarlo en la web principal y pasaros el enlace.
+
+    5. Dar soporte técnico si hay problemas con pagos o entradas.
+
+
+### 2. Preparar el mensaje de difusión (WhatsApp)
+
+- Redactar un mensaje tipo para compartir con el cartel y el enlace:
+
+    - Frase inicial llamativa: “¡(Nombre ciudad), prepárate!”
+
+    - Aviso de que es el primer Thinkglao o el siguiente que se hace.
+
+    - Mención del ponente: quién es y por qué viene “con ganas de ponerte a pensar más que cuando te preguntan qué quieres en la vida”.
+
+    - Detalles clave:
+
+        - fecha
+
+        - hora
+
+        - dirección
+
+    - Reclamo logístico:
+
+        - pizzas
+
+        - barra libre de cerveza
+
+        - ambiente muy distinto a una charla normal
+
+    - Llamada a la acción: link de venta de entradas y aviso de que se pueden acabar.
+
+
+### 3. “Mover” el Thinkglao (3–4 semanas antes, pero se mantiene vivo 1 semana antes)
+
+- Si es el primer Thinkglao en la ciudad:
+
+    - crear grupo de WhatsApp: “Thinkglaos + Nombre ciudad”; solo avisos.
+
+    - enviar enlace del grupo a ITTT Central.
+
+- A partir de ahí:
+
+    - cada vez que haya cartel nuevo, recordatorio o evento, compartirlo en ese grupo.
+
+- Usar WhatsApp como canal clave:
+
+    - facilita reenviar
+
+    - llega a gente de confianza.
+
+- Complementar con redes sociales:
+
+    - la cuenta de ITTT en LinkedIn e Instagram amplifica.
+
+- Si ves que vas flojo de entradas:
+
+    - escribir a contacto de ITTT (consultar en archivo privado) o al teléfono que dan
+
+    - pedir un empujón de marketing.
+
+
+### 4. Contactar con el ponente (2 semanas antes)
+
+- Enviar mensaje de recordatorio:
+
+    - confirmar fecha, hora y lugar
+
+    - ofrecer ayuda logística (recogerle si viene de fuera, aparcamiento, etc.)
+
+    - resumir de nuevo:
+
+        - 18 minutos de intervención
+
+        - 45 minutos de preguntas
+
+        - público joven
+
+        - ambiente informal con cerveza y pizzas.
+
+
+### 5. Pedido de cerveza y Mercadona
+
+- A una semana del evento:
+
+    - confirmar número de entradas vendidas
+
+    - añadir un 20 % de buffer (la gente que se apunta tarde o acompaña).
+
+- Mandar un WhatsApp a ITTT con:
+
+    - número de entradas estimadas
+
+    - dirección exacta donde recibir cervezas y vino
+
+    - dirección del evento para el pedido de Mercadona (si es distinta)
+
+    - rango horario en el que habrá alguien para recibir
+
+    - nombre, apellidos y teléfono del embajador/contacto local.
+
+- ITTT se encarga:
+
+    - de enviar cerveza y vino una semana antes
+
+    - de gestionar compra Mercadona para que llegue el mismo día 2–3 horas antes.
+
+- Si Mercadona no llega bien:
+
+    - llamar a ITTT
+
+    - pedir documento de pedidos
+
+    - hacer la compra en persona.
+
+
+---
+
+## NOTAS E INDICACIONES (1 SEMANA ANTES)
+
+- Aquí el foco es **difusión + logística macro** (entradas, bebida, comida), no tanto detalles de sala.
+
+- Cuanto mejor definido esté el número de entradas, más ajustado será:
+
+    - el pedido de cervezas
+
+    - el pedido de comida
+
+    - el aforo.
+
+- El grupo “Thinkglaos + ciudad” es tu activo a largo plazo:
+    ahí se anunciarán los siguientes eventos y sirve para fidelizar a la comunidad.
+
+- No esperes al último día para escribir al ponente:
+    cuanto antes tenga claro el formato, mejor afinada será la charla.
+
+
+---
+
+# ANTES DEL THINKGLAO
+
+(día antes y 3 horas antes)
+
+## TAREAS
+
+### 1. Chequear que cuentas con todo el material (día antes)
+
+- Revisar físicamente que tienes:
+
+    - Roll up (lona vertical con logo).
+
+    - Foam (panel rígido con la marca).
+
+    - Camisetas de ITTT para voluntarios.
+
+    - Cronómetro:
+
+        - comprobar que está cargado
+
+        - ponerlo a cero
+
+    - Tablas de madera grandes (mínimo 1 cada 20 asistentes).
+
+    - Cubos grandes para meter las cervezas con hielos.
+
+    - Cervezas Estrella Damm.
+
+    - Compra de Mercadona (o confirmación de entrega para el día siguiente).
+
+    - Altavoces con sus cables.
+
+    - Cuchillos para cortar queso y fuet.
+
+- Confirmar dónde se va a guardar todo hasta el momento del montaje.
+
+
+### 2. Repartir responsabilidades (día antes)
+
+- Asignar tareas claras entre los voluntarios:
+
+    - Contacto con la persona del local (habla con ellos si hay cualquier incidencia).
+
+    - Recepción del ponente y acompañarle a su llegada.
+
+    - Enfriar cervezas y cuidar la barra.
+
+    - Montar las tablas de queso y fuet.
+
+    - Gestionar la música (lista de Spotify “Ya está el Thinkglao Montao” o similar).
+
+    - Decorar la sala siguiendo el estilo Thinkglao.
+
+    - Gestionar la app de entradas y QR (Wix Owner).
+
+    - Grabar vídeos, fotos, stories y enviarlos a Alda.
+
+    - Presentar el evento y al ponente.
+
+    - Recoger pizzas cuando lleguen.
+
+    - Coordinar la limpieza final.
+
+
+### 3. Preparar bebidas (3 horas antes del evento)
+
+- Recibir la compra de Mercadona.
+
+- Llenar cubos con agua y hielo.
+
+- Meter las cervezas dentro de los cubos para que se enfríen bien.
+
+- Colocar las coca-colas y refrescos con hielo para servir fríos.
+
+- Si hay Lustau (vermut):
+
+    - poner botellas ordenadas
+
+    - preparar cubiteras con hielo
+
+    - meter una botella dentro de la cubitera
+
+    - colocar cerca el roll up de Lustau si lo hay.
+
+- Colocar vasos ordenados, junto a la zona de bebidas.
+
+
+### 4. Preparar tablas de queso y fuet (3 horas antes)
+
+- Cortar el fuet en rodajas finas.
+
+- Cortar los quesos en porciones manejables (triángulos, bastones, etc.).
+
+- Montar las tablas:
+
+    - queso en varios tipos
+
+    - fuet
+
+    - picos / pan crujiente
+
+    - nueces
+
+    - uvas.
+
+- Dejar las tablas listas para sacar en la “Previa”.
+
+
+### 5. Preparar decoración (3 horas antes)
+
+- Pedir a todos los voluntarios que se pongan la camiseta de ITTT.
+
+- Colocar el roll up en la puerta de entrada; más adelante se puede mover al escenario.
+
+- Poner la bombilla detrás del ponente; si hay alfombra circular, colocarla debajo de la bombilla.
+
+- Apilar las cajas rojas de Estrella Damm a un lado del escenario, unas encima de otras.
+
+- Colocar el cronómetro encima de las cajas, cargado y marcado a 18:00 (tiempo del ponente).
+
+- Repartir cubos con cervezas por la zona donde se sentará el público, para que la bebida esté cerca.
+
+
+### 6. Preparar la sala y las entradas
+
+- Organizar la sala:
+
+    - quitar sillas de delante
+
+    - dejar solo algunas detrás para personas mayores o embarazadas
+
+    - dejar un espacio claro delante del ponente.
+
+- Configurar el sistema de entradas:
+
+    - un voluntario descarga la app “Wix Owner” (App Store o Google Play).
+
+    - Staff Central añade su email como “Staff” en Wix Events.
+
+    - iniciar sesión en la app y abrir el evento.
+
+    - comprobar que la cámara escanea correctamente un QR de prueba.
+
+
+---
+
+## NOTAS E INDICACIONES (ANTES)
+
+- La clave del montaje: que la gente entre y diga “qué gusto estar aquí”, no “otra sala de actos fría”.
+
+- Cuidar los detalles:
+
+    - cables escondidos
+
+    - basura fuera de vista
+
+    - cervezas bien frías
+
+    - música sonando suave al entrar.
+
+- El cronómetro visible a todo el mundo refuerza la idea de formato ágil y respetuoso con el tiempo.
+
+- Las sillas delante matan el ambiente; cuanto más cerca esté la gente en el suelo, más se rompe la distancia ponente–público.
+
+
+---
+
+# DURANTE EL THINKGLAO
+
+## TAREAS
+
+### 1. Gestión de entradas y acceso
+
+- Mantener las puertas cerradas hasta la hora fijada de inicio.
+
+- En el momento de apertura:
+
+    - uno o dos voluntarios van a la puerta con el móvil o tablet y la app Wix Owner abierta.
+
+    - saludar amablemente a cada asistente.
+
+    - pedir que muestren su entrada digital (QR en el móvil).
+
+    - escanear el código con la app.
+
+    - revisar que la app marca la entrada como válida y dar paso.
+
+- Si el QR da error:
+
+    - explicar la situación con calma
+
+    - sugerir que compre otra entrada si todavía hay aforo.
+
+- Si alguien llega sin entrada:
+
+    - explicar que las entradas se compran online
+
+    - si hay aforo, indicarle que entre en la web y la compre al momento, luego se escanea el nuevo QR.
+
+
+### 2. Check-in continuo y control de aforo
+
+- Durante los primeros minutos seguir escaneando a los que lleguen tarde.
+
+- El voluntario de puerta debe:
+
+    - tener noción del aforo
+
+    - avisar al embajador si la sala se está llenando.
+
+- El embajador decide:
+
+    - cuándo dejar de vender en puerta
+
+    - si se admite a alguien adicional o no.
+
+
+### 3. Acogida del ponente
+
+- Recibir al ponente cuando llegue:
+
+    - saludarle
+
+    - enseñarle el espacio
+
+    - explicarle dónde se sentará y dónde hablará.
+
+- Recordar:
+
+    - el orden de la tarde
+
+    - dónde estará el cronómetro y cómo funciona
+
+    - cuándo le avisáis para subir a hablar.
+
+
+### 4. Presentaciones y arranque
+
+- El presentador (normalmente el embajador) hace:
+
+    - bienvenida al público
+
+    - mini historia de ITTT (quiénes somos y por qué estamos aquí)
+
+    - mención de colaboradores (marcas de bebida, espacios, patrocinadores locales)
+
+    - presentación del ponente (nombre, qué hace, por qué está hoy aquí).
+
+- Explicar brevemente el formato:
+
+    - 18 minutos de charla (Thinknómetro)
+
+    - 45 minutos de preguntas
+
+    - luego pizzas y cervezas para seguir la conversación.
+
+
+### 5. Desarrollo de la charla y preguntas
+
+- Durante los 18 minutos:
+
+    - silencio y atención
+
+    - nadie cruza delante del ponente
+
+    - se pueden hacer 1–2 stories discretas, pero sin molestar.
+
+- Cuando termina el tiempo:
+
+    - abrir el turno de preguntas
+
+    - animar a que la gente pregunte sin miedo
+
+    - mantener tono respetuoso pero cercano.
+
+
+### 6. Audiovisual y música
+
+- Si hay voluntario profesional o equipo Staff:
+
+    - coordinar con ITTT antes del evento
+
+    - grabar con calidad para subirlo luego a YouTube.
+
+- En todos los Thinkglaos:
+
+    - grabar stories en vertical:
+
+        - preparación
+
+        - montaje
+
+        - picoteo inicial
+
+        - charla
+
+        - preguntas
+
+        - pizzas y ambiente final.
+
+    - enviar esos vídeos a Alda (contacto de ITTT (consultar en archivo privado)).
+
+- Música:
+
+    - antes y después del evento debe haber música
+
+    - usar lista “Ya está el Thinkglao Montao” o similar
+
+    - volumen suficiente para ambiente, pero no para impedir conversaciones.
+
+
+### 7. Pizzas y cierre operativo
+
+- Recibir pizzas durante o al final de las preguntas.
+
+- Organizar:
+
+    - mesa de pizzas
+
+    - reparto de servilletas y platos.
+
+- Reunir tickets de compras si se ha pagado algo en efectivo o tarjeta local.
+
+- Hacia el final:
+
+    - recordar a la gente que irá cerrando el espacio
+
+    - animar a seguir viniendo a próximos Thinkglaos.
+
+
+### 8. Recogida y limpieza
+
+- Una vez la gente se va:
+
+    - recoger basura en bolsas grandes
+
+    - limpiar mesas y zonas muy manchadas
+
+    - recoger vasos sueltos
+
+    - guardar roll up, foam, cronómetro, cables, altavoces, etc.
+
+- Dejar el espacio:
+
+    - igual o mejor que estaba al llegar.
+
+
+---
+
+## NOTAS E INDICACIONES (DURANTE)
+
+- La puerta marca el tono: si la gente es bien recibida, entra con ganas.
+
+- No pasará nada si alguien se equivoca con un QR, lo importante es mantener siempre el buen humor.
+
+- El presentador no debe alargar mucho la introducción; la estrella es el ponente.
+
+- Stories sí, pero sin convertir el evento en un “rodaje”: primero el público.
+
+- La música antes y después genera ambiente; durante la charla debe estar completamente parada.
+
+
+---
+
+# DESPUÉS DEL THINKGLAO
+
+## TAREAS
+
+### 1. Gestión de gastos
+
+- Reunir todos los tickets y facturas:
+
+    - Mercadona
+
+    - pizzas
+
+    - hielo extra
+
+    - cualquier otro material comprado.
+
+- Enviar por correo a:
+    contacto de ITTT (consultar en archivo privado)
+
+- Pedir siempre factura con estos datos:
+
+    - Asociación It’stimetothink
+
+    - [consultar dirección fiscal en el archivo privado]
+
+    - NIF: [consultar datos fiscales en el archivo privado]
+
+
+### 2. Inventario de material
+
+- Hacer lista de todo lo que vuelve a casa:
+
+    - roll up
+
+    - foam
+
+    - cronómetro
+
+    - tablas
+
+    - cubos
+
+    - altavoces
+
+    - cables.
+
+- Anotar:
+
+    - si falta algo
+
+    - si algo se ha roto
+
+    - dónde se guarda hasta el siguiente Thinkglao.
+
+
+### 3. Acciones de marketing post-evento
+
+- Enviar los vídeos y stories grabados a Alda (contacto de ITTT (consultar en archivo privado)).
+
+- Comentar con ITTT cómo fue:
+
+    - asistencia
+
+    - ambiente
+
+    - ponente
+
+    - si el formato funcionó bien en ese espacio.
+
+
+### 4. Posible artículo / crónica
+
+- Si algún voluntario se anima:
+
+    - escribir un pequeño artículo sobre el Thinkglao
+
+    - contar:
+
+        - de qué fue la charla
+
+        - qué preguntas salieron
+
+        - qué ambiente hubo en el postpartido
+
+    - enviarlo a contacto de ITTT (consultar en archivo privado).
+
+- Los mejores artículos:
+
+    - se suben a la web
+
+    - se comparten en LinkedIn.
+
+
+### 5. Cerrar el círculo con contactos
+
+- Agradecer al ponente su participación.
+
+- Agradecer al espacio su apoyo.
+
+- Agradecer a los voluntarios el trabajo.
+
+
+---
+
+## NOTAS E INDICACIONES (DESPUÉS)
+
+- El post es lo que convierte un evento puntual en una **comunidad**:
+    facturas, inventario y contenido bien enviado permiten que haya más Thinkglaos.
+
+- Es buen momento para:
+
+    - detectar nuevos voluntarios
+
+    - detectar potenciales ponentes futuros
+
+    - preguntar a la gente qué les ha gustado más.
+
+- Siempre dejar canales de contacto claros:
+
+    - contacto de ITTT (consultar en archivo privado)
+
+    - redes sociales de ITTT
+
+    - grupo de WhatsApp de la ciudad.
