@@ -47,9 +47,11 @@ El ZIP original sigue en la carpeta superior. Los componentes anteriores se cons
 ## Configuración pendiente del equipo
 
 1. Invitar a los embajadores como colaboradores de escritura en Settings → Collaborators. Cada uno conecta su token limitado al repositorio desde su dispositivo. Los voluntarios no necesitan token.
-2. Completar fecha, espacio, ponente y nombres visibles reales. Los nombres iniciales son puestos de trabajo.
-3. Para IA generativa, añadir una clave activa en Preguntas → Configurar IA, en cada sesión. La búsqueda documental funciona sin clave. Una clave compartida requeriría un servicio privado: una web pública de Pages no puede ocultarla.
+2. El equipo está actualizado con Alejandro Zamora, Teresa Peteiro, Daniel Ramírez, Juan María, Helena Palomino y María Marcos como voluntarios, y Pablo Ramírez y Javier Yuste como embajadores. Próximo encuentro: jueves 29 de octubre de 2026 a las 20:00, Claustro Santo Tomé, con Laura Rodríguez Rivero. Pablo conserva el material anterior. Estos datos constan en `data/state.json`; las tarjetas conservan su estado y no se asignan personas a tareas sin indicación del equipo.
+3. Para IA generativa, añadir la clave en Preguntas → Configurar IA. Se puede recordar expresamente en el dispositivo de confianza. El modelo inicial es `gemini-3.5-flash-lite`, comprobado con una consulta real, y las respuestas se limitan normalmente a 2–4 frases o viñetas. El contexto incluye evento, equipo, tareas y estados, materiales y custodia, espacios, manual y borradores de comunicación. La clave no se publica en código ni en datos. Una única clave compartida sin configurarla en cada dispositivo requeriría un servicio privado que la custodie.
 4. Los vídeos originales ya están enlazados en Manual y material. Para volver a publicar y verificar este material, ejecutar `node scripts/publish-videos.mjs`: reutiliza los archivos idénticos, comprueba sus huellas y conserva los demás recursos del tablero.
+
+La pestaña **Textos WhatsApp** aparece al conectar como embajador. Incluye promoción, explicación del formato, voluntariado/comunidad, colaboradores y ponentes. Se generan borradores con los datos del evento activo, se pueden copiar sin enviar, y las personalizaciones se guardan por evento mediante la sincronización existente. Los nombres del directorio no conceden acceso de escritura a GitHub.
 
 ## Desarrollo y despliegue
 

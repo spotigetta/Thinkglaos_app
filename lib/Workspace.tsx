@@ -65,7 +65,9 @@ import {
   type Identity,
 } from "./github";
 import { answer } from "./assistant";
+import { Messages } from "./Messages";
 import "../index.css";
+import "../original-soft.css";
 const CACHE = "thinkglaos-state-v3",
   QUEUE = "thinkglaos-queue-v3",
   AUTH = "thinkglaos-auth-v3";
@@ -668,6 +670,7 @@ export default function Workspace() {
     ["venues", "Espacios", MapPin],
     ["library", "Manual y material", BookOpen],
     ["assistant", "Preguntas", MessageCircle],
+    ...(canEdit ? [["messages", "Textos WhatsApp", Send] as const] : []),
   ] as const;
   return (
     <div className="workspace">
@@ -675,7 +678,8 @@ export default function Workspace() {
         <a className="brand" href="./">
           <img src="./assets/thinkglao.jpg" alt="Bombilla ITTT" />
           <b>
-            THINKGLAOS<span>TOLEDO / ORGANIZACIÓN</span>
+            IT’S TIME <em>TO THINK</em>
+            <span>THINKGLAO ORGANIZER · TOLEDO</span>
           </b>
         </a>
         <div className="sidebar-caption">HAGAMOS QUE PASE</div>
@@ -776,6 +780,8 @@ export default function Workspace() {
                   <>
                     Todo lo que<em> hay que saber.</em>
                   </>
+                ) : view === "messages" ? (
+                  <>Comunicación del equipo</>
                 ) : (
                   <>
                     Preguntar es<em> el principio.</em>
@@ -793,7 +799,9 @@ export default function Workspace() {
                         ? "Candidatos, conversaciones y decisiones, en un mismo lugar."
                         : view === "library"
                           ? "El manual, los recursos y las respuestas de referencia."
-                          : "Consulta el manual o traslada una duda al equipo."}
+                          : view === "messages"
+                            ? "Borradores para copiar, personalizar y compartir con cada audiencia."
+                            : "Consulta el manual o traslada una duda al equipo."}
               </p>
             </div>
             <div className="heading-tools">
@@ -841,7 +849,12 @@ export default function Workspace() {
                   <div>
                     <small>PRÓXIMO ENCUENTRO</small>
                     <strong>
-                      {event?.date ? dateLabel(event.date) : "Pongámosle fecha"}
+                      {event?.date
+                        ? new Date(event.date + "T12:00:00").toLocaleDateString(
+                            "es-ES",
+                            { weekday: "long", day: "numeric", month: "long" },
+                          )
+                        : "Pongámosle fecha"}
                     </strong>
                   </div>
                 </div>
@@ -850,8 +863,12 @@ export default function Workspace() {
                   <span>{event?.venue || "Espacio por confirmar"}</span>
                   <span className="divider" />
                   <span>
-                    {event?.start || "20:00"} — {event?.end || "23:00"}
+                    {event?.start || "Hora por confirmar"}
+                    {event?.end ? " — " + event.end : " · fin por confirmar"}
                   </span>
+                  {event?.speaker && (
+                    <span className="event-speaker">Con {event.speaker}</span>
+                  )}
                 </div>
                 {event?.ticketsURL ? (
                   <SafeLink href={event.ticketsURL} className="text-link">
@@ -1099,10 +1116,8 @@ export default function Workspace() {
             <>
               <div className="team-grid" style={{ zoom }}>
                 {people
-                  .filter(
-                    (person) =>
-                      state.members.some((m) => m.name === person) ||
-                      tasks.some((t) => t.assignedTo === person),
+                  .filter((person) =>
+                    state.members.some((m) => m.name === person),
                   )
                   .map((person) => {
                     const member = state.members.find((m) => m.name === person),
@@ -1164,6 +1179,37 @@ export default function Workspace() {
                     );
                   })}
               </div>
+              {filtered.some(
+                (t) => !state.members.some((m) => m.name === t.assignedTo),
+              ) && (
+                <section className="member-panel unassigned-panel">
+                  <h3>Tareas por asignar a una persona</h3>
+                  <p className="muted">
+                    El protocolo indica un rol; los embajadores pueden elegir a
+                    la persona responsable al editar cada tarea.
+                  </p>
+                  {filtered
+                    .filter(
+                      (t) =>
+                        !state.members.some((m) => m.name === t.assignedTo),
+                    )
+                    .map((t) => (
+                      <button
+                        key={t.id}
+                        className="member-task"
+                        onClick={() => detail(t)}
+                      >
+                        <span>
+                          {t.title}
+                          <small>
+                            {t.assignedTo} · {t.phase}
+                          </small>
+                        </span>
+                        <ChevronRight size={15} />
+                      </button>
+                    ))}
+                </section>
+              )}
               {canEdit && (
                 <div className="section-footer">
                   <Button onClick={() => recordEditor("members")}>
@@ -1300,7 +1346,13 @@ export default function Workspace() {
               <div className="section-toolbar">
                 <div className="section-title">
                   <h2>Material compartido</h2>
-                  <span>{state.resources.length}</span>
+                  <span>
+                    {
+                      state.resources.filter(
+                        (r) => r.kind !== "Texto embajadores",
+                      ).length
+                    }
+                  </span>
                 </div>
                 {canEdit && (
                   <div className="toolbar-actions">
@@ -1333,42 +1385,44 @@ export default function Workspace() {
                 recomprimir, para abrirlos o descargarlos desde GitHub.
               </p>
               <div className="resource-list">
-                {state.resources.map((r) => (
-                  <article key={r.id}>
-                    <span className="resource-icon">
-                      <Paperclip />
-                    </span>
-                    <div>
-                      <small>{r.kind}</small>
-                      <h3>{r.name}</h3>
-                      <p>{r.notes}</p>
-                    </div>
-                    {r.url && (
-                      <SafeLink href={r.url} className="btn icon">
-                        <ExternalLink size={18} />
-                        <span className="sr-only">Abrir {r.name}</span>
-                      </SafeLink>
-                    )}
-                    {canEdit && (
-                      <>
-                        <Button
-                          kind="icon"
-                          title="Editar recurso"
-                          onClick={() => recordEditor("resources", r)}
-                        >
-                          <Pencil size={16} />
-                        </Button>
-                        <Button
-                          kind="icon"
-                          title="Eliminar recurso"
-                          onClick={() => remove("resources", r.id, r.name)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </>
-                    )}
-                  </article>
-                ))}
+                {state.resources
+                  .filter((r) => r.kind !== "Texto embajadores")
+                  .map((r) => (
+                    <article key={r.id}>
+                      <span className="resource-icon">
+                        <Paperclip />
+                      </span>
+                      <div>
+                        <small>{r.kind}</small>
+                        <h3>{r.name}</h3>
+                        <p>{r.notes}</p>
+                      </div>
+                      {r.url && (
+                        <SafeLink href={r.url} className="btn icon">
+                          <ExternalLink size={18} />
+                          <span className="sr-only">Abrir {r.name}</span>
+                        </SafeLink>
+                      )}
+                      {canEdit && (
+                        <>
+                          <Button
+                            kind="icon"
+                            title="Editar recurso"
+                            onClick={() => recordEditor("resources", r)}
+                          >
+                            <Pencil size={16} />
+                          </Button>
+                          <Button
+                            kind="icon"
+                            title="Eliminar recurso"
+                            onClick={() => remove("resources", r.id, r.name)}
+                          >
+                            <Trash2 size={16} />
+                          </Button>
+                        </>
+                      )}
+                    </article>
+                  ))}
               </div>
               {!state.resources.length && (
                 <Empty>
@@ -1387,6 +1441,20 @@ export default function Workspace() {
                 ))}
               </details>
             </>
+          )}
+          {view === "messages" && canEdit && (
+            <Messages
+              state={state}
+              eventId={eventId}
+              onSave={(resource, exists) =>
+                change(
+                  "resources",
+                  resource.id,
+                  resource,
+                  exists ? "patch" : "create",
+                )
+              }
+            />
           )}
           {view === "assistant" && (
             <Assistant
@@ -2086,11 +2154,20 @@ function Assistant({
     [busy, setBusy] = useState(false),
     [config, setConfig] = useState(false),
     [key, setKey] = useState(
-      () => sessionStorage.getItem("thinkglaos-gemini") || "",
+      () =>
+        sessionStorage.getItem("thinkglaos-gemini") ||
+        localStorage.getItem("thinkglaos-gemini") ||
+        "",
     ),
-    [model, setModel] = useState(
-      () => localStorage.getItem("thinkglaos-model") || "gemini-2.5-flash",
+    [rememberKey, setRememberKey] = useState(
+      () => !!localStorage.getItem("thinkglaos-gemini"),
     ),
+    [model, setModel] = useState(() => {
+      const stored = localStorage.getItem("thinkglaos-model");
+      return !stored || stored === "gemini-2.5-flash"
+        ? "gemini-3.5-flash-lite"
+        : stored;
+    }),
     [issues, setIssues] = useState<
       {
         id: number;
@@ -2168,7 +2245,7 @@ function Assistant({
         </header>
         {config && (
           <div className="ai-config">
-            <Field label="Clave Gemini · solo en esta sesión">
+            <Field label="Clave API de Gemini">
               <input
                 type="password"
                 autoComplete="off"
@@ -2176,9 +2253,24 @@ function Assistant({
                 onChange={(e) => {
                   setKey(e.target.value);
                   sessionStorage.setItem("thinkglaos-gemini", e.target.value);
+                  if (rememberKey)
+                    localStorage.setItem("thinkglaos-gemini", e.target.value);
                 }}
               />
             </Field>
+            <label className="filter-toggle">
+              <input
+                type="checkbox"
+                checked={rememberKey}
+                onChange={(e) => {
+                  setRememberKey(e.target.checked);
+                  if (e.target.checked)
+                    localStorage.setItem("thinkglaos-gemini", key);
+                  else localStorage.removeItem("thinkglaos-gemini");
+                }}
+              />
+              Recordar clave en este dispositivo de confianza
+            </label>
             <Field label="Modelo de tu proyecto">
               <input
                 value={model}
@@ -2190,7 +2282,8 @@ function Assistant({
             </Field>
             <p className="muted">
               Al consultar con IA se envían tu pregunta, el contexto del manual
-              y el tablero a Gemini. La clave permanece en tu sesión. Sin clave,
+              y el tablero a Gemini. La clave se guarda en tu sesión o, si lo
+              eliges, en este dispositivo. No se publica en GitHub. Sin clave,
               se buscan referencias locales.
             </p>
           </div>

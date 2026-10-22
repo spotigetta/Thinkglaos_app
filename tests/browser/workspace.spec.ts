@@ -206,3 +206,59 @@ test("Escritorio muestra el plan de forma estable", async ({ page }) => {
     ),
   ).toBe(true);
 });
+test("Los textos de WhatsApp están reservados a embajadores y se pueden copiar y personalizar", async ({
+  page,
+}) => {
+  await network(page);
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
+        writeText: async (text: string) => {
+          (window as any).__copied = text;
+        },
+      },
+    });
+  });
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Textos WhatsApp", exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: /Acceso de embajadores/ }).click();
+  await page.getByLabel("Token personal de GitHub").fill("test-token");
+  await page
+    .getByRole("button", { name: "Conectar cuenta", exact: true })
+    .click();
+  await page
+    .getByRole("navigation", { name: "Secciones", exact: true })
+    .getByRole("button", { name: "Textos WhatsApp", exact: true })
+    .click();
+  await expect(page.getByLabel("Texto de WhatsApp")).toHaveValue(
+    /Laura Rodríguez Rivero/,
+  );
+  await page
+    .getByRole("button", { name: "Copiar para WhatsApp", exact: true })
+    .click();
+  expect(await page.evaluate(() => (window as any).__copied)).toContain(
+    "Claustro Santo Tomé",
+  );
+  await page.getByRole("button", { name: "Personalizar", exact: true }).click();
+  await page
+    .getByLabel("Texto de WhatsApp")
+    .fill("Mensaje personalizado para nuestro equipo");
+  await page
+    .getByRole("button", { name: "Guardar texto", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      remote.resources.some(
+        (r: { kind: string; notes: string }) =>
+          r.kind === "Texto embajadores" &&
+          r.notes === "Mensaje personalizado para nuestro equipo",
+      ),
+    )
+    .toBe(true);
+  await page.screenshot({
+    path: ".local/messages-desktop.png",
+    fullPage: true,
+  });
+});
