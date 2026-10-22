@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 5,
-  "updatedAt": "2026-10-22T16:27:45.820Z",
+  "revision": 6,
+  "updatedAt": "2026-10-22T16:41:17.339Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -10,16 +10,16 @@
   "events": [
     {
       "id": "toledo-proxima",
-      "name": "Próximo Thinkglao",
+      "name": "Thinkglao · Laura Rodríguez Rivero",
       "city": "Toledo",
-      "date": "",
+      "date": "2026-10-29",
       "start": "20:00",
-      "end": "23:00",
-      "venue": "",
-      "speaker": "",
+      "end": "",
+      "venue": "Claustro Santo Tomé",
+      "speaker": "Laura Rodríguez Rivero",
       "capacity": 80,
       "ticketsURL": "",
-      "notes": "Fecha, espacio y ponente pendientes de confirmar. No se han importado las fechas históricas de enero/febrero de 2026 como eventos actuales."
+      "notes": "Jueves 29 de octubre de 2026 a las 20:00. Sede y ponente indicados por Pablo. Hora de finalización por confirmar; el aforo de la ficha es una previsión. Los materiales del Thinkglao anterior los conserva Pablo Ramírez."
     }
   ],
   "tasks": [
@@ -419,46 +419,52 @@
   ],
   "members": [
     {
-      "id": "role-0",
-      "name": "Embajador",
+      "id": "alejandro-zamora",
+      "name": "Alejandro Zamora",
+      "role": "Voluntario",
+      "note": ""
+    },
+    {
+      "id": "teresa-peteiro",
+      "name": "Teresa Peteiro",
+      "role": "Voluntaria",
+      "note": ""
+    },
+    {
+      "id": "daniel-ramirez",
+      "name": "Daniel Ramírez",
+      "role": "Voluntario",
+      "note": ""
+    },
+    {
+      "id": "juan-maria",
+      "name": "Juan María",
+      "role": "Voluntario",
+      "note": ""
+    },
+    {
+      "id": "helena-palomino",
+      "name": "Helena Palomino",
+      "role": "Voluntaria",
+      "note": ""
+    },
+    {
+      "id": "maria-marcos",
+      "name": "María Marcos",
+      "role": "Voluntaria",
+      "note": ""
+    },
+    {
+      "id": "pablo-ramirez",
+      "name": "Pablo Ramírez",
       "role": "Embajador",
-      "note": "Puesto por asignar a una persona"
+      "note": "Conserva los materiales del Thinkglao anterior."
     },
     {
-      "id": "role-1",
-      "name": "Voluntario Apoyo",
-      "role": "Voluntario Apoyo",
-      "note": "Puesto por asignar a una persona"
-    },
-    {
-      "id": "role-2",
-      "name": "Voluntario QR",
-      "role": "Voluntario QR",
-      "note": "Puesto por asignar a una persona"
-    },
-    {
-      "id": "role-3",
-      "name": "Voluntario Contenido",
-      "role": "Voluntario Contenido",
-      "note": "Puesto por asignar a una persona"
-    },
-    {
-      "id": "role-4",
-      "name": "Voluntario Logística",
-      "role": "Voluntario Logística",
-      "note": "Puesto por asignar a una persona"
-    },
-    {
-      "id": "role-5",
-      "name": "Voluntario 3",
-      "role": "Voluntario 3",
-      "note": "Puesto por asignar a una persona"
-    },
-    {
-      "id": "role-6",
-      "name": "Responsable Material",
-      "role": "Responsable Material",
-      "note": "Puesto por asignar a una persona"
+      "id": "javier-yuste",
+      "name": "Javier Yuste",
+      "role": "Embajador",
+      "note": ""
     }
   ],
   "venues": [
@@ -596,6 +602,15 @@
       "status": "Por validar",
       "notes": "Candidato de la investigación histórica. Confirmar disponibilidad, capacidad para el formato, condiciones y presupuesto.",
       "url": ""
+    },
+    {
+      "id": "claustro-santo-tome",
+      "name": "Claustro Santo Tomé",
+      "area": "Toledo",
+      "status": "Confirmado",
+      "notes": "Sede del Thinkglao del 29 de octubre de 2026 a las 20:00 con Laura Rodríguez Rivero.",
+      "source": "Información facilitada por Pablo",
+      "url": ""
     }
   ],
   "resources": [
@@ -633,6 +648,13 @@
       "kind": "Vídeo promocional",
       "url": "https://github.com/spotigetta/Thinkglaos_app/releases/download/videos-originales-2026-10/Promo-Partners-y-Anfitriones.mp4",
       "notes": "Archivo original sin recomprimir · 113.7 MiB · Disponible en GitHub Releases."
+    },
+    {
+      "id": "material-custodia-pablo",
+      "name": "Material del Thinkglao anterior",
+      "kind": "Organización",
+      "url": "",
+      "notes": "Los materiales del Thinkglao anterior los conserva Pablo Ramírez. Coordinar con Pablo la recogida y el traslado al próximo encuentro."
     }
   ]
 }
