@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 6,
-  "updatedAt": "2026-10-22T16:41:17.339Z",
+  "revision": 9,
+  "updatedAt": "2026-10-22T19:48:22.194Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -14,12 +14,12 @@
       "city": "Toledo",
       "date": "2026-10-29",
       "start": "20:00",
-      "end": "",
+      "end": "23:30",
       "venue": "Claustro Santo Tomé",
       "speaker": "Laura Rodríguez Rivero",
       "capacity": 80,
-      "ticketsURL": "",
-      "notes": "Jueves 29 de octubre de 2026 a las 20:00. Sede y ponente indicados por Pablo. Hora de finalización por confirmar; el aforo de la ficha es una previsión. Los materiales del Thinkglao anterior los conserva Pablo Ramírez."
+      "ticketsURL": "https://www.itstimetothink.org/event-details/thinkglao-con-laura-rodriguez-rivero",
+      "notes": "Horario oficial: 29 octubre 2026 de 20:00 a 23:30. Claustro Santo Tomé, Pl. del Conde, 4, Toledo. Montaje desde 17:30 y QR listo 19:30: propuesta basada en la experiencia anterior; resto de preparación orientativo. Material anterior con Pablo Ramírez."
     }
   ],
   "tasks": [
@@ -27,57 +27,67 @@
       "id": "planning-0",
       "eventId": "toledo-proxima",
       "title": "Cerrar espacio y condiciones",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
       "isDone": false,
       "isImportant": true,
       "notes": [
+        "Confirmar megafonía, micro y música.",
+        "Alfombras si el suelo está frío.",
+        "Confirmar climatización; si falta, disponer equipos y climatizar horas antes.",
+        "Disponer mesas para la comida de después.",
+        "Confirmar acceso, aforo y condiciones con el lugar.",
         "Confirmar aforo, comida y bebida, suelo, música, seguro, acceso y cierre por escrito."
-      ]
+      ],
+      "time": "Días previos",
+      "completedSteps": []
     },
     {
       "id": "planning-1",
       "eventId": "toledo-proxima",
       "title": "Confirmar ponente y fecha",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
       "isDone": false,
       "isImportant": true,
       "notes": [
         "Alinear ponente, espacio y equipo. Explicar los 18 minutos y el turno de preguntas."
-      ]
+      ],
+      "time": "Días previos"
     },
     {
       "id": "planning-2",
       "eventId": "toledo-proxima",
       "title": "Formar el equipo local",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
       "isDone": false,
       "isImportant": true,
       "notes": [
         "Confirmar puerta QR, apoyo, logística, contenido y responsable de material."
-      ]
+      ],
+      "time": "Días previos"
     },
     {
       "id": "planning-3",
       "eventId": "toledo-proxima",
       "title": "Cartel, landing y difusión",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
       "isDone": false,
       "isImportant": true,
       "notes": [
         "Coordinar con ITTT los datos del evento y probar el enlace de entradas."
-      ]
+      ],
+      "time": "Días previos"
     },
     {
       "id": "manual-001",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "title": "Confirmar envío material ITTT",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
@@ -88,11 +98,12 @@
         "Preparar sitio para guardarlo."
       ],
       "isImportant": true,
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Días previos"
     },
     {
       "id": "manual-002",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "title": "Recepción de paquetes",
       "originalRole": "Voluntario Apoyo",
       "assignedTo": "Voluntario Apoyo",
@@ -101,11 +112,12 @@
         "Estar disponible si embajador no puede.",
         "Avisar cuando llegue todo."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Días previos"
     },
     {
       "id": "manual-003",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "title": "Pedido de Cerveza",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
@@ -114,37 +126,48 @@
         "Calcular asistentes + 20% margen.",
         "Enviar WhatsApp a ITTT: Entradas, Dirección, Contacto, Fecha."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Días previos"
     },
     {
       "id": "manual-004",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "title": "Pedido Mercadona",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
       "isDone": false,
       "notes": [
+        "Pedir entrega de Mercadona a las 17:30 (horario de trabajo propuesto).",
+        "Confirmar persona para recibir y espacio en frío.",
+        "Coordinar cantidades con el aforo previsto.",
         "Enviar datos a ITTT.",
         "Franja entrega: 2-3 horas antes del evento.",
         "Asegurar recepción."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Días previos",
+      "completedSteps": []
     },
     {
       "id": "manual-005",
-      "phase": "1 Semana Antes",
-      "title": "Confirmar recepción Mercadona",
+      "phase": "Esa tarde",
+      "title": "Recibir Mercadona",
       "originalRole": "Voluntario Apoyo",
       "assignedTo": "Voluntario Apoyo",
       "isDone": false,
       "notes": [
+        "Recepcionar el pedido.",
+        "Guardar inmediatamente lo que necesita frío.",
+        "Comprobar cantidades y avisar si falta algo.",
         "Confirmar disponibilidad para recoger el pedido."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "17:30 · propuesta",
+      "completedSteps": []
     },
     {
       "id": "manual-006",
-      "phase": "1 Semana Antes",
+      "phase": "Organizar",
       "title": "Plan B: Mercadona fallido",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
@@ -154,85 +177,116 @@
         "Hacer compra presencial."
       ],
       "isImportant": true,
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Días previos"
     },
     {
       "id": "manual-007",
-      "phase": "1 Semana Antes",
-      "title": "Revisión física del material (Día antes)",
+      "phase": "Organizar",
+      "title": "Kit del embajador",
       "originalRole": "Todos",
       "assignedTo": "Embajador",
       "isDone": false,
       "notes": [
+        "1 rollup.",
+        "La bombilla.",
+        "Thinkómetro: encender y probar.",
+        "2 espuertas con abridores.",
+        "2 tablas de cortar.",
+        "Cuchillos para cortar.",
+        "Pablo conserva los materiales del anterior Thinkglao: coordinar recogida.",
         "Tocar todo con la mano.",
         "Encender cronómetro.",
         "Montar mentalmente escenario.",
         "Check: Roll up, Foam, Camisetas, Cronómetro, Tablas, Cubos, Cervezas, Altavoces, Cuchillos."
       ],
       "isImportant": true,
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Día anterior",
+      "completedSteps": []
     },
     {
       "id": "manual-008",
-      "phase": "La Tarde de Antes",
+      "phase": "Esa tarde",
       "title": "Preparación Bebidas",
       "originalRole": "Equipo",
       "assignedTo": "Voluntario Apoyo",
       "isDone": false,
       "notes": [
+        "Colocar bebidas en las dos espuertas con hielo y agua.",
+        "Dejar abridores disponibles.",
+        "Reservar bebida en frío para reponer.",
         "Recibir compra.",
         "Llenar cubos con agua/hielo.",
         "Enfriar cervezas.",
         "Vermut: botella en cubitera, vasos ordenados."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "17:40 · orientativa",
+      "completedSteps": []
     },
     {
       "id": "manual-009",
-      "phase": "La Tarde de Antes",
+      "phase": "Esa tarde",
       "title": "Preparación Comida",
       "originalRole": "Equipo",
       "assignedTo": "Voluntario 3",
       "isDone": false,
       "notes": [
+        "Cortar fuet y preparar la comida.",
+        "Usar las dos tablas y los cuchillos.",
+        "Organizar las mesas de comida y reservas.",
         "Cortar fuet y quesos.",
         "Montar tablas: Queso, Fuet, Picos, Nueces, Uvas."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "17:45 · orientativa",
+      "completedSteps": []
     },
     {
       "id": "manual-010",
-      "phase": "La Tarde de Antes",
+      "phase": "Esa tarde",
       "title": "Montaje Decoración y Escenario",
       "originalRole": "Equipo",
       "assignedTo": "Voluntario Logística",
       "isDone": false,
       "notes": [
+        "Música durante todo el montaje, camisetas de voluntario y buen rollo.",
+        "Preparar iluminación, rollup, bombilla y pantalla del thinkómetro.",
+        "Indicar claramente THINKGLAO en la entrada.",
         "Ponerse camisetas ITTT.",
         "Roll up en puerta (luego escenario).",
         "Escenario: Bombilla, Alfombra, Cajas Damm, Cronómetro a 18:00.",
         "Distribuir cubos de cerveza."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "18:00 · orientativa",
+      "completedSteps": []
     },
     {
       "id": "manual-011",
-      "phase": "La Tarde de Antes",
+      "phase": "Esa tarde",
       "title": "Verificación Espacio",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
       "isDone": false,
       "notes": [
+        "Probar acústica, megafonía y micro.",
+        "Comprobar climatización y alfombras si el suelo está frío.",
+        "Mesas de comida listas; paso y accesos despejados.",
+        "Thinkómetro visible y ponente cómodo.",
         "Sin sillas delante (solo suelo).",
         "Sillas solo atrás (mayores).",
         "Cronómetro visible para ponente.",
         "Bombilla protagonista."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "18:30 · orientativa",
+      "completedSteps": []
     },
     {
       "id": "manual-012",
-      "phase": "Protocolo de Entradas",
+      "phase": "Esa tarde",
       "title": "Decisiones Previas",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
@@ -242,27 +296,33 @@
         "Decidir venta en puerta.",
         "Tener contacto ITTT a mano."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "19:00 · orientativa"
     },
     {
       "id": "manual-013",
-      "phase": "Protocolo de Entradas",
+      "phase": "Esa tarde",
       "title": "Setup Lector QR",
       "originalRole": "Voluntario QR",
       "assignedTo": "Voluntario QR",
       "isDone": false,
       "notes": [
+        "Responsable en la puerta a las 19:30.",
+        "App de lectura QR instalada y con acceso autorizado.",
+        "Probar escáner y tener batería o cargador.",
         "Instalar Wix Owner.",
         "Login correo ITTT.",
         "Probar escáner.",
         "Tener batería."
       ],
       "isImportant": true,
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "19:30 · propuesta",
+      "completedSteps": []
     },
     {
       "id": "manual-014",
-      "phase": "Protocolo de Entradas",
+      "phase": "Esa tarde",
       "title": "Gestión de Cola",
       "originalRole": "Voluntario Apoyo",
       "assignedTo": "Voluntario Apoyo",
@@ -272,11 +332,12 @@
         "Redirigir dudas.",
         "Guiar hacia dentro tras escaneo (sentarse delante)."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "19:30 · propuesta"
     },
     {
       "id": "manual-015",
-      "phase": "Protocolo de Entradas",
+      "phase": "Esa tarde",
       "title": "Escaneo de Entradas",
       "originalRole": "Voluntario QR",
       "assignedTo": "Voluntario QR",
@@ -286,11 +347,12 @@
         "Validar en pantalla.",
         "Avisar embajador si error."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "19:30–20:00 · propuesta"
     },
     {
       "id": "manual-016",
-      "phase": "Protocolo de Entradas",
+      "phase": "Esa tarde",
       "title": "Gestión Sin Entrada / Incidencias",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
@@ -301,7 +363,8 @@
         "Decidir cierre de puertas.",
         "Resolver fallos técnicos app."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "19:30–20:00 · propuesta"
     },
     {
       "id": "manual-017",
@@ -317,7 +380,8 @@
         "Foto ambiente.",
         "NO moverse durante charla."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-018",
@@ -330,7 +394,8 @@
         "Acompañar y tranquilizar.",
         "Recordar: 18 min + preguntas + pizzas."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-019",
@@ -344,7 +409,8 @@
         "Mencionar colaboradores.",
         "Presentar ponente."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-020",
@@ -356,13 +422,17 @@
       "notes": [
         "Esperar repartidor.",
         "Recoger y llevar a mesa.",
-        "Avisar embajador."
+        "Avisar embajador.",
+        "Confirmar hora de entrega con el proveedor.",
+        "Dejar un responsable atento al teléfono y a la puerta.",
+        "Recibir y colocar las pizzas en las mesas."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Durante · entrega por confirmar"
     },
     {
       "id": "manual-021",
-      "phase": "Durante el Thinkglao",
+      "phase": "Fin",
       "title": "Recogida y Limpieza",
       "originalRole": "Todos",
       "assignedTo": "Todos",
@@ -373,11 +443,12 @@
         "Guardar material ITTT.",
         "Espacio impecable."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "20:00–23:30"
     },
     {
       "id": "manual-022",
-      "phase": "Post-Thinkglao",
+      "phase": "Fin",
       "title": "Gestión Gastos",
       "originalRole": "Embajador",
       "assignedTo": "Embajador",
@@ -387,11 +458,12 @@
         "Enviar a contacto de ITTT (consultar en archivo privado).",
         "Datos fiscales: Asociación Itstimetothink, NIF [consultar datos fiscales en el archivo privado]."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Desde 23:30"
     },
     {
       "id": "manual-023",
-      "phase": "Post-Thinkglao",
+      "phase": "Fin",
       "title": "Inventario",
       "originalRole": "Responsable Material",
       "assignedTo": "Responsable Material",
@@ -401,11 +473,12 @@
         "Apuntar roturas/pérdidas.",
         "Guardar material."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Desde 23:30"
     },
     {
       "id": "manual-024",
-      "phase": "Post-Thinkglao",
+      "phase": "Fin",
       "title": "Envío Contenido",
       "originalRole": "Voluntario Contenido",
       "assignedTo": "Voluntario Contenido",
@@ -414,7 +487,55 @@
         "Seleccionar lo mejor.",
         "Enviar a contacto de ITTT (consultar en archivo privado)."
       ],
-      "eventId": "toledo-proxima"
+      "eventId": "toledo-proxima",
+      "time": "Desde 23:30"
+    },
+    {
+      "id": "operativa-clima",
+      "phase": "Esa tarde",
+      "title": "Climatizar el lugar",
+      "time": "16:30 · orientativa",
+      "notes": [
+        "Encender climatización con antelación suficiente.",
+        "Si no hay equipos, llevarlos y acordar su uso con el lugar.",
+        "Comprobar temperatura antes de recibir al equipo."
+      ],
+      "eventId": "toledo-proxima",
+      "assignedTo": "Sin asignar",
+      "originalRole": "Equipo",
+      "isDone": false
+    },
+    {
+      "id": "operativa-cuidados",
+      "phase": "Durante el Thinkglao",
+      "title": "Comida, bebida y comodidad",
+      "time": "20:00–23:30 · continuo",
+      "notes": [
+        "Reponer comida y bebida: que siempre haya.",
+        "Comprobar que el ponente esté cómodo.",
+        "Estar pendientes de que todos estén cómodos."
+      ],
+      "eventId": "toledo-proxima",
+      "assignedTo": "Sin asignar",
+      "originalRole": "Equipo",
+      "isDone": false
+    },
+    {
+      "id": "operativa-cierre",
+      "phase": "Fin",
+      "title": "Despedida e inventario",
+      "time": "23:30 · fin oficial",
+      "notes": [
+        "Despedir al ponente y asistentes.",
+        "Recoger, limpiar y revisar el lugar.",
+        "Contar rollup, bombilla, thinkómetro, 2 espuertas, abridores, 2 tablas y cuchillos.",
+        "Anotar sobrantes y quién guarda cada material.",
+        "Comprobar luces, equipos, cierre y despedirse del equipo."
+      ],
+      "eventId": "toledo-proxima",
+      "assignedTo": "Sin asignar",
+      "originalRole": "Equipo",
+      "isDone": false
     }
   ],
   "members": [
