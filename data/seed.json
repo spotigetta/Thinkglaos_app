@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 13,
-  "updatedAt": "2026-10-22T20:39:49.400Z",
+  "revision": 14,
+  "updatedAt": "2026-10-22T20:53:58.200Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -40,9 +40,10 @@
         "Confirmar acceso, aforo y condiciones con el lugar.",
         "Confirmar aforo, comida y bebida, suelo, música, seguro, acceso y cierre por escrito."
       ],
-      "time": "Días previos",
+      "time": "18:00–18:30 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.399Z"
+      "updatedAt": "2026-10-22T20:53:58.199Z",
+      "scheduledDate": "2026-10-22"
     },
     {
       "id": "planning-1",
@@ -56,8 +57,9 @@
       "notes": [
         "Alinear ponente, espacio y equipo. Explicar los 18 minutos y el turno de preguntas."
       ],
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "18:30–19:00 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-22"
     },
     {
       "id": "planning-2",
@@ -71,8 +73,9 @@
       "notes": [
         "Confirmar puerta QR, apoyo, logística, contenido y responsable de material."
       ],
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "18:00–18:30 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-23"
     },
     {
       "id": "planning-3",
@@ -86,8 +89,9 @@
       "notes": [
         "Coordinar con ITTT los datos del evento y probar el enlace de entradas."
       ],
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "18:30–19:30 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-23"
     },
     {
       "id": "manual-001",
@@ -103,8 +107,9 @@
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "19:00–19:15 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-22"
     },
     {
       "id": "manual-002",
@@ -118,8 +123,9 @@
         "Avisar cuando llegue todo."
       ],
       "eventId": "toledo-proxima",
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "18:00–18:15 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-27"
     },
     {
       "id": "manual-003",
@@ -133,8 +139,9 @@
         "Enviar WhatsApp a ITTT: Entradas, Dirección, Contacto, Fecha."
       ],
       "eventId": "toledo-proxima",
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "18:00–18:20 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-26"
     },
     {
       "id": "manual-004",
@@ -152,9 +159,10 @@
         "Asegurar recepción."
       ],
       "eventId": "toledo-proxima",
-      "time": "Días previos",
+      "time": "18:20–19:00 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-26"
     },
     {
       "id": "manual-005",
@@ -167,12 +175,14 @@
         "Recepcionar el pedido.",
         "Guardar inmediatamente lo que necesita frío.",
         "Comprobar cantidades y avisar si falta algo.",
-        "Confirmar disponibilidad para recoger el pedido."
+        "Confirmar disponibilidad para recoger el pedido.",
+        "Referencia de la edición anterior: recepción a las 17:30. Confirmar la franja del pedido para esta edición."
       ],
       "eventId": "toledo-proxima",
-      "time": "17:30 · propuesta",
+      "time": "17:30–17:45 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-006",
@@ -183,12 +193,14 @@
       "isDone": false,
       "notes": [
         "Llamar ITTT, pedir documento compra.",
-        "Hacer compra presencial."
+        "Hacer compra presencial.",
+        "Preparar alternativa si falla Mercadona; activarla solo si hay incidencia el día del evento."
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "Días previos",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "18:00–18:15 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-28"
     },
     {
       "id": "manual-007",
@@ -212,9 +224,10 @@
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "Día anterior",
+      "time": "18:15–18:45 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-28"
     },
     {
       "id": "manual-008",
@@ -233,9 +246,10 @@
         "Vermut: botella en cubitera, vasos ordenados."
       ],
       "eventId": "toledo-proxima",
-      "time": "17:40 · orientativa",
+      "time": "17:40–18:15 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-009",
@@ -252,9 +266,10 @@
         "Montar tablas: Queso, Fuet, Picos, Nueces, Uvas."
       ],
       "eventId": "toledo-proxima",
-      "time": "17:45 · orientativa",
+      "time": "17:45–18:30 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-010",
@@ -274,9 +289,10 @@
         "Apoyo de decoración: Mery Marcos, al terminar difusión, antes de la recepción."
       ],
       "eventId": "toledo-proxima",
-      "time": "18:00 · orientativa",
+      "time": "18:00–18:45 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-011",
@@ -296,9 +312,10 @@
         "Bombilla protagonista."
       ],
       "eventId": "toledo-proxima",
-      "time": "18:30 · orientativa",
+      "time": "18:45–19:00 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-012",
@@ -313,8 +330,9 @@
         "Tener contacto ITTT a mano."
       ],
       "eventId": "toledo-proxima",
-      "time": "19:00 · orientativa",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "19:00–19:15 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-013",
@@ -330,13 +348,15 @@
         "Instalar Wix Owner.",
         "Login correo ITTT.",
         "Probar escáner.",
-        "Tener batería."
+        "Tener batería.",
+        "Instalar y probar la app antes: a las 19:30 el lector debe estar listo en puerta."
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "19:30 · propuesta",
+      "time": "19:15–19:30 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-014",
@@ -351,8 +371,9 @@
         "Guiar hacia dentro tras escaneo (sentarse delante)."
       ],
       "eventId": "toledo-proxima",
-      "time": "19:30 · propuesta",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "19:30–20:00 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-015",
@@ -368,7 +389,8 @@
       ],
       "eventId": "toledo-proxima",
       "time": "19:30–20:00 · propuesta",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-016",
@@ -385,7 +407,8 @@
       ],
       "eventId": "toledo-proxima",
       "time": "19:30–20:00 · propuesta",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-017",
@@ -402,8 +425,9 @@
         "NO moverse durante charla."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "20:00–23:30 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-018",
@@ -414,11 +438,13 @@
       "isDone": false,
       "notes": [
         "Acompañar y tranquilizar.",
-        "Recordar: 18 min + preguntas + pizzas."
+        "Recordar: 18 min + preguntas + pizzas.",
+        "Acoger a Laura y probar el micro antes de abrir. Mantener una persona de referencia durante toda la velada."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "19:15–19:30 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-019",
@@ -430,11 +456,13 @@
       "notes": [
         "Presentar ITTT.",
         "Mencionar colaboradores.",
-        "Presentar ponente."
+        "Presentar ponente.",
+        "Guion propuesto: bienvenida a las 20:00; presentación 20:25; intervención de Laura 20:30–20:48; preguntas 20:48–21:33; conversación y comida después. Confirmar con la ponente."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "20:25–20:30 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-020",
@@ -449,11 +477,13 @@
         "Avisar embajador.",
         "Confirmar hora de entrega con el proveedor.",
         "Dejar un responsable atento al teléfono y a la puerta.",
-        "Recibir y colocar las pizzas en las mesas."
+        "Recibir y colocar las pizzas en las mesas.",
+        "Hora objetivo, pendiente de confirmar con la pizzería. Coordinar recepción sin interrumpir las preguntas."
       ],
       "eventId": "toledo-proxima",
-      "time": "Durante · entrega por confirmar",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "21:30–21:45 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-021",
@@ -470,8 +500,9 @@
         "Coordina Daniel; recogida y limpieza entre todo el equipo."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "23:30–23:55 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-022",
@@ -486,8 +517,9 @@
         "Datos fiscales: Asociación Itstimetothink, NIF [consultar datos fiscales en el archivo privado]."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "12:00–12:30 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-30"
     },
     {
       "id": "manual-023",
@@ -502,8 +534,9 @@
         "Guardar material."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "23:40–23:55 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "manual-024",
@@ -517,14 +550,15 @@
         "Enviar a contacto de ITTT (consultar en archivo privado)."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30",
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "time": "12:30–13:00 · propuesta",
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-30"
     },
     {
       "id": "operativa-clima",
       "phase": "Esa tarde",
       "title": "Climatizar el lugar",
-      "time": "16:30 · orientativa",
+      "time": "16:30–17:00 · propuesta",
       "notes": [
         "Encender climatización con antelación suficiente.",
         "Si no hay equipos, llevarlos y acordar su uso con el lugar.",
@@ -534,13 +568,14 @@
       "assignedTo": "Javier Yuste",
       "originalRole": "Equipo",
       "isDone": false,
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "operativa-cuidados",
       "phase": "Durante el Thinkglao",
       "title": "Comida, bebida y comodidad",
-      "time": "20:00–23:30 · continuo",
+      "time": "20:00–23:30 · propuesta",
       "notes": [
         "Reponer comida y bebida: que siempre haya.",
         "Comprobar que el ponente esté cómodo.",
@@ -550,13 +585,14 @@
       "assignedTo": "Teresa",
       "originalRole": "Equipo",
       "isDone": false,
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     },
     {
       "id": "operativa-cierre",
       "phase": "Fin",
       "title": "Despedida e inventario",
-      "time": "23:30 · fin oficial",
+      "time": "23:30–23:40 · propuesta",
       "notes": [
         "Despedir al ponente y asistentes.",
         "Recoger, limpiar y revisar el lugar.",
@@ -568,7 +604,8 @@
       "assignedTo": "Juan María",
       "originalRole": "Equipo",
       "isDone": false,
-      "updatedAt": "2026-10-22T20:39:49.400Z"
+      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "scheduledDate": "2026-10-29"
     }
   ],
   "members": [
