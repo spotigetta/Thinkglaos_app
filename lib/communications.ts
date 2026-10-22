@@ -16,6 +16,15 @@ export function whatsappTemplates(state: State, eventId: string) {
     tickets = event?.ticketsURL
       ? `\n🎟️ Entradas: ${event.ticketsURL}`
       : "\n¿Te vienes? Escríbenos y te contamos cómo apuntarte.";
+  const coordinators =
+    state.members
+      .filter((m) => /embajador/i.test(m.role))
+      .map((m) => m.name)
+      .join(" y ") || "El equipo local";
+  const coordinatorRole =
+    state.members.filter((m) => /embajador/i.test(m.role)).length === 1
+      ? "Embajador"
+      : "Embajadores";
   return [
     {
       id: "promotion",
@@ -47,5 +56,20 @@ export function whatsappTemplates(state: State, eventId: string) {
       audience: "Para una primera conversación con un ponente",
       text: `Hola, ¿qué tal? Somos Pablo Ramírez y Javier Yuste, embajadores de Thinkglao ${city}, de IT’S TIME TO THINK.\n\nNos gustaría hablar contigo sobre una posible participación en uno de nuestros encuentros. El formato es cercano: 18 minutos para compartir una idea que haga pensar y unos 45 minutos de preguntas y conversación con el público. Después seguimos charlando de manera informal.\n\nBuscamos una voz con algo que contar, más que una conferencia convencional. La fecha, el tema y las condiciones se acuerdan contigo y con ITTT. ¿Te apetecería que lo comentáramos?`,
     },
-  ];
+  ].map((template) => ({
+    ...template,
+    text: template.text
+      .replace(
+        "Lo coordinan Pablo Ramírez y Javier Yuste.",
+        `Coordinación: ${coordinators}.`,
+      )
+      .replace(
+        "Pablo Ramírez y Javier Yuste · Embajadores",
+        `${coordinators} · ${coordinatorRole}`,
+      )
+      .replace(
+        "Somos Pablo Ramírez y Javier Yuste, embajadores",
+        `Te escribe ${coordinators}, del equipo`,
+      ),
+  }));
 }

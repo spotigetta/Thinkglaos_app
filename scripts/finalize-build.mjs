@@ -13,6 +13,8 @@ const files = [
   ...fs.readdirSync("dist/assets").map((name) => "./assets/" + name),
   "./data/knowledge.json",
   "./data/seed.json",
+  "./media/youtube.json",
+  "./media/audio-manolo-whatsapp.mp3",
 ];
 let sw = fs
   .readFileSync("public/sw.js", "utf8")

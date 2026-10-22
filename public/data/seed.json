@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 10,
-  "updatedAt": "2026-10-22T19:52:57.965Z",
+  "revision": 11,
+  "updatedAt": "2026-10-22T20:11:19.548Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -547,7 +547,7 @@
     },
     {
       "id": "teresa-peteiro",
-      "name": "Teresa Peteiro",
+      "name": "Teresa",
       "role": "Voluntaria",
       "note": ""
     },
@@ -564,14 +564,8 @@
       "note": ""
     },
     {
-      "id": "helena-palomino",
-      "name": "Helena Palomino",
-      "role": "Voluntaria",
-      "note": ""
-    },
-    {
       "id": "maria-marcos",
-      "name": "María Marcos",
+      "name": "Mery Marcos",
       "role": "Voluntaria",
       "note": ""
     },
@@ -584,7 +578,13 @@
     {
       "id": "javier-yuste",
       "name": "Javier Yuste",
-      "role": "Embajador",
+      "role": "Voluntario",
+      "note": ""
+    },
+    {
+      "id": "lucia-lopez",
+      "name": "Lucía López",
+      "role": "Voluntaria",
       "note": ""
     }
   ],
@@ -826,6 +826,20 @@
       "kind": "Organización",
       "url": "",
       "notes": "Los materiales del Thinkglao anterior los conserva Pablo Ramírez. Coordinar con Pablo la recogida y el traslado al próximo encuentro."
+    },
+    {
+      "id": "guia-voluntarios",
+      "name": "Guía rápida para voluntarios",
+      "kind": "Organización",
+      "url": "",
+      "notes": "¡Bienvenido al equipo Thinkglao! 💡\n\nUn Thinkglao es una conversación en comunidad: un ponente comparte una idea durante 18 minutos, después hay unos 45 minutos de preguntas y seguimos charlando con comida y barra libre de cerveza. No hace falta saber del tema: ven con curiosidad.\n\nComo voluntario, tu misión es que la gente y el ponente estén cómodos. Nos repartimos tareas concretas; no tienes que hacerlo todo.\n\n1. Antes: acordamos quién hace cada cosa, compras, material y condiciones del lugar.\n2. Esa tarde: montaje desde las 17:30, pedido al frío, comida, bebidas, música, sonido y señalización. A las 19:30, responsable de QR listo en la puerta con la app. Son horas de trabajo propuestas.\n3. Durante: recibir bien, reponer comida y bebida, cuidar al ponente y estar atentos a las pizzas.\n4. Al terminar: despedida, recogida e inventario.\n\nEn la app elige tu nombre, pulsa «Mis tareas» y abre cada tarjeta para ver los pasos. Si algo falla o no tienes tarea, avisa a Pablo Ramírez, que coordina el equipo.\n\nPróximo: Laura Rodríguez Rivero · 29 de octubre · 20:00 · Claustro Santo Tomé."
+    },
+    {
+      "id": "audio-manolo-whatsapp",
+      "name": "Audio de Manolo · WhatsApp",
+      "kind": "Audio",
+      "url": "https://spotigetta.github.io/Thinkglaos_app/media/audio-manolo-whatsapp.mp3",
+      "notes": "MP3 extraído del vídeo original. Reproduce, descarga o comparte desde la sección Vídeos."
     }
   ]
 }

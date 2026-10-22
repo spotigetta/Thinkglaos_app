@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, type ReactNode } from "react";
 import { flushSync } from "react-dom";
-import { AssignPerson, MissionControl, RosterForm } from "./TeamFlow";
+import { AssignPerson, RosterForm } from "./TeamFlow";
+import { StartHere, VolunteerGuide } from "./Welcome";
+import { InlineMedia, mediaKind } from "./Media";
 import { whatsappTemplates } from "./communications";
 import {
   LayoutDashboard,
@@ -73,6 +75,7 @@ import "../index.css";
 import "../original-soft.css";
 import "../motion.css";
 import "../mobile.css";
+import "../welcome.css";
 import { normalizePhase } from "./plan";
 import { Discover, Phrase } from "./Discover";
 const CACHE = "thinkglaos-state-v3",
@@ -819,7 +822,7 @@ export default function Workspace() {
   }
   const tabs = [
     ["board", "Plan de trabajo", LayoutDashboard],
-    ["discover", "Descubrir", BookOpen],
+    ["discover", "Vídeos", Play],
     ["workflow", "Flujo", GitMerge],
     ["team", "Equipo", Users],
     ["venues", "Espacios", MapPin],
@@ -828,7 +831,7 @@ export default function Workspace() {
     ...(canEdit ? [["messages", "Textos WhatsApp", Send] as const] : []),
   ] as const;
   return (
-    <div className="workspace">
+    <div className="workspace" data-view={view}>
       <aside className="sidebar">
         <a className="brand" href="./">
           <img src="./assets/thinkglao.jpg" alt="Bombilla ITTT" />
@@ -998,10 +1001,21 @@ export default function Workspace() {
               <button onClick={() => void sync.poll(true)}>Reintentar</button>
             </div>
           )}
-          {view === "discover" && <Discover />}
+          {view === "discover" && <Discover resources={state.resources} />}
           {view === "board" && (
             <>
-              <MissionControl
+              <StartHere
+                onGuide={() =>
+                  setModal(
+                    <Modal
+                      title="Tu primera vez en Thinkglao"
+                      onClose={() => setModal(null)}
+                    >
+                      <VolunteerGuide state={state} eventId={eventId} />
+                    </Modal>,
+                  )
+                }
+                onVideos={() => navigate("discover")}
                 state={state}
                 eventId={eventId}
                 person={
@@ -1164,7 +1178,9 @@ export default function Workspace() {
                 <div className="section-title">
                   <h2>
                     {view === "board"
-                      ? "El plan de trabajo"
+                      ? assignee === myName && myName
+                        ? "Mis tareas"
+                        : "Plan del equipo"
                       : view === "workflow"
                         ? "Las fases del encuentro"
                         : "Reparto del equipo"}
@@ -1172,6 +1188,19 @@ export default function Workspace() {
                   <span>{filtered.length}</span>
                 </div>
                 <div className="toolbar-actions">
+                  {view === "board" && assignee !== "ALL" && (
+                    <Button
+                      kind="quiet"
+                      onClick={() => {
+                        setAssignee("ALL");
+                        setPendingOnly(false);
+                        setPhase("ALL");
+                        setQuery("");
+                      }}
+                    >
+                      Ver todo el equipo
+                    </Button>
+                  )}
                   {canEdit && view === "team" && (
                     <Button kind="primary" onClick={() => addMember()}>
                       <Users size={17} />
@@ -1641,9 +1670,8 @@ export default function Workspace() {
                 )}
               </div>
               <p className="muted">
-                Vídeos, material de sesión, documentos y notas. Los vídeos de
-                sesión y promoción están disponibles en su calidad original, sin
-                recomprimir, para abrirlos o descargarlos desde GitHub.
+                Reproduce el material aquí o descarga el original para
+                compartirlo.
               </p>
               <div className="resource-list">
                 {state.resources
@@ -1657,6 +1685,7 @@ export default function Workspace() {
                         <small>{r.kind}</small>
                         <h3>{r.name}</h3>
                         <p>{r.notes}</p>
+                        {mediaKind(r.url) && <InlineMedia resource={r} />}
                       </div>
                       {r.url && (
                         <SafeLink href={r.url} className="btn icon">

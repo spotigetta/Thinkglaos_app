@@ -1,4 +1,6 @@
 ﻿import React, { useState } from "react";
+import type { Resource } from "./model";
+import { ManoloAudio, InlineMedia, mediaKind } from "./Media";
 const base = "https://www.itstimetothink.org";
 const events = [
   [
@@ -70,63 +72,186 @@ export function Phrase() {
     </div>
   );
 }
-export function Discover() {
+type YouTubeItem = { id: string; title: string; kind: "shorts" | "videos" };
+export function Discover({ resources = [] }: { resources?: Resource[] }) {
+  const [catalog, setCatalog] = useState<YouTubeItem[]>([]);
+  const [active, setActive] = useState("");
+  const [tab, setTab] = useState<"shorts" | "videos" | "material">("shorts");
+  const [error, setError] = useState("");
+  React.useEffect(() => {
+    const pause = () => setActive("");
+    window.addEventListener("thinkglaos-native-play", pause);
+    return () => window.removeEventListener("thinkglaos-native-play", pause);
+  }, []);
+  React.useEffect(() => {
+    const controller = new AbortController();
+    fetch("./media/youtube.json", { signal: controller.signal })
+      .then((r) => {
+        if (!r.ok) throw Error();
+        return r.json();
+      })
+      .then((data) => setCatalog(data.items))
+      .catch((e) => {
+        if (e.name !== "AbortError")
+          setError(
+            "No se pudo cargar el catálogo. Prueba a abrir de nuevo esta sección.",
+          );
+      });
+    return () => controller.abort();
+  }, []);
   return (
     <section className="discover">
-      <h2>Más Thinkglaos</h2>
-      <p>Desliza y descubre ↔</p>
-      <div className="shorts-track">
-        {events.map(([name, date, slug, img]) => (
+      <h2>Ver, escuchar y compartir</h2>
+      <ManoloAudio />
+      <div className="media-tabs" role="tablist" aria-label="Tipo de vídeo">
+        {(
+          [
+            ["shorts", "Shorts"],
+            ["videos", "Charlas completas"],
+            ["material", "Material del equipo"],
+          ] as const
+        ).map(([id, name]) => (
+          <button
+            key={id}
+            role="tab"
+            aria-selected={tab === id}
+            onClick={() => {
+              setTab(id);
+              setActive("");
+            }}
+          >
+            {name}
+          </button>
+        ))}
+      </div>
+      {error && <p role="status">{error}</p>}
+      {tab !== "material" ? (
+        <div
+          className={"youtube-grid " + (tab === "shorts" ? "is-shorts" : "")}
+        >
+          {catalog
+            .filter((item) => item.kind === tab)
+            .map((item) => (
+              <article key={item.id} className="youtube-card">
+                <div className="youtube-frame">
+                  {active === item.id ? (
+                    <iframe
+                      title={item.title}
+                      src={
+                        "https://www.youtube-nocookie.com/embed/" +
+                        item.id +
+                        "?autoplay=1&playsinline=1&rel=0"
+                      }
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      referrerPolicy="strict-origin-when-cross-origin"
+                    />
+                  ) : (
+                    <button
+                      onClick={() => {
+                        document
+                          .querySelectorAll<HTMLMediaElement>("video,audio")
+                          .forEach((media) => media.pause());
+                        setActive(item.id);
+                      }}
+                      aria-label={"Reproducir " + item.title}
+                    >
+                      <img
+                        loading="lazy"
+                        src={
+                          "https://i.ytimg.com/vi/" + item.id + "/hqdefault.jpg"
+                        }
+                        alt=""
+                      />
+                      <span>▶</span>
+                    </button>
+                  )}
+                </div>
+                <h3>{item.title}</h3>
+                {active === item.id && (
+                  <a
+                    href={"https://www.youtube.com/watch?v=" + item.id}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Si YouTube bloquea la reproducción, abrir original ↗
+                  </a>
+                )}
+              </article>
+            ))}
+        </div>
+      ) : (
+        <div className="team-media">
+          {resources
+            .filter((r) => mediaKind(r.url))
+            .map((r) => (
+              <article key={r.id}>
+                <h3>{r.name}</h3>
+                <InlineMedia resource={r} />
+                <a href={r.url} target="_blank" rel="noreferrer">
+                  Descargar original ↗
+                </a>
+              </article>
+            ))}
+        </div>
+      )}
+      <details className="event-discovery">
+        <summary>Otros encuentros · entradas y lugares</summary>
+        <h2>Más Thinkglaos</h2>
+        <p>Desliza y descubre ↔</p>
+        <div className="shorts-track">
+          {events.map(([name, date, slug, img]) => (
+            <a
+              className="short-card"
+              key={slug}
+              href={base + "/event-details/" + slug}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                loading="lazy"
+                src={"https://static.wixstatic.com/media/" + img}
+                alt={"Cartel de " + name}
+              />
+              <div>
+                <small>{date}</small>
+                <h3>{name}</h3>
+                <span>Ver encuentro ↗</span>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div className="discover-links">
           <a
-            className="short-card"
-            key={slug}
-            href={base + "/event-details/" + slug}
+            className="btn primary"
+            href="https://www.youtube.com/@ItsTimeToThink/shorts"
             target="_blank"
             rel="noreferrer"
           >
-            <img
-              loading="lazy"
-              src={"https://static.wixstatic.com/media/" + img}
-              alt={"Cartel de " + name}
-            />
-            <div>
-              <small>{date}</small>
-              <h3>{name}</h3>
-              <span>Ver encuentro ↗</span>
-            </div>
+            ▶ Shorts
           </a>
-        ))}
-      </div>
-      <div className="discover-links">
-        <a
-          className="btn primary"
-          href="https://www.youtube.com/@ItsTimeToThink/shorts"
-          target="_blank"
-          rel="noreferrer"
-        >
-          ▶ Shorts
-        </a>
-        <a
-          className="btn"
-          href="https://www.youtube.com/@ItsTimeToThink/videos"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Vídeos completos ↗
-        </a>
-        <a
-          className="btn"
-          href={base + "/thinkglaos"}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Agenda oficial ↗
-        </a>
-      </div>
-      <small>
-        Carteles de la agenda oficial · consulta del 22 oct 2026. Fechas y
-        disponibilidad actualizadas en cada enlace.
-      </small>
+          <a
+            className="btn"
+            href="https://www.youtube.com/@ItsTimeToThink/videos"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Vídeos completos ↗
+          </a>
+          <a
+            className="btn"
+            href={base + "/thinkglaos"}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Agenda oficial ↗
+          </a>
+        </div>
+        <small>
+          Carteles de la agenda oficial · consulta del 22 oct 2026. Fechas y
+          disponibilidad actualizadas en cada enlace.
+        </small>
+      </details>
       <Phrase />
     </section>
   );

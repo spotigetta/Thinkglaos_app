@@ -197,7 +197,9 @@ test("Escritorio muestra el plan de forma estable", async ({ page }) => {
   await network(page);
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /Un gran equipo/ }),
+    page
+      .locator(".start-here")
+      .getByRole("heading", { name: "Laura Rodríguez Rivero" }),
   ).toBeVisible();
   await page.screenshot({ path: ".local/desktop-plan.png", fullPage: true });
   expect(
@@ -291,12 +293,10 @@ test("Asignación rápida, incorporación en lote y vista personal conservan el 
     )
     .toBe("Pablo Ramírez");
   await page.getByLabel("Mi nombre en el equipo").selectOption("Pablo Ramírez");
-  await expect(page.locator(".personal-next")).toContainText(
+  await expect(page.locator(".my-next")).toContainText(
     "Cerrar espacio y condiciones",
   );
-  await page
-    .getByRole("button", { name: "Ver qué tengo que hacer", exact: true })
-    .click();
+  await page.locator(".my-next").getByRole("button").click();
   await expect(page.getByRole("dialog")).toContainText("Pablo Ramírez");
   await page.getByRole("button", { name: "Cerrar", exact: true }).click();
   await page
@@ -380,9 +380,10 @@ test("Reducir movimiento mantiene la navegación y las acciones, sin animaciones
   await expect(page.locator(".phase-pills")).toBeVisible();
   expect(
     await page
-      .locator(".orbital-art")
-      .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("none");
+      .locator(".start-actions>button")
+      .first()
+      .evaluate((el) => getComputedStyle(el).transitionDuration),
+  ).toBe("0s");
   await page
     .getByRole("navigation", { name: "Secciones", exact: true })
     .getByRole("button", { name: "Equipo", exact: true })
@@ -409,9 +410,10 @@ test("Móvil muestra cuatro fases, horas y descubrimiento sin perder secciones",
   ).toBeVisible();
   await page
     .getByRole("navigation", { name: "Secciones móvil" })
-    .getByRole("button", { name: "Descubrir", exact: true })
+    .getByRole("button", { name: "Vídeos", exact: true })
     .click();
   await expect(page.locator(".short-card")).toHaveCount(7);
+  await page.locator(".event-discovery>summary").click();
   await expect(
     page.getByRole("link", { name: "▶ Shorts", exact: true }),
   ).toHaveAttribute("href", "https://www.youtube.com/@ItsTimeToThink/shorts");
@@ -459,4 +461,91 @@ test("Espacios muestra dirección, Maps y fotos en móvil", async ({ page }) => 
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+});
+
+test("Inicio orienta al voluntario, filtra sus tareas y comparte el MP3", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page);
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
+        writeText: async (text: string) => {
+          (window as any).__copied = text;
+        },
+      },
+    });
+    Object.defineProperty(navigator, "canShare", { value: () => true });
+    Object.defineProperty(navigator, "share", {
+      value: async (data: ShareData) => {
+        const file = data.files![0];
+        (window as any).__shared = {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        };
+      },
+    });
+  });
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Guía rápida Qué hacemos", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText("17:30");
+  await page
+    .getByRole("button", { name: "Copiar para WhatsApp", exact: true })
+    .click();
+  expect(await page.evaluate(() => (window as any).__copied)).toContain(
+    "Pablo Ramírez",
+  );
+  expect(await page.evaluate(() => (window as any).__copied)).not.toContain(
+    "Javier Yuste, embajador",
+  );
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page.getByLabel("Mi nombre en el equipo").selectOption("Javier Yuste");
+  await page.getByRole("button", { name: /Mis tareas .*pendientes/ }).click();
+  await expect(
+    page.getByRole("heading", { name: "Mis tareas", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Ver todo el equipo", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Vídeos Ver y compartir", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Compartir audio", exact: true })
+    .click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__shared?.size))
+    .toBeGreaterThan(100000);
+  expect(await page.evaluate(() => (window as any).__shared.type)).toBe(
+    "audio/mpeg",
+  );
+  expect(await page.evaluate(() => (window as any).__shared.name)).toBe(
+    "Manolo-Lama-Thinkglaos.mp3",
+  );
+  await page.route("https://www.youtube-nocookie.com/**", (r) =>
+    r.fulfill({
+      body: "<html><body>Player</body></html>",
+      contentType: "text/html",
+    }),
+  );
+  await page.locator(".youtube-card").first().getByRole("button").click();
+  await expect(page.locator(".youtube-frame iframe")).toHaveCount(1);
+  await page.locator(".youtube-card").nth(1).getByRole("button").click();
+  await expect(page.locator(".youtube-frame iframe")).toHaveCount(1);
+  await page
+    .getByRole("tab", { name: "Charlas completas", exact: true })
+    .click();
+  await expect(page.locator(".youtube-frame iframe")).toHaveCount(0);
+  await expect(
+    page.locator(".youtube-card").first().getByRole("button"),
+  ).toBeVisible();
+  await page
+    .getByRole("tab", { name: "Material del equipo", exact: true })
+    .click();
+  await expect(page.locator(".team-media video").first()).toBeVisible();
+  expect(writes).toBe(0);
 });
