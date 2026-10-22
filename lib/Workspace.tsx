@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef, type ReactNode } from "react";
+import { flushSync } from "react-dom";
+import { AssignPerson, MissionControl, RosterForm } from "./TeamFlow";
+import { whatsappTemplates } from "./communications";
 import {
   LayoutDashboard,
   GitMerge,
@@ -68,6 +71,7 @@ import { answer } from "./assistant";
 import { Messages } from "./Messages";
 import "../index.css";
 import "../original-soft.css";
+import "../motion.css";
 const CACHE = "thinkglaos-state-v3",
   QUEUE = "thinkglaos-queue-v3",
   AUTH = "thinkglaos-auth-v3";
@@ -138,13 +142,36 @@ function Modal({
     ref.current?.showModal();
     return () => ref.current?.close();
   }, []);
+  const closing = useRef(false);
+  function dismiss() {
+    if (closing.current) return;
+    closing.current = true;
+    const dialog = ref.current;
+    if (!dialog || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      onClose();
+      return;
+    }
+    dialog
+      .animate(
+        [
+          { opacity: 1, transform: "translateY(0) scale(1)" },
+          { opacity: 0, transform: "translateY(24px) scale(.97)" },
+        ],
+        { duration: 160, easing: "cubic-bezier(.4,0,1,1)", fill: "forwards" },
+      )
+      .finished.then(onClose)
+      .catch(onClose);
+  }
   return (
     <dialog
       ref={ref}
       className={wide ? "modal wide" : "modal"}
-      onCancel={onClose}
+      onCancel={(e) => {
+        e.preventDefault();
+        dismiss();
+      }}
       onClick={(e) => {
-        if (e.target === ref.current) onClose();
+        if (e.target === ref.current) dismiss();
       }}
     >
       <header>
@@ -152,11 +179,13 @@ function Modal({
           <small>THINKGLAO · ESPACIO DE TRABAJO</small>
           <h2>{title}</h2>
         </div>
-        <Button onClick={onClose} kind="icon" title="Cerrar">
+        <Button onClick={dismiss} kind="icon" title="Cerrar">
           <X />
         </Button>
       </header>
-      <div className="modal-body">{children}</div>
+      <div key={title} className="modal-body">
+        {children}
+      </div>
     </dialog>
   );
 }
@@ -393,6 +422,107 @@ export default function Workspace() {
       ),
   );
   const next = tasks.find((t) => t.isImportant && !t.isDone);
+  const [myName, setMyName] = useState(
+      () => localStorage.getItem("thinkglaos-my-name") || "",
+    ),
+    [celebration, setCelebration] = useState(0);
+  const transition = useRef<{ skipTransition: () => void } | null>(null);
+  function navigate(target: string) {
+    if (target === view) return;
+    if (
+      !document.startViewTransition ||
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setView(target);
+      window.scrollTo(0, 0);
+      return;
+    }
+    transition.current?.skipTransition();
+    transition.current = document.startViewTransition(() => {
+      flushSync(() => setView(target));
+      window.scrollTo(0, 0);
+    });
+  }
+  useEffect(() => {
+    if (!celebration) return;
+    const timer = setTimeout(() => setCelebration(0), 1500);
+    return () => clearTimeout(timer);
+  }, [celebration]);
+  function complete(task: EventTask) {
+    change("tasks", task.id, { isDone: !task.isDone });
+    if (!task.isDone) {
+      setCelebration(Date.now());
+      setToast("Una menos. ¡Buen trabajo, equipo!");
+    }
+  }
+  function assign(task: EventTask) {
+    setModal(
+      <Modal title={"Asignar: " + task.title} onClose={() => setModal(null)}>
+        <AssignPerson
+          task={task}
+          members={state.members}
+          tasks={tasks}
+          onAdd={() => addMember(task)}
+          onAssign={(name) => {
+            change("tasks", task.id, { assignedTo: name });
+            setModal(null);
+            setToast(
+              name === "Sin asignar"
+                ? "Tarea sin persona asignada"
+                : "Asignada a " + name,
+            );
+          }}
+        />
+      </Modal>,
+    );
+  }
+  function addMember(task?: EventTask) {
+    setModal(
+      <Modal
+        title={task ? "Añadir persona y asignar" : "Sumar al equipo"}
+        onClose={() => setModal(null)}
+      >
+        <RosterForm
+          members={state.members}
+          onSave={(names, role, note) => {
+            for (const name of names)
+              change("members", uid(), { name, role, note }, "create");
+            if (task) change("tasks", task.id, { assignedTo: names[0] });
+            setModal(null);
+            setToast(
+              names.length === 1
+                ? names[0] + " ya forma parte del equipo"
+                : names.length + " personas incorporadas al equipo",
+            );
+          }}
+        />
+      </Modal>,
+    );
+  }
+  async function shareEvent() {
+    const text = whatsappTemplates(state, eventId)[0].text;
+    try {
+      if (navigator.share)
+        await navigator.share({ title: "Thinkglao Toledo", text });
+      else {
+        await navigator.clipboard.writeText(text);
+        setToast("Invitación copiada. Lista para compartir.");
+      }
+    } catch (error) {
+      if ((error as Error).name !== "AbortError")
+        setModal(
+          <Modal title="Comparte el Thinkglao" onClose={() => setModal(null)}>
+            <p>Selecciona y copia la invitación.</p>
+            <textarea
+              rows={12}
+              aria-label="Invitación para compartir"
+              readOnly
+              value={text}
+            />
+          </Modal>,
+        );
+    }
+  }
   const [collapsed, setCollapsed] = useState<string[]>(() =>
     innerWidth < 760 ? phases.slice(1) : [],
   );
@@ -460,14 +590,14 @@ export default function Workspace() {
         canEdit={canEdit}
         onClose={() => setModal(null)}
         onToggle={() => {
-          change("tasks", task.id, { isDone: !task.isDone });
+          complete(task);
           setModal(null);
         }}
         onEdit={() => editTask(task)}
         onDelete={() => remove("tasks", task.id, task.title)}
         onAsk={() => {
           setModal(null);
-          setView("assistant");
+          navigate("assistant");
           setQuery("Cómo realizar " + task.title);
         }}
         onStep={(index) => {
@@ -498,7 +628,7 @@ export default function Workspace() {
                 (task.isDone ? "Reabrir " : "Completar ") + task.title
               }
               aria-pressed={task.isDone}
-              onClick={() => change("tasks", task.id, { isDone: !task.isDone })}
+              onClick={() => complete(task)}
             >
               {task.isDone && <Check size={16} />}
             </button>
@@ -514,7 +644,25 @@ export default function Workspace() {
         </button>
         <footer>
           <span className="avatar">{task.assignedTo.slice(0, 1)}</span>
-          <span className="task-person">{task.assignedTo}</span>
+          {canEdit ? (
+            <button
+              className="task-person quick-assign"
+              aria-label={"Asignar responsable: " + task.title}
+              onClick={() => assign(task)}
+            >
+              <Users size={13} />
+              {state.members.some((m) => m.name === task.assignedTo)
+                ? task.assignedTo
+                : "Asignar persona"}
+              <ChevronRight size={13} />
+            </button>
+          ) : (
+            <span className="task-person">
+              {state.members.some((m) => m.name === task.assignedTo)
+                ? task.assignedTo
+                : "Por asignar · " + task.originalRole}
+            </span>
+          )}
           {task.due && <time>{dateLabel(task.due)}</time>}
           <button
             className="icon-link"
@@ -603,6 +751,10 @@ export default function Workspace() {
     entity: "members" | "venues" | "resources",
     record?: Member | Venue | Resource,
   ) {
+    if (entity === "members" && !record) {
+      addMember();
+      return;
+    }
     setModal(
       <RecordEditor
         entity={entity}
@@ -689,7 +841,7 @@ export default function Workspace() {
               key={id}
               className={view === id ? "active" : ""}
               onClick={() => {
-                setView(id);
+                navigate(id);
                 setQuery("");
               }}
             >
@@ -843,6 +995,39 @@ export default function Workspace() {
           )}
           {view === "board" && (
             <>
+              <MissionControl
+                state={state}
+                eventId={eventId}
+                person={
+                  state.members.some((m) => m.name === myName) ? myName : ""
+                }
+                canEdit={canEdit}
+                onPerson={(name) => {
+                  setMyName(name);
+                  localStorage.setItem("thinkglaos-my-name", name);
+                }}
+                onTask={detail}
+                onAdd={() => addMember()}
+                onShare={() => void shareEvent()}
+                onMine={() => {
+                  setAssignee(myName);
+                  setPhase("ALL");
+                  setPendingOnly(true);
+                  setQuery("");
+                  setCollapsed([]);
+                  setTimeout(
+                    () =>
+                      document.getElementById("work-plan")?.scrollIntoView({
+                        behavior: matchMedia("(prefers-reduced-motion: reduce)")
+                          .matches
+                          ? "auto"
+                          : "smooth",
+                        block: "start",
+                      }),
+                    50,
+                  );
+                }}
+              />
               <section className="event-strip">
                 <div className="event-date">
                   <CalendarDays />
@@ -969,7 +1154,7 @@ export default function Workspace() {
           )}
           {["board", "workflow", "team"].includes(view) && (
             <>
-              <div className="section-toolbar">
+              <div className="section-toolbar" id="work-plan">
                 <div className="section-title">
                   <h2>
                     {view === "board"
@@ -981,6 +1166,12 @@ export default function Workspace() {
                   <span>{filtered.length}</span>
                 </div>
                 <div className="toolbar-actions">
+                  {canEdit && view === "team" && (
+                    <Button kind="primary" onClick={() => addMember()}>
+                      <Users size={17} />
+                      Añadir miembro
+                    </Button>
+                  )}
                   {canEdit && (
                     <Button kind="primary" onClick={() => editTask()}>
                       <Plus size={17} />
@@ -1209,14 +1400,6 @@ export default function Workspace() {
                       </button>
                     ))}
                 </section>
-              )}
-              {canEdit && (
-                <div className="section-footer">
-                  <Button onClick={() => recordEditor("members")}>
-                    <Plus size={17} />
-                    Añadir persona
-                  </Button>
-                </div>
               )}
             </>
           )}
@@ -1581,7 +1764,7 @@ export default function Workspace() {
             key={id}
             className={view === id ? "active" : ""}
             onClick={() => {
-              setView(id);
+              navigate(id);
               setQuery("");
             }}
           >
@@ -1592,6 +1775,13 @@ export default function Workspace() {
           </button>
         ))}
       </nav>
+      {celebration > 0 && (
+        <div key={celebration} className="completion-burst" aria-hidden="true">
+          {Array.from({ length: 14 }, (_, i) => (
+            <i key={i} style={{ "--i": i } as React.CSSProperties} />
+          ))}
+        </div>
+      )}
       {toast && (
         <div className="toast" role="status">
           {toast}

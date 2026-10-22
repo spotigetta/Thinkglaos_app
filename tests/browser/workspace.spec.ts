@@ -262,3 +262,137 @@ test("Los textos de WhatsApp están reservados a embajadores y se pueden copiar 
     fullPage: true,
   });
 });
+
+test("Asignación rápida, incorporación en lote y vista personal conservan el mismo tablero", async ({
+  page,
+}) => {
+  await network(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: /Acceso de embajadores/ }).click();
+  await page.getByLabel("Token personal de GitHub").fill("test-token");
+  await page
+    .getByRole("button", { name: "Conectar cuenta", exact: true })
+    .click();
+  await page
+    .getByRole("button", {
+      name: "Asignar responsable: Cerrar espacio y condiciones",
+      exact: true,
+    })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /Pablo Ramírez/ })
+    .click();
+  await expect
+    .poll(
+      () =>
+        remote.tasks.find((t: { id: string }) => t.id === "planning-0")
+          ?.assignedTo,
+    )
+    .toBe("Pablo Ramírez");
+  await page.getByLabel("Mi nombre en el equipo").selectOption("Pablo Ramírez");
+  await expect(page.locator(".personal-next")).toContainText(
+    "Cerrar espacio y condiciones",
+  );
+  await page
+    .getByRole("button", { name: "Ver qué tengo que hacer", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText("Pablo Ramírez");
+  await page.getByRole("button", { name: "Cerrar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Sumar al equipo", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Varias de una vez", exact: true })
+    .click();
+  await page
+    .getByLabel("Nombres · uno por línea")
+    .fill("Ana García\nLuis Pérez\nana garcia\nPablo Ramírez");
+  await expect(
+    page.getByRole("button", { name: "Incorporar 2 personas", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Incorporar 2 personas", exact: true })
+    .click();
+  await expect
+    .poll(
+      () =>
+        remote.members.filter((m: { name: string }) =>
+          ["Ana García", "Luis Pérez"].includes(m.name),
+        ).length,
+    )
+    .toBe(2);
+  expect(
+    remote.members.filter((m: { name: string }) => m.name === "Pablo Ramírez")
+      .length,
+  ).toBe(1);
+  await page
+    .getByRole("button", {
+      name: "Asignar responsable: Recepción de paquetes",
+      exact: true,
+    })
+    .click();
+  await page.getByLabel("Buscar persona para asignar").fill("Ana");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /Ana García/ })
+    .click();
+  await expect
+    .poll(
+      () =>
+        remote.tasks.find((t: { id: string }) => t.id === "manual-002")
+          ?.assignedTo,
+    )
+    .toBe("Ana García");
+  await page
+    .getByRole("button", {
+      name: "Asignar responsable: Setup Lector QR",
+      exact: true,
+    })
+    .click();
+  await page.screenshot({
+    path: ".local/quick-assignment.png",
+    fullPage: false,
+  });
+  await page
+    .getByRole("button", { name: "Añadir persona y asignar", exact: true })
+    .click();
+  await page.getByLabel("Nombre visible").fill("Eva Pérez");
+  await page
+    .getByRole("button", { name: "Añadir al equipo", exact: true })
+    .click();
+  await expect
+    .poll(
+      () =>
+        remote.members.some((m: { name: string }) => m.name === "Eva Pérez") &&
+        remote.tasks.find(
+          (t: { title: string }) => t.title === "Setup Lector QR",
+        )?.assignedTo === "Eva Pérez",
+    )
+    .toBe(true);
+});
+test("Reducir movimiento mantiene la navegación y las acciones, sin animaciones", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await network(page);
+  await page.goto("/");
+  await expect(page.locator(".hype-window")).toBeVisible();
+  expect(
+    await page
+      .locator(".orbital-art")
+      .evaluate((el) => getComputedStyle(el).animationName),
+  ).toBe("none");
+  await page
+    .getByRole("navigation", { name: "Secciones", exact: true })
+    .getByRole("button", { name: "Equipo", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Pablo Ramírez", exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

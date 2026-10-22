@@ -53,6 +53,14 @@ El ZIP original sigue en la carpeta superior. Los componentes anteriores se cons
 
 La pestaña **Textos WhatsApp** aparece al conectar como embajador. Incluye promoción, explicación del formato, voluntariado/comunidad, colaboradores y ponentes. Se generan borradores con los datos del evento activo, se pueden copiar sin enviar, y las personalizaciones se guardan por evento mediante la sincronización existente. Los nombres del directorio no conceden acceso de escritura a GitHub.
 
+## Experiencia del equipo
+
+La interfaz mantiene el negro y amarillo de Thinkglao con ventanas flotantes y transiciones deslizantes entre secciones. Las tarjetas entran de forma escalonada, las ventanas tienen apertura y cierre animados y completar una tarea produce una celebración breve. Se respeta `prefers-reduced-motion`; los cambios de datos en segundo plano no reinician la navegación ni las animaciones de todas las tarjetas.
+
+«Tu parte del Thinkglao» permite elegir un nombre en este dispositivo para ver pendientes y el siguiente paso. Es una vista de consulta, no un inicio de sesión ni un cambio de permisos. En móvil aparece antes de la invitación. Los embajadores pueden pulsar **Asignar persona** en cada tarjeta: se muestran los miembros y su carga pendiente, y pueden añadir una persona y asignarla en el mismo recorrido. **Añadir miembro** permite incorporar uno o varios nombres, ignorando duplicados por tildes, mayúsculas o espacios. La función «Embajador» del directorio sigue sin conceder permisos técnicos.
+
+La invitación muestra la cuenta atrás real del evento en días de Madrid y el tamaño del equipo registrado. **Comparte el Thinkglao** abre la hoja nativa de compartir o copia el texto de promoción. Ningún mensaje se envía automáticamente; no se inventan ventas, entradas disponibles ni asistencia.
+
 ## Desarrollo y despliegue
 
     npm install
