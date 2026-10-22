@@ -114,7 +114,8 @@ export function Timeline({
       <p className="timeline-plan-note">
         Horas propuestas para organizarnos, basadas en la última edición. Inicio
         público: {event?.start}; fin: {event?.end}. La entrega de pizzas debe
-        confirmarse con el proveedor.
+        confirmarse con el proveedor. Montaje desde las 17:00. Las ramas de una
+        misma hora son tareas en paralelo de distintos responsables.
       </p>
       <div className="branch-timeline" ref={root}>
         {today && slots.some((s) => s.minutes !== null) && (

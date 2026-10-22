@@ -8,6 +8,7 @@ import {
 } from "../lib/event-clock";
 import { Phase } from "../types";
 import type { EventTask } from "../lib/model";
+import fs from "node:fs";
 const task = (
   id: string,
   time: string,
@@ -53,4 +54,21 @@ test("El marcador se interpola entre las horas y permanece dentro del eje", () =
   assert.equal(markerPosition(points, 1110), 200);
   assert.equal(markerPosition(points, 1000), 100);
   assert.equal(markerPosition(points, 1400), 300);
+});
+test("La operativa empieza a las 17, tiene una sola tarjeta Mercadona y se ordena por hora", () => {
+  const seed = JSON.parse(fs.readFileSync("public/data/seed.json", "utf8"));
+  const rows: EventTask[] = seed.tasks.filter(
+    (t: EventTask) => t.eventId === "toledo-proxima",
+  );
+  assert.equal(rows.filter((t) => /mercadona/i.test(t.title)).length, 1);
+  assert.ok(rows.every((t) => (taskMinutes(t) ?? 1020) >= 1020));
+  const day = rows.filter((t) => t.scheduledDate === "2026-10-29");
+  const slots = timelineSlots(day.reverse());
+  assert.equal(slots[0].label, "17:00");
+  assert.deepEqual(
+    slots.map((s) => s.minutes),
+    [...slots.map((s) => s.minutes)].sort((a, b) => a! - b!),
+  );
+  const mercadona = rows.find((t) => /mercadona/i.test(t.title))!;
+  assert.ok(mercadona.notes.some((note) => note.includes("Solo si falla")));
 });

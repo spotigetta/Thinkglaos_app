@@ -708,6 +708,46 @@ test("Modo montaje pausa, cambia escenas, carga música y permite salir", async 
     "src",
     "./montage/photo-2.jpg",
   );
+  await page
+    .getByRole("button", { name: "Activar sonido", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Silenciar", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page
+    .getByRole("button", { name: "Siguiente escena", exact: true })
+    .click();
+  const clip = page.locator(".montage-photo-panel video");
+  await expect(clip).toHaveAttribute(
+    "src",
+    "./media/voluntarios-secreto-salsa.mp4",
+  );
+  await expect
+    .poll(() => clip.evaluate((v: HTMLVideoElement) => v.currentTime))
+    .toBeGreaterThan(0);
+  await page.getByRole("button", { name: "Silenciar", exact: true }).click();
+  await expect
+    .poll(() => clip.evaluate((v: HTMLVideoElement) => v.muted))
+    .toBe(true);
+  await page
+    .getByRole("button", { name: "Pausar escenas", exact: true })
+    .click();
+  await expect
+    .poll(() => clip.evaluate((v: HTMLVideoElement) => v.paused))
+    .toBe(true);
+  await page.route("https://www.youtube-nocookie.com/**", (r) =>
+    r.fulfill({ body: "<html>Short ITTT</html>", contentType: "text/html" }),
+  );
+  await page
+    .getByRole("button", { name: "Siguiente escena", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Siguiente escena", exact: true })
+    .click();
+  await expect(page.locator(".montage-photo-panel iframe")).toHaveAttribute(
+    "src",
+    /youtube-nocookie.com\/embed\//,
+  );
   await page.getByLabel("Elegir música para el montaje").setInputFiles({
     name: "musica.mp3",
     mimeType: "audio/mpeg",
@@ -736,6 +776,46 @@ test("Modo montaje pausa, cambia escenas, carga música y permite salir", async 
     .click();
   await expect(page.locator(".montage-screen")).toHaveCount(0);
   await expect(page.locator(".start-here")).toBeVisible();
+  expect(writes).toBe(0);
+});
+
+test("Los vídeos de voluntarios se destacan y reproducen en móvil dentro de la app", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page);
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Modo montaje", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Modo montaje", exact: true }),
+  ).toContainText("Pantalla de montaje");
+  await page
+    .getByRole("button", { name: "Vídeos Ver y compartir", exact: true })
+    .click();
+  const featured = page.getByRole("region", {
+    name: "Vídeos destacados para voluntarios",
+  });
+  await expect(featured.locator("video")).toHaveCount(2);
+  const first = featured.locator("video").first(),
+    second = featured.locator("video").last();
+  await first.evaluate((v: HTMLVideoElement) => v.play());
+  await expect
+    .poll(() => first.evaluate((v: HTMLVideoElement) => v.currentTime))
+    .toBeGreaterThan(0);
+  await second.evaluate((v: HTMLVideoElement) => v.play());
+  await expect
+    .poll(() => second.evaluate((v: HTMLVideoElement) => v.currentTime))
+    .toBeGreaterThan(0);
+  await expect
+    .poll(() => first.evaluate((v: HTMLVideoElement) => v.paused))
+    .toBe(true);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
   expect(writes).toBe(0);
 });
 

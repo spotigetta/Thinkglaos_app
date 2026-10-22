@@ -15,7 +15,13 @@ export function mediaKind(url: string) {
       ? "audio"
       : null;
 }
-export function InlineMedia({ resource }: { resource: Resource }) {
+export function InlineMedia({
+  resource,
+  poster,
+}: {
+  resource: Resource;
+  poster?: string;
+}) {
   const [error, setError] = useState(false);
   const kind = mediaKind(resource.url);
   const source =
@@ -38,6 +44,7 @@ export function InlineMedia({ resource }: { resource: Resource }) {
         />
       ) : (
         <video
+          poster={poster}
           controls
           onPlay={playOnly}
           playsInline

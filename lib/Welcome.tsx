@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -9,6 +9,8 @@ import {
   MapPin,
 } from "lucide-react";
 import type { State, EventTask } from "./model";
+import { VolunteerVideos } from "./VolunteerVideos";
+import { compareTaskSchedule } from "./event-clock";
 
 export function volunteerExplanation(state: State, eventId: string) {
   const event = state.events.find((e) => e.id === eventId);
@@ -17,7 +19,7 @@ export function volunteerExplanation(state: State, eventId: string) {
       .filter((m) => /embajador/i.test(m.role))
       .map((m) => m.name)
       .join(" y ") || "el embajador";
-  return `¡Bienvenido al equipo Thinkglao! 💡\n\nUn Thinkglao es una conversación en comunidad: un ponente comparte una idea durante 18 minutos, después hay unos 45 minutos de preguntas y seguimos charlando con comida y barra libre de cerveza. No hace falta saber del tema: ven con curiosidad.\n\nComo voluntario, tu misión es que la gente y el ponente estén cómodos. Nos repartimos tareas concretas; no tienes que hacerlo todo.\n\n1. Antes: acordamos quién hace cada cosa, compras, material y condiciones del lugar.\n2. Esa tarde: montaje desde las 17:30, pedido al frío, comida, bebidas, música, sonido y señalización. A las 19:30, responsable de QR listo en la puerta con la app. Son horas de trabajo propuestas.\n3. Durante: recibir bien, reponer comida y bebida, cuidar al ponente y estar atentos a las pizzas.\n4. Al terminar: despedida, recogida e inventario.\n\nEn la app elige tu nombre, pulsa «Mis tareas» y abre cada tarjeta para ver los pasos. Si algo falla o no tienes tarea, avisa a ${coordinator}, que coordina el equipo.\n\n${event?.speaker ? `Próximo: ${event.speaker} · ${event.date ? new Date(event.date + "T12:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long" }) : "fecha por confirmar"} · ${event.start || "hora por confirmar"} · ${event.venue || "lugar por confirmar"}.` : ""}`;
+  return `¡Bienvenido al equipo Thinkglao! 💡\n\nUn Thinkglao es una conversación en comunidad: un ponente comparte una idea durante 18 minutos, después hay unos 45 minutos de preguntas y seguimos charlando con comida y barra libre de cerveza. No hace falta saber del tema: ven con curiosidad.\n\nComo voluntario, tu misión es que la gente y el ponente estén cómodos. Nos repartimos tareas concretas; no tienes que hacerlo todo.\n\n1. Antes: acordamos quién hace cada cosa, compras, material y condiciones del lugar.\n2. Esa tarde: montaje desde las 17:00, pedido al frío, comida, bebidas, música, sonido y señalización. A las 19:30, responsable de QR listo en la puerta con la app. Son horas de trabajo propuestas.\n3. Durante: recibir bien, reponer comida y bebida, cuidar al ponente y estar atentos a las pizzas.\n4. Al terminar: despedida, recogida e inventario.\n\nEn la app elige tu nombre, pulsa «Mis tareas» y abre cada tarjeta para ver los pasos. Si algo falla o no tienes tarea, avisa a ${coordinator}, que coordina el equipo.\n\n${event?.speaker ? `Próximo: ${event.speaker} · ${event.date ? new Date(event.date + "T12:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long" }) : "fecha por confirmar"} · ${event.start || "hora por confirmar"} · ${event.venue || "lugar por confirmar"}.` : ""}`;
 }
 
 export function VolunteerGuide({
@@ -33,6 +35,7 @@ export function VolunteerGuide({
   const text = volunteerExplanation(state, eventId);
   return (
     <section className="volunteer-guide">
+      <VolunteerVideos />
       <p className="guide-lead">
         18 minutos de ideas. Preguntas. Comida, cerveza y conversación.
       </p>
@@ -54,8 +57,8 @@ export function VolunteerGuide({
         {[
           ["Antes", "Acordamos tareas, compras, material y lugar."],
           [
-            "17:30 · montaje propuesto",
-            "Pedido al frío, preparar comida y bebidas, música, camisetas, sonido y entrada señalizada.",
+            "17:00 · empezamos a montar",
+            "Preparar el espacio, música y camisetas. 17:30: recibir el pedido, guardar al frío y preparar comida y bebidas.",
           ],
           ["19:30 · QR listo", "Responsable en puerta con la app probada."],
           [
@@ -128,9 +131,11 @@ export function StartHere({
   onMontage: () => void;
 }) {
   const event = state.events.find((e) => e.id === eventId);
-  const mine = state.tasks.filter(
-    (t) => t.eventId === eventId && t.assignedTo === person && !t.isDone,
-  );
+  const mine = state.tasks
+    .filter(
+      (t) => t.eventId === eventId && t.assignedTo === person && !t.isDone,
+    )
+    .sort(compareTaskSchedule);
   const location = state.venues.find((v) => v.name === event?.venue);
   return (
     <section className="start-here">
@@ -223,11 +228,22 @@ export function StartHere({
           <BookOpen size={16} />
           Libro del voluntario
         </button>
-        <button onClick={onMontage}>
-          <Play size={16} />
-          Modo montaje
-        </button>
       </div>
+      <button
+        className="montage-launch"
+        aria-label="Modo montaje"
+        onClick={onMontage}
+      >
+        <span className="montage-launch-icon">
+          <Play fill="currentColor" />
+        </span>
+        <span>
+          <small>ENCIENDE EL AMBIENTE</small>
+          <b>Pantalla de montaje</b>
+          <em>Vídeos, frases, música y reloj en vivo</em>
+        </span>
+        <ArrowRight />
+      </button>
       {person && (
         <div className="my-next">
           {mine[0] ? (

@@ -104,7 +104,7 @@ export const extraPlan = [
     id: "operativa-clima",
     phase: Phase.AFTERNOON_BEFORE,
     title: "Climatizar el lugar",
-    time: "16:30 · orientativa",
+    time: "17:00 · orientativa",
     notes: [
       "Encender climatización con antelación suficiente.",
       "Si no hay equipos, llevarlos y acordar su uso con el lugar.",

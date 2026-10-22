@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import { execFileSync } from "node:child_process";
 
 // Proposal for 29 October, anchored to the previous edition (17:30 delivery,
@@ -18,7 +18,7 @@ const plan = {
     "Preparar alternativa si falla Mercadona; activarla solo si hay incidencia el día del evento.",
   ],
   "manual-007": ["2026-10-28", "18:15–18:45"],
-  "operativa-clima": ["2026-10-29", "16:30–17:00"],
+  "operativa-clima": ["2026-10-29", "17:00–17:20"],
   "manual-005": [
     "2026-10-29",
     "17:30–17:45",
@@ -57,8 +57,8 @@ const plan = {
   "operativa-cierre": ["2026-10-29", "23:30–23:40"],
   "manual-023": ["2026-10-29", "23:40–23:55"],
   "manual-021": ["2026-10-29", "23:30–23:55"],
-  "manual-022": ["2026-10-30", "12:00–12:30"],
-  "manual-024": ["2026-10-30", "12:30–13:00"],
+  "manual-022": ["2026-10-30", "18:00–18:30"],
+  "manual-024": ["2026-10-30", "18:30–19:00"],
 };
 const credential = execFileSync("git", ["credential", "fill"], {
   input: "protocol=https\nhost=github.com\n\n",

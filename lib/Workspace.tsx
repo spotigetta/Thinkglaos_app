@@ -6,6 +6,7 @@ import { InlineMedia, mediaKind } from "./Media";
 import { SharePanel } from "./SharePanel";
 import { Timeline } from "./Timeline";
 import { Montage } from "./Montage";
+import { compareTaskSchedule } from "./event-clock";
 const BookReader = React.lazy(() => import("./BookReader"));
 import { whatsappTemplates } from "./communications";
 import {
@@ -415,7 +416,9 @@ export default function Workspace() {
   }, [toast]);
   const canEdit = identity?.canEdit === true,
     event = state.events.find((e) => e.id === eventId),
-    tasks = state.tasks.filter((t) => t.eventId === eventId),
+    tasks = state.tasks
+      .filter((t) => t.eventId === eventId)
+      .sort(compareTaskSchedule),
     done = tasks.filter((t) => t.isDone).length,
     people = [
       ...new Set([
@@ -615,6 +618,9 @@ export default function Workspace() {
       >
         <div className="task-top">
           <span className={"tag " + (task.isImportant ? "critical" : "")}>
+            {task.scheduledDate && task.scheduledDate !== event?.date
+              ? dateLabel(task.scheduledDate) + " · "
+              : ""}
             {task.time || (task.isImportant ? "Clave" : "Sin hora")}
           </span>
           {canEdit ? (
@@ -1311,13 +1317,7 @@ export default function Workspace() {
               {phases.map((p, index) => {
                 const list = filtered
                   .filter((t) => normalizePhase(t.phase) === p)
-                  .sort((a, b) =>
-                    (
-                      a.time?.match(/\d{2}:\d{2}/)?.[0] || "00:00"
-                    ).localeCompare(
-                      b.time?.match(/\d{2}:\d{2}/)?.[0] || "00:00",
-                    ),
-                  );
+                  .sort(compareTaskSchedule);
                 return (
                   list.length > 0 && (
                     <section key={p} className="phase-section">

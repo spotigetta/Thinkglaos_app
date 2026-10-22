@@ -17,6 +17,8 @@ const files = [
   "./media/quotes.json",
   "./share/thinkglaos-toledo.jpg",
   "./media/audio-manolo-whatsapp.mp3",
+  "./media/voluntarios-secreto-salsa.jpg",
+  "./media/voluntarios-historia-toledo.jpg",
   "./books/el-secreto-de-la-salsa.pdf",
   ...fs.readdirSync("dist/montage").map((name) => "./montage/" + name),
 ];

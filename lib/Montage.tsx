@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { EventInfo, EventTask } from "./model";
 import { madridClock } from "./event-clock";
+import { volunteerVideos } from "./VolunteerVideos";
+import { montageMusic } from "./montage-music";
 type Photo = {
   src: string;
   caption: string;
   source: string;
   credit: string;
   website?: boolean;
+  video?: string;
+  youtube?: string;
 };
 const messages = [
   [
@@ -49,6 +53,43 @@ export function Montage({
   onClose: () => void;
 }) {
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [shorts, setShorts] = useState<{ id: string; title: string }[]>([]);
+  const [sound, setSound] = useState(false);
+  const synth = useRef<ReturnType<typeof montageMusic> | null>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  const scenes: Photo[] = [];
+  photos.forEach((photo, i) => {
+    scenes.push(photo);
+    if (i === 1 || i === 3) {
+      const clip = volunteerVideos[i === 1 ? 0 : 1];
+      scenes.push({
+        src: clip.poster,
+        caption: clip.name,
+        credit: "ITTT · equipo de voluntarios",
+        source: clip.url,
+        video: clip.url,
+      });
+    }
+    if ((i === 2 || i === 4 || i === 6) && shorts.length) {
+      const clip = shorts[Math.floor(i / 2) - 1];
+      if (clip)
+        scenes.push({
+          src: photo.src,
+          caption: clip.title,
+          credit: "ITTT · canal oficial de YouTube",
+          source: "https://www.youtube.com/shorts/" + clip.id,
+          youtube: clip.id,
+        });
+    }
+    if (i === 5)
+      scenes.push({
+        src: photo.src,
+        caption: "Manolo Lama · Thinkglaos",
+        credit: "ITTT",
+        source: "./media/manolo-original.mp4",
+        video: "./media/manolo-original.mp4",
+      });
+  });
   const [index, setIndex] = useState(0);
   const [running, setRunning] = useState(true);
   const [duration, setDuration] = useState(20);
@@ -66,6 +107,16 @@ export function Montage({
   const close = useRef(onClose);
   close.current = onClose;
   useEffect(() => {
+    fetch("./media/youtube.json")
+      .then((r) => r.json())
+      .then((data) =>
+        setShorts(
+          data.items
+            .filter((item: { kind: string }) => item.kind === "shorts")
+            .slice(0, 3),
+        ),
+      )
+      .catch(() => {});
     fetch("./montage/photos.json")
       .then((r) => {
         if (!r.ok) throw Error();
@@ -113,13 +164,14 @@ export function Montage({
       clearInterval(timer);
       document.body.style.overflow = previousOverflow;
       urls.current.forEach(URL.revokeObjectURL);
+      synth.current?.stop();
       if (ownedFullscreen.current && document.fullscreenElement)
         void document.exitFullscreen().catch(() => {});
       previous?.focus();
     };
   }, []);
   useEffect(() => {
-    if (!running || live || !photos.length) return;
+    if (!running || live || !scenes.length) return;
     let last = performance.now();
     const timer = setInterval(() => {
       const current = performance.now();
@@ -127,12 +179,12 @@ export function Montage({
       last = current;
       if (elapsed.current >= duration * 1000) {
         elapsed.current = 0;
-        setIndex((i) => (i + 1) % photos.length);
+        setIndex((i) => (i + 1) % scenes.length);
       }
       setProgress(elapsed.current / (duration * 1000));
     }, 100);
     return () => clearInterval(timer);
-  }, [running, live, duration, photos.length]);
+  }, [running, live, duration, scenes.length]);
   useEffect(() => {
     let lock: WakeLockSentinel | undefined;
     let active = true;
@@ -157,7 +209,7 @@ export function Montage({
     elapsed.current = 0;
     setProgress(0);
     setLive(false);
-    setIndex((i) => (i + offset + photos.length) % Math.max(photos.length, 1));
+    setIndex((i) => (i + offset + scenes.length) % Math.max(scenes.length, 1));
   }
   async function fullscreen() {
     try {
@@ -171,8 +223,22 @@ export function Montage({
       );
     }
   }
-  const photo = photos[index];
+  const photo = scenes[index];
   const message = messages[index % messages.length];
+  useEffect(() => {
+    synth.current?.volume(
+      running && !live ? (photo?.video && sound ? 0.035 : 0.18) : 0,
+    );
+    if (video.current) {
+      if (running && !live)
+        void video.current
+          .play()
+          .catch(() =>
+            setNotice("Pulsa reproducir en el vídeo para continuar."),
+          );
+      else video.current.pause();
+    }
+  }, [running, live, index, sound, photo?.video]);
   return createPortal(
     <div
       className="montage-screen"
@@ -192,7 +258,9 @@ export function Montage({
           <span>TOLEDO / MODO MONTAJE</span>
         </div>
         <div>
-          <time>{madridClock(now).time}</time>
+          <time aria-label="Hora en vivo de Madrid">
+            {madridClock(now).time}
+          </time>
           <button onClick={onClose} aria-label="Salir del modo montaje">
             Salir ×
           </button>
@@ -209,7 +277,11 @@ export function Montage({
         </div>
       ) : (
         <main
-          className={"montage-stage " + (photo?.website ? "website-scene" : "")}
+          className={
+            "montage-stage " +
+            (photo?.website ? "website-scene " : "") +
+            (photo?.video || photo?.youtube ? "video-scene" : "")
+          }
         >
           <div className="montage-panel">
             <span className="montage-mission">MISIÓN: HACER COMUNIDAD</span>
@@ -236,7 +308,38 @@ export function Montage({
           </div>
           {photo && (
             <div className="montage-photo-panel">
-              <img src={photo.src} alt={photo.caption} />
+              {photo.video ? (
+                <video
+                  key={photo.video}
+                  ref={video}
+                  src={photo.video}
+                  poster={photo.src}
+                  autoPlay
+                  muted={!sound}
+                  playsInline
+                  loop
+                  controls
+                  aria-label={photo.caption}
+                />
+              ) : photo.youtube ? (
+                <iframe
+                  key={photo.youtube + sound + running}
+                  title={photo.caption}
+                  src={
+                    "https://www.youtube-nocookie.com/embed/" +
+                    photo.youtube +
+                    "?autoplay=" +
+                    (running ? "1" : "0") +
+                    "&mute=" +
+                    (sound ? "0" : "1") +
+                    "&playsinline=1&rel=0"
+                  }
+                  allow="autoplay; encrypted-media; fullscreen"
+                  allowFullScreen
+                />
+              ) : (
+                <img src={photo.src} alt={photo.caption} />
+              )}
               <span>
                 {photo.website ? "Una ventana a ITTT" : photo.caption}
               </span>
@@ -260,7 +363,7 @@ export function Montage({
               →
             </button>
             <span>
-              {index + 1} / {photos.length || messages.length}
+              {index + 1} / {scenes.length || messages.length}
             </span>
             <select
               aria-label="Duración de cada escena"
@@ -278,6 +381,21 @@ export function Montage({
             </select>
           </div>
           <div>
+            <button
+              disabled={!scenes.length}
+              onClick={() => {
+                elapsed.current = 0;
+                setProgress(0);
+                setLive(false);
+                setIndex(
+                  scenes.findIndex(
+                    (scene) => scene.video === volunteerVideos[0].url,
+                  ),
+                );
+              }}
+            >
+              Vídeos del equipo
+            </button>
             <button onClick={() => void fullscreen()}>Pantalla completa</button>
             <button
               onClick={() => {
@@ -289,6 +407,29 @@ export function Montage({
           </div>
         </div>
         <div className="montage-music">
+          <button
+            aria-pressed={sound}
+            onClick={() => {
+              if (sound) {
+                synth.current?.stop();
+                synth.current = null;
+                audio.current?.pause();
+                setSound(false);
+              } else {
+                try {
+                  if (!music.length) synth.current = montageMusic();
+                  setSound(true);
+                  setNotice(
+                    "Sonido activado · música instrumental original y audio de los vídeos.",
+                  );
+                } catch {
+                  setNotice("Puedes cargar tu música con el botón de al lado.");
+                }
+              }
+            }}
+          >
+            {sound ? "Silenciar" : "Activar sonido"}
+          </button>
           <label>
             Cargar música
             <input
@@ -298,6 +439,8 @@ export function Montage({
               multiple
               onChange={(e) => {
                 audio.current?.pause();
+                synth.current?.stop();
+                synth.current = null;
                 urls.current.forEach(URL.revokeObjectURL);
                 const tracks = [...(e.target.files || [])].map((file) => ({
                   url: URL.createObjectURL(file),
@@ -319,6 +462,7 @@ export function Montage({
               <audio
                 ref={audio}
                 controls
+                onPlay={() => setSound(true)}
                 src={music[track]?.url}
                 onEnded={() => {
                   setTrack((t) => (t + 1) % music.length);
@@ -330,7 +474,9 @@ export function Montage({
               />
             </>
           ) : (
-            <span>O mantén tu música de Spotify mientras montáis.</span>
+            <span>
+              Música ambiente incluida · activa el sonido o carga tu mezcla.
+            </span>
           )}
           <small>{photo?.credit || "ITTT"} · imágenes de la web oficial</small>
         </div>

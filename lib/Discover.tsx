@@ -2,6 +2,7 @@
 import type { Resource } from "./model";
 import { ManoloAudio, InlineMedia, mediaKind } from "./Media";
 import { QuoteShorts } from "./QuoteShorts";
+import { VolunteerVideos } from "./VolunteerVideos";
 const base = "https://www.itstimetothink.org";
 const events = [
   [
@@ -119,6 +120,7 @@ export function Discover({ resources = [] }: { resources?: Resource[] }) {
   return (
     <section className="discover">
       <h2>Ver, escuchar y compartir</h2>
+      <VolunteerVideos />
       {tab !== "quotes" && <ManoloAudio />}
       <div className="media-tabs" role="tablist" aria-label="Tipo de vídeo">
         {(

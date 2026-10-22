@@ -29,6 +29,16 @@ export function taskMinutes(task: EventTask) {
   if (!match || /^antes\b/i.test(task.time || "")) return null;
   return Number(match[1]) * 60 + Number(match[2]);
 }
+export function compareTaskSchedule(a: EventTask, b: EventTask) {
+  const dateOrder = (a.scheduledDate || "9999").localeCompare(
+    b.scheduledDate || "9999",
+  );
+  return (
+    dateOrder ||
+    (taskMinutes(a) ?? 1440) - (taskMinutes(b) ?? 1440) ||
+    a.title.localeCompare(b.title, "es")
+  );
+}
 export type TimelineSlot = {
   key: string;
   label: string;
@@ -45,7 +55,7 @@ export function timelineSlots(tasks: EventTask[]): TimelineSlot[] {
       taskMinutes(t) === null && normalizePhase(t.phase) !== Phase.WEEK_BEFORE,
   );
   const timed = new Map<number, EventTask[]>();
-  for (const task of tasks) {
+  for (const task of [...tasks].sort(compareTaskSchedule)) {
     const minutes = taskMinutes(task);
     if (minutes !== null)
       timed.set(minutes, [...(timed.get(minutes) || []), task]);
