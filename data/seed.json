@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 12,
-  "updatedAt": "2026-10-22T20:27:57.737Z",
+  "revision": 13,
+  "updatedAt": "2026-10-22T20:39:49.400Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -29,7 +29,7 @@
       "title": "Cerrar espacio y condiciones",
       "phase": "Organizar",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "isImportant": true,
       "notes": [
@@ -41,7 +41,8 @@
         "Confirmar aforo, comida y bebida, suelo, música, seguro, acceso y cierre por escrito."
       ],
       "time": "Días previos",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.399Z"
     },
     {
       "id": "planning-1",
@@ -49,13 +50,14 @@
       "title": "Confirmar ponente y fecha",
       "phase": "Organizar",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "isImportant": true,
       "notes": [
         "Alinear ponente, espacio y equipo. Explicar los 18 minutos y el turno de preguntas."
       ],
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "planning-2",
@@ -63,13 +65,14 @@
       "title": "Formar el equipo local",
       "phase": "Organizar",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "isImportant": true,
       "notes": [
         "Confirmar puerta QR, apoyo, logística, contenido y responsable de material."
       ],
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "planning-3",
@@ -77,20 +80,21 @@
       "title": "Cartel, landing y difusión",
       "phase": "Organizar",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Mery Marcos",
       "isDone": false,
       "isImportant": true,
       "notes": [
         "Coordinar con ITTT los datos del evento y probar el enlace de entradas."
       ],
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-001",
       "phase": "Organizar",
       "title": "Confirmar envío material ITTT",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Confirmar dirección de envío.",
@@ -99,42 +103,45 @@
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-002",
       "phase": "Organizar",
       "title": "Recepción de paquetes",
       "originalRole": "Voluntario Apoyo",
-      "assignedTo": "Voluntario Apoyo",
+      "assignedTo": "Javier Yuste",
       "isDone": false,
       "notes": [
         "Estar disponible si embajador no puede.",
         "Avisar cuando llegue todo."
       ],
       "eventId": "toledo-proxima",
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-003",
       "phase": "Organizar",
       "title": "Pedido de Cerveza",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Calcular asistentes + 20% margen.",
         "Enviar WhatsApp a ITTT: Entradas, Dirección, Contacto, Fecha."
       ],
       "eventId": "toledo-proxima",
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-004",
       "phase": "Organizar",
       "title": "Pedido Mercadona",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Pedir entrega de Mercadona a las 17:30 (horario de trabajo propuesto).",
@@ -146,14 +153,15 @@
       ],
       "eventId": "toledo-proxima",
       "time": "Días previos",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-005",
       "phase": "Esa tarde",
       "title": "Recibir Mercadona",
       "originalRole": "Voluntario Apoyo",
-      "assignedTo": "Voluntario Apoyo",
+      "assignedTo": "Alejandro Zamora",
       "isDone": false,
       "notes": [
         "Recepcionar el pedido.",
@@ -163,14 +171,15 @@
       ],
       "eventId": "toledo-proxima",
       "time": "17:30 · propuesta",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-006",
       "phase": "Organizar",
       "title": "Plan B: Mercadona fallido",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Llamar ITTT, pedir documento compra.",
@@ -178,14 +187,15 @@
       ],
       "isImportant": true,
       "eventId": "toledo-proxima",
-      "time": "Días previos"
+      "time": "Días previos",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-007",
       "phase": "Organizar",
       "title": "Kit del embajador",
       "originalRole": "Todos",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "1 rollup.",
@@ -203,14 +213,15 @@
       "isImportant": true,
       "eventId": "toledo-proxima",
       "time": "Día anterior",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-008",
       "phase": "Esa tarde",
       "title": "Preparación Bebidas",
       "originalRole": "Equipo",
-      "assignedTo": "Voluntario Apoyo",
+      "assignedTo": "Daniel Ramírez",
       "isDone": false,
       "notes": [
         "Colocar bebidas en las dos espuertas con hielo y agua.",
@@ -223,14 +234,15 @@
       ],
       "eventId": "toledo-proxima",
       "time": "17:40 · orientativa",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-009",
       "phase": "Esa tarde",
       "title": "Preparación Comida",
       "originalRole": "Equipo",
-      "assignedTo": "Voluntario 3",
+      "assignedTo": "Teresa",
       "isDone": false,
       "notes": [
         "Cortar fuet y preparar la comida.",
@@ -241,14 +253,15 @@
       ],
       "eventId": "toledo-proxima",
       "time": "17:45 · orientativa",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-010",
       "phase": "Esa tarde",
       "title": "Montaje Decoración y Escenario",
       "originalRole": "Equipo",
-      "assignedTo": "Voluntario Logística",
+      "assignedTo": "Juan María",
       "isDone": false,
       "notes": [
         "Música durante todo el montaje, camisetas de voluntario y buen rollo.",
@@ -257,18 +270,20 @@
         "Ponerse camisetas ITTT.",
         "Roll up en puerta (luego escenario).",
         "Escenario: Bombilla, Alfombra, Cajas Damm, Cronómetro a 18:00.",
-        "Distribuir cubos de cerveza."
+        "Distribuir cubos de cerveza.",
+        "Apoyo de decoración: Mery Marcos, al terminar difusión, antes de la recepción."
       ],
       "eventId": "toledo-proxima",
       "time": "18:00 · orientativa",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-011",
       "phase": "Esa tarde",
       "title": "Verificación Espacio",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Javier Yuste",
       "isDone": false,
       "notes": [
         "Probar acústica, megafonía y micro.",
@@ -282,14 +297,15 @@
       ],
       "eventId": "toledo-proxima",
       "time": "18:30 · orientativa",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-012",
       "phase": "Esa tarde",
       "title": "Decisiones Previas",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Confirmar aforo.",
@@ -297,14 +313,15 @@
         "Tener contacto ITTT a mano."
       ],
       "eventId": "toledo-proxima",
-      "time": "19:00 · orientativa"
+      "time": "19:00 · orientativa",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-013",
       "phase": "Esa tarde",
       "title": "Setup Lector QR",
       "originalRole": "Voluntario QR",
-      "assignedTo": "Voluntario QR",
+      "assignedTo": "Lucía López",
       "isDone": false,
       "notes": [
         "Responsable en la puerta a las 19:30.",
@@ -318,14 +335,15 @@
       "isImportant": true,
       "eventId": "toledo-proxima",
       "time": "19:30 · propuesta",
-      "completedSteps": []
+      "completedSteps": [],
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-014",
       "phase": "Esa tarde",
       "title": "Gestión de Cola",
       "originalRole": "Voluntario Apoyo",
-      "assignedTo": "Voluntario Apoyo",
+      "assignedTo": "Mery Marcos",
       "isDone": false,
       "notes": [
         "Controlar fila.",
@@ -333,14 +351,15 @@
         "Guiar hacia dentro tras escaneo (sentarse delante)."
       ],
       "eventId": "toledo-proxima",
-      "time": "19:30 · propuesta"
+      "time": "19:30 · propuesta",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-015",
       "phase": "Esa tarde",
       "title": "Escaneo de Entradas",
       "originalRole": "Voluntario QR",
-      "assignedTo": "Voluntario QR",
+      "assignedTo": "Lucía López",
       "isDone": false,
       "notes": [
         "Pedir QR a TODOS.",
@@ -348,14 +367,15 @@
         "Avisar embajador si error."
       ],
       "eventId": "toledo-proxima",
-      "time": "19:30–20:00 · propuesta"
+      "time": "19:30–20:00 · propuesta",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-016",
       "phase": "Esa tarde",
       "title": "Gestión Sin Entrada / Incidencias",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Dirigir a web para compra si hay aforo.",
@@ -364,14 +384,15 @@
         "Resolver fallos técnicos app."
       ],
       "eventId": "toledo-proxima",
-      "time": "19:30–20:00 · propuesta"
+      "time": "19:30–20:00 · propuesta",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-017",
       "phase": "Durante el Thinkglao",
       "title": "Grabación Contenido",
       "originalRole": "Voluntario Contenido",
-      "assignedTo": "Voluntario Contenido",
+      "assignedTo": "Mery Marcos",
       "isDone": false,
       "notes": [
         "Grabar inicio charla.",
@@ -381,28 +402,30 @@
         "NO moverse durante charla."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30"
+      "time": "20:00–23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-018",
       "phase": "Durante el Thinkglao",
       "title": "Acogida Ponente",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Javier Yuste",
       "isDone": false,
       "notes": [
         "Acompañar y tranquilizar.",
         "Recordar: 18 min + preguntas + pizzas."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30"
+      "time": "20:00–23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-019",
       "phase": "Durante el Thinkglao",
       "title": "Presentación Evento",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Presentar ITTT.",
@@ -410,14 +433,15 @@
         "Presentar ponente."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30"
+      "time": "20:00–23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-020",
       "phase": "Durante el Thinkglao",
       "title": "Recepción Pizzas",
       "originalRole": "Voluntario Logística",
-      "assignedTo": "Voluntario Logística",
+      "assignedTo": "Alejandro Zamora",
       "isDone": false,
       "notes": [
         "Esperar repartidor.",
@@ -428,30 +452,33 @@
         "Recibir y colocar las pizzas en las mesas."
       ],
       "eventId": "toledo-proxima",
-      "time": "Durante · entrega por confirmar"
+      "time": "Durante · entrega por confirmar",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-021",
       "phase": "Fin",
       "title": "Recogida y Limpieza",
       "originalRole": "Todos",
-      "assignedTo": "Todos",
+      "assignedTo": "Daniel Ramírez",
       "isDone": false,
       "notes": [
         "Recoger basura.",
         "Desmontar escenario.",
         "Guardar material ITTT.",
-        "Espacio impecable."
+        "Espacio impecable.",
+        "Coordina Daniel; recogida y limpieza entre todo el equipo."
       ],
       "eventId": "toledo-proxima",
-      "time": "20:00–23:30"
+      "time": "Desde 23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-022",
       "phase": "Fin",
       "title": "Gestión Gastos",
       "originalRole": "Embajador",
-      "assignedTo": "Embajador",
+      "assignedTo": "Pablo Ramírez",
       "isDone": false,
       "notes": [
         "Reunir tickets.",
@@ -459,14 +486,15 @@
         "Datos fiscales: Asociación Itstimetothink, NIF [consultar datos fiscales en el archivo privado]."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30"
+      "time": "Desde 23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-023",
       "phase": "Fin",
       "title": "Inventario",
       "originalRole": "Responsable Material",
-      "assignedTo": "Responsable Material",
+      "assignedTo": "Juan María",
       "isDone": false,
       "notes": [
         "Revisar material ITTT.",
@@ -474,21 +502,23 @@
         "Guardar material."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30"
+      "time": "Desde 23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "manual-024",
       "phase": "Fin",
       "title": "Envío Contenido",
       "originalRole": "Voluntario Contenido",
-      "assignedTo": "Voluntario Contenido",
+      "assignedTo": "Mery Marcos",
       "isDone": false,
       "notes": [
         "Seleccionar lo mejor.",
         "Enviar a contacto de ITTT (consultar en archivo privado)."
       ],
       "eventId": "toledo-proxima",
-      "time": "Desde 23:30"
+      "time": "Desde 23:30",
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "operativa-clima",
@@ -501,9 +531,10 @@
         "Comprobar temperatura antes de recibir al equipo."
       ],
       "eventId": "toledo-proxima",
-      "assignedTo": "Sin asignar",
+      "assignedTo": "Javier Yuste",
       "originalRole": "Equipo",
-      "isDone": false
+      "isDone": false,
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "operativa-cuidados",
@@ -516,9 +547,10 @@
         "Estar pendientes de que todos estén cómodos."
       ],
       "eventId": "toledo-proxima",
-      "assignedTo": "Sin asignar",
+      "assignedTo": "Teresa",
       "originalRole": "Equipo",
-      "isDone": false
+      "isDone": false,
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     },
     {
       "id": "operativa-cierre",
@@ -533,9 +565,10 @@
         "Comprobar luces, equipos, cierre y despedirse del equipo."
       ],
       "eventId": "toledo-proxima",
-      "assignedTo": "Sin asignar",
+      "assignedTo": "Juan María",
       "originalRole": "Equipo",
-      "isDone": false
+      "isDone": false,
+      "updatedAt": "2026-10-22T20:39:49.400Z"
     }
   ],
   "members": [
