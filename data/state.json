@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
-  "revision": 14,
-  "updatedAt": "2026-10-22T20:53:58.200Z",
+  "revision": 15,
+  "updatedAt": "2026-10-22T21:04:29.344Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
-    "977b6866-ab50-4cc2-b0aa-9bafb5df21b3"
+    "977b6866-ab50-4cc2-b0aa-9bafb5df21b3",
+    "flow-from-17-v2"
   ],
   "events": [
     {
@@ -19,7 +20,7 @@
       "speaker": "Laura Rodríguez Rivero",
       "capacity": 80,
       "ticketsURL": "https://www.itstimetothink.org/event-details/thinkglao-con-laura-rodriguez-rivero",
-      "notes": "Horario oficial: 29 octubre 2026 de 20:00 a 23:30. Claustro Santo Tomé, Pl. del Conde, 4, Toledo. Montaje desde 17:30 y QR listo 19:30: propuesta basada en la experiencia anterior; resto de preparación orientativo. Material anterior con Pablo Ramírez."
+      "notes": "29 octubre 2026 · 20:00–23:30 · Claustro Santo Tomé, Pl. del Conde, 4, Toledo. Equipo desde las 17:00. Mercadona 17:30 y QR listo 19:30, basados en la edición anterior. Las horas de trabajo son propuestas; confirmar entrega de pizzas. Material con Pablo Ramírez."
     }
   ],
   "tasks": [
@@ -144,27 +145,6 @@
       "scheduledDate": "2026-10-26"
     },
     {
-      "id": "manual-004",
-      "phase": "Organizar",
-      "title": "Pedido Mercadona",
-      "originalRole": "Embajador",
-      "assignedTo": "Pablo Ramírez",
-      "isDone": false,
-      "notes": [
-        "Pedir entrega de Mercadona a las 17:30 (horario de trabajo propuesto).",
-        "Confirmar persona para recibir y espacio en frío.",
-        "Coordinar cantidades con el aforo previsto.",
-        "Enviar datos a ITTT.",
-        "Franja entrega: 2-3 horas antes del evento.",
-        "Asegurar recepción."
-      ],
-      "eventId": "toledo-proxima",
-      "time": "18:20–19:00 · propuesta",
-      "completedSteps": [],
-      "updatedAt": "2026-10-22T20:53:58.200Z",
-      "scheduledDate": "2026-10-26"
-    },
-    {
       "id": "manual-005",
       "phase": "Esa tarde",
       "title": "Recibir Mercadona",
@@ -176,31 +156,22 @@
         "Guardar inmediatamente lo que necesita frío.",
         "Comprobar cantidades y avisar si falta algo.",
         "Confirmar disponibilidad para recoger el pedido.",
-        "Referencia de la edición anterior: recepción a las 17:30. Confirmar la franja del pedido para esta edición."
+        "Referencia de la edición anterior: recepción a las 17:30. Confirmar la franja del pedido para esta edición.",
+        "Pedido previo · Pablo: Pedir entrega de Mercadona a las 17:30 (horario de trabajo propuesto).",
+        "Pedido previo · Pablo: Confirmar persona para recibir y espacio en frío.",
+        "Pedido previo · Pablo: Coordinar cantidades con el aforo previsto.",
+        "Pedido previo · Pablo: Enviar datos a ITTT.",
+        "Pedido previo · Pablo: Franja entrega: 2-3 horas antes del evento.",
+        "Pedido previo · Pablo: Asegurar recepción.",
+        "Solo si falla la entrega · Pablo: Llamar ITTT, pedir documento compra.",
+        "Solo si falla la entrega · Pablo: Hacer compra presencial.",
+        "Solo si falla la entrega · Pablo: Preparar alternativa si falla Mercadona; activarla solo si hay incidencia el día del evento."
       ],
       "eventId": "toledo-proxima",
       "time": "17:30–17:45 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "updatedAt": "2026-10-22T21:04:29.343Z",
       "scheduledDate": "2026-10-29"
-    },
-    {
-      "id": "manual-006",
-      "phase": "Organizar",
-      "title": "Plan B: Mercadona fallido",
-      "originalRole": "Embajador",
-      "assignedTo": "Pablo Ramírez",
-      "isDone": false,
-      "notes": [
-        "Llamar ITTT, pedir documento compra.",
-        "Hacer compra presencial.",
-        "Preparar alternativa si falla Mercadona; activarla solo si hay incidencia el día del evento."
-      ],
-      "isImportant": true,
-      "eventId": "toledo-proxima",
-      "time": "18:00–18:15 · propuesta",
-      "updatedAt": "2026-10-22T20:53:58.200Z",
-      "scheduledDate": "2026-10-28"
     },
     {
       "id": "manual-007",
@@ -246,9 +217,9 @@
         "Vermut: botella en cubitera, vasos ordenados."
       ],
       "eventId": "toledo-proxima",
-      "time": "17:40–18:15 · propuesta",
+      "time": "17:45–18:15 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-29"
     },
     {
@@ -268,7 +239,7 @@
       "eventId": "toledo-proxima",
       "time": "17:45–18:30 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-29"
     },
     {
@@ -289,9 +260,9 @@
         "Apoyo de decoración: Mery Marcos, al terminar difusión, antes de la recepción."
       ],
       "eventId": "toledo-proxima",
-      "time": "18:00–18:45 · propuesta",
+      "time": "17:00–17:45 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-29"
     },
     {
@@ -312,9 +283,9 @@
         "Bombilla protagonista."
       ],
       "eventId": "toledo-proxima",
-      "time": "18:45–19:00 · propuesta",
+      "time": "18:30–19:00 · propuesta",
       "completedSteps": [],
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-29"
     },
     {
@@ -481,8 +452,8 @@
         "Hora objetivo, pendiente de confirmar con la pizzería. Coordinar recepción sin interrumpir las preguntas."
       ],
       "eventId": "toledo-proxima",
-      "time": "21:30–21:45 · propuesta",
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "time": "21:40–22:00 · propuesta",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-29"
     },
     {
@@ -517,8 +488,8 @@
         "Datos fiscales: Asociación Itstimetothink, NIF [consultar datos fiscales en el archivo privado]."
       ],
       "eventId": "toledo-proxima",
-      "time": "12:00–12:30 · propuesta",
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "time": "18:00–18:30 · propuesta",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-30"
     },
     {
@@ -550,15 +521,15 @@
         "Enviar a contacto de ITTT (consultar en archivo privado)."
       ],
       "eventId": "toledo-proxima",
-      "time": "12:30–13:00 · propuesta",
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "time": "18:30–19:00 · propuesta",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-30"
     },
     {
       "id": "operativa-clima",
       "phase": "Esa tarde",
       "title": "Climatizar el lugar",
-      "time": "16:30–17:00 · propuesta",
+      "time": "17:00–17:20 · propuesta",
       "notes": [
         "Encender climatización con antelación suficiente.",
         "Si no hay equipos, llevarlos y acordar su uso con el lugar.",
@@ -568,7 +539,7 @@
       "assignedTo": "Javier Yuste",
       "originalRole": "Equipo",
       "isDone": false,
-      "updatedAt": "2026-10-22T20:53:58.200Z",
+      "updatedAt": "2026-10-22T21:04:29.344Z",
       "scheduledDate": "2026-10-29"
     },
     {
@@ -917,6 +888,20 @@
       "name": "El secreto de la salsa · Libro del voluntario",
       "url": "https://spotigetta.github.io/Thinkglaos_app/books/el-secreto-de-la-salsa.pdf",
       "notes": "Original completo de 81 páginas. Lee dentro de la app desde Inicio → Libro del voluntario. Accesos al ciclo del voluntario (p. 33), cuidado del equipo (p. 40) y roles de la noche (p. 77). La página de lectura se recuerda en este dispositivo."
+    },
+    {
+      "id": "voluntarios-salsa",
+      "name": "El verdadero secreto de la salsa de ITTT",
+      "kind": "video",
+      "url": "./media/voluntarios-secreto-salsa.mp4",
+      "notes": "Destacado para voluntarios · vídeo original en máxima calidad"
+    },
+    {
+      "id": "voluntarios-toledo",
+      "name": "Prepárate para hacer historia en Toledo",
+      "kind": "video",
+      "url": "./media/voluntarios-historia-toledo.mp4",
+      "notes": "Destacado para voluntarios · vídeo original en máxima calidad"
     }
   ]
 }
