@@ -3,6 +3,7 @@ import { flushSync } from "react-dom";
 import { AssignPerson, RosterForm } from "./TeamFlow";
 import { StartHere, VolunteerGuide } from "./Welcome";
 import { InlineMedia, mediaKind } from "./Media";
+import { SharePanel } from "./SharePanel";
 import { Timeline } from "./Timeline";
 import { Montage } from "./Montage";
 const BookReader = React.lazy(() => import("./BookReader"));
@@ -80,6 +81,7 @@ import "../motion.css";
 import "../mobile.css";
 import "../welcome.css";
 import "../event-experience.css";
+import "../discovery.css";
 import { normalizePhase } from "./plan";
 import { Discover, Phrase } from "./Discover";
 const CACHE = "thinkglaos-state-v3",
@@ -511,27 +513,11 @@ export default function Workspace() {
   }
   async function shareEvent() {
     const text = whatsappTemplates(state, eventId)[0].text;
-    try {
-      if (navigator.share)
-        await navigator.share({ title: "Thinkglao Toledo", text });
-      else {
-        await navigator.clipboard.writeText(text);
-        setToast("Invitación copiada. Lista para compartir.");
-      }
-    } catch (error) {
-      if ((error as Error).name !== "AbortError")
-        setModal(
-          <Modal title="Comparte el Thinkglao" onClose={() => setModal(null)}>
-            <p>Selecciona y copia la invitación.</p>
-            <textarea
-              rows={12}
-              aria-label="Invitación para compartir"
-              readOnly
-              value={text}
-            />
-          </Modal>,
-        );
-    }
+    setModal(
+      <Modal title="Comparte el Thinkglao" onClose={() => setModal(null)}>
+        <SharePanel event={event} invitation={text} />
+      </Modal>,
+    );
   }
   const [collapsed, setCollapsed] = useState<string[]>(() =>
     innerWidth < 760 ? phases.slice(1) : [],

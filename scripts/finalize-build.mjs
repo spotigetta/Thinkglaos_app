@@ -14,6 +14,8 @@ const files = [
   "./data/knowledge.json",
   "./data/seed.json",
   "./media/youtube.json",
+  "./media/quotes.json",
+  "./share/thinkglaos-toledo.jpg",
   "./media/audio-manolo-whatsapp.mp3",
   "./books/el-secreto-de-la-salsa.pdf",
   ...fs.readdirSync("dist/montage").map((name) => "./montage/" + name),

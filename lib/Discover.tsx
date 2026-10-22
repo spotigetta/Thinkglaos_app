@@ -1,6 +1,7 @@
 ﻿import React, { useState } from "react";
 import type { Resource } from "./model";
 import { ManoloAudio, InlineMedia, mediaKind } from "./Media";
+import { QuoteShorts } from "./QuoteShorts";
 const base = "https://www.itstimetothink.org";
 const events = [
   [
@@ -76,13 +77,26 @@ type YouTubeItem = { id: string; title: string; kind: "shorts" | "videos" };
 export function Discover({ resources = [] }: { resources?: Resource[] }) {
   const [catalog, setCatalog] = useState<YouTubeItem[]>([]);
   const [active, setActive] = useState("");
-  const [tab, setTab] = useState<"shorts" | "videos" | "material">("shorts");
+  const [tab, setTab] = useState<"shorts" | "videos" | "quotes" | "material">(
+    "shorts",
+  );
+  const [query, setQuery] = useState("");
+  const [visible, setVisible] = useState(36);
+  const [checkedAt, setCheckedAt] = useState("");
   const [error, setError] = useState("");
   React.useEffect(() => {
     const pause = () => setActive("");
     window.addEventListener("thinkglaos-native-play", pause);
     return () => window.removeEventListener("thinkglaos-native-play", pause);
   }, []);
+  const normal = (s: string) =>
+    s
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  const filtered = catalog.filter(
+    (item) => item.kind === tab && normal(item.title).includes(normal(query)),
+  );
   React.useEffect(() => {
     const controller = new AbortController();
     fetch("./media/youtube.json", { signal: controller.signal })
@@ -90,7 +104,10 @@ export function Discover({ resources = [] }: { resources?: Resource[] }) {
         if (!r.ok) throw Error();
         return r.json();
       })
-      .then((data) => setCatalog(data.items))
+      .then((data) => {
+        setCatalog(data.items);
+        setCheckedAt(data.checkedAt);
+      })
       .catch((e) => {
         if (e.name !== "AbortError")
           setError(
@@ -102,12 +119,13 @@ export function Discover({ resources = [] }: { resources?: Resource[] }) {
   return (
     <section className="discover">
       <h2>Ver, escuchar y compartir</h2>
-      <ManoloAudio />
+      {tab !== "quotes" && <ManoloAudio />}
       <div className="media-tabs" role="tablist" aria-label="Tipo de vídeo">
         {(
           [
             ["shorts", "Shorts"],
             ["videos", "Charlas completas"],
+            ["quotes", "Frases"],
             ["material", "Material del equipo"],
           ] as const
         ).map(([id, name]) => (
@@ -118,6 +136,8 @@ export function Discover({ resources = [] }: { resources?: Resource[] }) {
             onClick={() => {
               setTab(id);
               setActive("");
+              setVisible(36);
+              setQuery("");
             }}
           >
             {name}
@@ -125,13 +145,35 @@ export function Discover({ resources = [] }: { resources?: Resource[] }) {
         ))}
       </div>
       {error && <p role="status">{error}</p>}
-      {tab !== "material" ? (
-        <div
-          className={"youtube-grid " + (tab === "shorts" ? "is-shorts" : "")}
-        >
-          {catalog
-            .filter((item) => item.kind === tab)
-            .map((item) => (
+      {tab === "quotes" ? (
+        <QuoteShorts />
+      ) : tab !== "material" ? (
+        <>
+          <div className="catalog-tools">
+            <input
+              aria-label="Buscar vídeos en todo el canal"
+              placeholder="Busca entre todos los vídeos y ponentes…"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setVisible(36);
+              }}
+            />
+            <span>
+              {filtered.length}{" "}
+              {tab === "shorts" ? "Shorts" : "vídeos completos"} disponibles
+            </span>
+            {checkedAt && (
+              <small>
+                Catálogo consultado el{" "}
+                {new Date(checkedAt).toLocaleDateString("es-ES")}
+              </small>
+            )}
+          </div>
+          <div
+            className={"youtube-grid " + (tab === "shorts" ? "is-shorts" : "")}
+          >
+            {filtered.slice(0, visible).map((item) => (
               <article key={item.id} className="youtube-card">
                 <div className="youtube-frame">
                   {active === item.id ? (
@@ -179,7 +221,18 @@ export function Discover({ resources = [] }: { resources?: Resource[] }) {
                 )}
               </article>
             ))}
-        </div>
+          </div>
+          {visible < filtered.length && (
+            <button
+              className="btn catalog-more"
+              onClick={() => setVisible((n) => n + 36)}
+            >
+              Cargar más · {Math.min(visible, filtered.length)} de{" "}
+              {filtered.length}
+            </button>
+          )}
+          {filtered.length === 0 && <p>No hay vídeos para esa búsqueda.</p>}
+        </>
       ) : (
         <div className="team-media">
           {resources

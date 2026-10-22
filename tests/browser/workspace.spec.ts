@@ -601,7 +601,8 @@ test("El voluntario lee el PDF completo y retoma la última página", async ({
 test("La línea temporal avanza con la hora real del día del encuentro", async ({
   page,
 }) => {
-  await page.clock.install({ time: new Date("2026-10-29T16:29:30Z") });
+  await page.clock.install({ time: new Date("2026-10-29T16:29:00Z") });
+  await page.clock.pauseAt(new Date("2026-10-29T16:29:30Z"));
   await network(page);
   await page.goto("/");
   await page
@@ -698,5 +699,127 @@ test("Modo montaje pausa, cambia escenas, carga música y permite salir", async 
     .click();
   await expect(page.locator(".montage-screen")).toHaveCount(0);
   await expect(page.locator(".start-here")).toBeVisible();
+  expect(writes).toBe(0);
+});
+
+test("Todo el catálogo se puede buscar y las frases enlazan a su fuente", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page);
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Vídeos Ver y compartir", exact: true })
+    .click();
+  const catalog = JSON.parse(
+    fs.readFileSync("public/media/youtube.json", "utf8"),
+  ).items;
+  const shorts = catalog.filter((i: any) => i.kind === "shorts");
+  await expect(page.locator(".catalog-tools")).toContainText(
+    shorts.length + " Shorts",
+  );
+  await expect(page.locator(".youtube-card")).toHaveCount(36);
+  await page.getByRole("button", { name: /Cargar más/ }).click();
+  await expect(page.locator(".youtube-card")).toHaveCount(72);
+  await page
+    .getByLabel("Buscar vídeos en todo el canal")
+    .fill(shorts[shorts.length - 1].title);
+  await expect(
+    page
+      .locator(".youtube-card")
+      .filter({ hasText: shorts[shorts.length - 1].title }),
+  ).toHaveCount(1);
+  await page
+    .getByRole("tab", { name: "Charlas completas", exact: true })
+    .click();
+  const videos = catalog.filter((i: any) => i.kind === "videos");
+  await expect(page.locator(".catalog-tools")).toContainText(
+    videos.length + " vídeos completos",
+  );
+  await page.getByRole("tab", { name: "Frases", exact: true }).click();
+  const quotes = JSON.parse(
+    fs.readFileSync("public/media/quotes.json", "utf8"),
+  ).items;
+  await expect(page.locator(".quote-short")).toHaveCount(quotes.length);
+  const first = page.locator(".quote-short").first();
+  await expect(first).toContainText(quotes[0].text);
+  await expect(first.getByRole("link", { name: /Fuente:/ })).toHaveAttribute(
+    "href",
+    quotes[0].url,
+  );
+  await page.route("https://www.youtube-nocookie.com/**", (r) =>
+    r.fulfill({
+      body: "<html><body>Player</body></html>",
+      contentType: "text/html",
+    }),
+  );
+  await first
+    .getByRole("button", { name: "Ver fragmento ▶", exact: true })
+    .click();
+  await expect(first.locator("iframe")).toHaveCount(1);
+  await page.getByRole("button", { name: "Cerrar vídeo de la frase" }).click();
+  await expect(page.locator(".quote-video")).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect(writes).toBe(0);
+});
+
+test("Un voluntario comparte el evento y la app sin permiso de edición", async ({
+  page,
+  request,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await network(page, false);
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      value: async (data: ShareData) => {
+        (window as any).__shared = data;
+      },
+    });
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
+        writeText: async (text: string) => {
+          (window as any).__copied = text;
+        },
+      },
+    });
+  });
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Compartir encuentro", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText("Todos los voluntarios");
+  await expect(
+    page.getByRole("link", { name: "Enviar evento por WhatsApp" }),
+  ).toHaveAttribute("href", /^https:\/\/wa\.me\//);
+  await page
+    .getByRole("button", { name: "Compartir evento…", exact: true })
+    .click();
+  expect(await page.evaluate(() => (window as any).__shared.url)).toBe(
+    remote.events[0].ticketsURL,
+  );
+  await page
+    .getByRole("button", { name: "Compartir app", exact: true })
+    .click();
+  expect(await page.evaluate(() => (window as any).__shared.url)).toBe(
+    "https://spotigetta.github.io/Thinkglaos_app/",
+  );
+  await page
+    .getByRole("button", { name: "Copiar invitación", exact: true })
+    .click();
+  expect(await page.evaluate(() => (window as any).__copied)).toContain(
+    remote.events[0].ticketsURL,
+  );
+  const html = await (await request.get("/")).text();
+  expect(html).toContain('property="og:image"');
+  expect(html).toContain(
+    "https://spotigetta.github.io/Thinkglaos_app/share/thinkglaos-toledo.jpg",
+  );
+  const image = await request.get("/share/thinkglaos-toledo.jpg");
+  expect(image.ok()).toBe(true);
+  expect(image.headers()["content-type"]).toContain("image/jpeg");
   expect(writes).toBe(0);
 });

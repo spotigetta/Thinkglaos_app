@@ -8,6 +8,7 @@
     "build": "vite build && node scripts/finalize-build.mjs",
     "check": "tsc --noEmit && tsx --test tests/*.test.ts",
     "prepare:data": "tsx scripts/prepare-data.ts",
+    "refresh:catalog": "node scripts/catalog-youtube.mjs && node scripts/prepare-quotes.mjs",
     "deploy": "node scripts/deploy.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "check:browser": "playwright test"

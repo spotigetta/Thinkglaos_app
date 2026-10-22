@@ -1,0 +1,264 @@
+.start-utility .btn:first-child {
+  width: auto !important;
+  min-width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px !important;
+}
+.start-utility .btn > span {
+  font-size: 11px;
+}
+.start-date {
+  padding-right: 95px;
+}
+.catalog-tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 18px;
+  flex-wrap: wrap;
+}
+.catalog-tools input,
+.quote-shorts > input {
+  flex: 1;
+  min-width: 180px;
+  width: 100%;
+  border: 1px solid #dce0d0;
+  background: #fffdf7;
+  border-radius: 13px;
+  padding: 13px 15px;
+  font: inherit;
+  font-size: 13px;
+}
+.catalog-tools > span {
+  font-size: 12px;
+  color: #657057;
+}
+.catalog-more {
+  margin: 14px 0 22px;
+  min-height: 44px;
+}
+.quote-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.quote-heading h3 {
+  font-size: 21px;
+  margin: 10px 0;
+}
+.quote-heading span {
+  font-size: 11px;
+  color: #6c775f;
+}
+.quote-shorts > p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #737b68;
+  max-width: 750px;
+}
+.quote-rail {
+  height: 70vh;
+  max-height: 780px;
+  min-height: 500px;
+  max-width: 480px;
+  margin: 20px auto 12px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  border-radius: 26px;
+  background: #1a241a;
+  box-shadow: 0 15px 40px #202b1922;
+}
+.quote-short {
+  height: 100%;
+  min-height: 100%;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  color: #fffce9;
+  box-sizing: border-box;
+}
+.quote-number {
+  font: 11px monospace;
+  letter-spacing: 0.2em;
+  color: #e1c67c;
+}
+.quote-short blockquote {
+  font-family: Georgia, serif;
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  line-height: 1.28;
+  margin: 24px 0;
+  border: 0;
+  padding: 0;
+  text-wrap: balance;
+}
+.quote-footer b,
+.quote-footer small {
+  display: block;
+}
+.quote-short blockquote.long {
+  font-size: 27px;
+}
+.quote-short blockquote.medium {
+  font-size: 32px;
+}
+.catalog-tools > small {
+  font-size: 10px;
+  color: #7f8873;
+}
+.quote-footer b {
+  font-size: 15px;
+}
+.quote-footer small {
+  font-size: 10px;
+  color: #c5c8b2;
+  margin: 6px 0 13px;
+}
+.quote-footer > div {
+  display: flex;
+  gap: 8px;
+}
+.quote-footer button {
+  border: 1px solid #fff4;
+  border-radius: 12px;
+  background: #fff1;
+  color: #fff;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.quote-footer > a {
+  display: block;
+  color: #c8d2bb;
+  font-size: 10px;
+  text-decoration: none;
+  margin-top: 14px;
+  line-height: 1.5;
+}
+.quote-video {
+  position: absolute;
+  inset: 0;
+  background: #0c130d;
+  z-index: 2;
+}
+.quote-video > button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 3;
+  padding: 10px 14px;
+  border: 1px solid #fff7;
+  border-radius: 16px;
+  background: #162315e6;
+  color: #fff;
+  cursor: pointer;
+}
+.quote-video iframe {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+.quote-shorts > small {
+  font-size: 11px;
+  color: #737c65;
+}
+.share-buttons {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.share-buttons .btn {
+  min-height: 44px;
+  font-size: 12px;
+}
+.share-app {
+  border: 1px solid #e1e5d6;
+  border-radius: 18px;
+  background: #f7f7ec;
+  padding: 14px;
+  margin-top: 18px;
+}
+.share-app img {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+}
+.share-app h3 {
+  margin: 14px 0 8px;
+}
+.share-app p,
+.share-panel > p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #717960;
+}
+.share-panel textarea {
+  resize: vertical;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.share-app .share-buttons {
+  margin-bottom: 0;
+}
+@media (max-width: 700px) {
+  .quote-short blockquote.long {
+    font-size: 21px;
+  }
+  .quote-short blockquote.medium {
+    font-size: 25px;
+  }
+  .start-date {
+    font-size: 10px;
+    padding-right: 100px;
+  }
+  .quote-rail {
+    width: 100%;
+    height: 65vh;
+    min-height: 460px;
+    border-radius: 20px;
+  }
+  .quote-short {
+    padding: 22px;
+  }
+  .quote-short blockquote {
+    font-size: 29px;
+  }
+  .quote-heading h3 {
+    font-size: 18px;
+  }
+  .catalog-tools {
+    gap: 9px;
+  }
+  .catalog-tools input {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .catalog-tools > span {
+    font-size: 11px;
+  }
+  .share-buttons {
+    gap: 7px;
+  }
+  .share-buttons .btn {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .media-tabs button {
+    padding: 10px 12px;
+  }
+  .quote-footer button {
+    font-size: 11px;
+  }
+}

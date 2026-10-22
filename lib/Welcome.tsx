@@ -162,9 +162,11 @@ export function StartHere({
           <button
             className="btn icon"
             title="Compartir encuentro"
+            aria-label="Compartir encuentro"
             onClick={onShare}
           >
             <Share2 size={17} />
+            <span>Compartir</span>
           </button>
           {canEdit && (
             <button
