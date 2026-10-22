@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": 11,
-  "updatedAt": "2026-10-22T20:11:19.548Z",
+  "revision": 12,
+  "updatedAt": "2026-10-22T20:27:57.737Z",
   "appliedOps": [
     "f024caf3-3170-4a04-bb79-1ff0e3eb7ddd",
     "4d69152e-fed2-4277-931a-51bf1dc30718",
@@ -840,6 +840,13 @@
       "kind": "Audio",
       "url": "https://spotigetta.github.io/Thinkglaos_app/media/audio-manolo-whatsapp.mp3",
       "notes": "MP3 extraído del vídeo original. Reproduce, descarga o comparte desde la sección Vídeos."
+    },
+    {
+      "id": "libro-voluntario-salsa",
+      "kind": "Libro PDF",
+      "name": "El secreto de la salsa · Libro del voluntario",
+      "url": "https://spotigetta.github.io/Thinkglaos_app/books/el-secreto-de-la-salsa.pdf",
+      "notes": "Original completo de 81 páginas. Lee dentro de la app desde Inicio → Libro del voluntario. Accesos al ciclo del voluntario (p. 33), cuidado del equipo (p. 40) y roles de la noche (p. 77). La página de lectura se recuerda en este dispositivo."
     }
   ]
 }

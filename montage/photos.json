@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-22T20:19:12.550Z",
+  "photos": [
+    {
+      "src": "./montage/photo-1.jpg",
+      "caption": "Preparar juntos",
+      "source": "https://static.wixstatic.com/media/110c49_cac4fbf007da497f855693798054b92b~mv2.jpg",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "IT’S TIME TO THINK · web oficial"
+    },
+    {
+      "src": "./montage/photo-2.jpg",
+      "caption": "Una idea que enciende preguntas",
+      "source": "https://static.wixstatic.com/media/110c49_39800cd79a8442f888c7509ffd2ad9d7~mv2.jpg",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "IT’S TIME TO THINK · web oficial"
+    },
+    {
+      "src": "./montage/photo-3.jpg",
+      "caption": "Escuchar y conversar",
+      "source": "https://static.wixstatic.com/media/110c49_4a041e5018ec45faa0db127958b50af2~mv2.jpg",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "IT’S TIME TO THINK · web oficial"
+    },
+    {
+      "src": "./montage/photo-4.jpg",
+      "caption": "Quedarse un rato más",
+      "source": "https://static.wixstatic.com/media/110c49_1d84392559b7465f819e7c3406029671~mv2.jpg",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "IT’S TIME TO THINK · web oficial"
+    },
+    {
+      "src": "./montage/photo-5.jpg",
+      "caption": "Comunidad en movimiento",
+      "source": "https://static.wixstatic.com/media/dca753_c50b3bd6d48f4b919ebbe4b5f1a2a589~mv2.jpg",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "IT’S TIME TO THINK · web oficial"
+    },
+    {
+      "src": "./montage/photo-6.jpg",
+      "caption": "La noche la hacemos juntos",
+      "source": "https://static.wixstatic.com/media/dca753_3416e2a455b04c99bcdd366398ce4386~mv2.jpg",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "IT’S TIME TO THINK · web oficial"
+    },
+    {
+      "src": "./montage/web-ittt.jpg",
+      "caption": "El movimiento sigue fuera de esta sala",
+      "source": "https://www.itstimetothink.org/thinkglaos",
+      "page": "https://www.itstimetothink.org/thinkglaos",
+      "credit": "ITTT · vista de su web",
+      "website": true
+    }
+  ]
+}
