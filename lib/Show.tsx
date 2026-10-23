@@ -93,6 +93,7 @@ export default function Show() {
     [advanced, setAdvanced] = useState(false);
   const externalEnabled = useRef(false);
   externalEnabled.current = externalMusic;
+  const [deck, setDeck] = useState("voces");
   current.current = s;
   const send = (m: { type: string; [key: string]: unknown }) => {
     if (m.type === "reset") seen.current.clear();
@@ -566,7 +567,12 @@ export default function Show() {
     );
   return (
     <div
-      className={"show-desk desktop-desk " + (advanced ? "desk-advanced" : "")}
+      className={
+        "show-desk desktop-desk deck-" +
+        deck +
+        " " +
+        (advanced ? "desk-advanced" : "")
+      }
     >
       <audio
         ref={voice}
@@ -612,6 +618,17 @@ export default function Show() {
         </button>
         <span>{online ? "● Proyector conectado" : "○ Abre la proyección"}</span>
       </header>
+      <nav className="desk-tabs" aria-label="Controles del directo">
+        {["voces", "tiempo", "audio"].map((d) => (
+          <button key={d} aria-pressed={deck === d} onClick={() => setDeck(d)}>
+            {d === "voces"
+              ? "Banco de voces"
+              : d === "tiempo"
+                ? "Tiempo y transporte"
+                : "Mezclador de música"}
+          </button>
+        ))}
+      </nav>
       <section className="show-monitor">
         <label>
           Música en proyección <meter min="0" max="1" value={levels.music} />

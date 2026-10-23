@@ -1061,3 +1061,67 @@ iframe.show-bg-video {
     animation: none;
   }
 }
+.desk-tabs {
+  display: flex;
+  gap: 8px;
+  grid-column: 1/-1;
+}
+.desk-tabs button[aria-pressed="true"] {
+  background: #e3c475;
+  color: #15272b;
+}
+@media (min-width: 1100px) {
+  .desktop-desk {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    grid-template-rows: auto auto minmax(190px, 0.85fr) auto minmax(220px, 1fr);
+  }
+  .desktop-desk > header {
+    grid-row: 1;
+  }
+  .desktop-desk > .dj-live {
+    grid-row: 2;
+  }
+  .desktop-desk > .show-monitor,
+  .desktop-desk > .scene-selector {
+    grid-row: 3;
+  }
+  .desktop-desk > .desk-tabs {
+    grid-row: 4;
+  }
+  .desktop-desk > section:has(.show-cues),
+  .desktop-desk > section:has(input[aria-label="Posición de la fase"]),
+  .desktop-desk > section:has(input[type="file"]) {
+    grid-column: 1/-1;
+    grid-row: 5;
+    overflow: auto;
+    min-height: 0;
+    display: none;
+  }
+  .deck-voces > section:has(.show-cues),
+  .deck-tiempo > section:has(input[aria-label="Posición de la fase"]),
+  .deck-audio > section:has(input[type="file"]) {
+    display: block;
+  }
+  .desktop-desk .show-cues {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-height: 190px;
+  }
+  .desktop-desk .scene-selector {
+    overflow: auto;
+  }
+  .desktop-desk .show-notice {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    max-width: 420px;
+    z-index: 40;
+  }
+  .desktop-desk.desk-advanced > section:last-of-type {
+    position: fixed;
+    inset: 25% 25%;
+    z-index: 35;
+    box-shadow: 0 0 0 100vmax #0009;
+  }
+}
