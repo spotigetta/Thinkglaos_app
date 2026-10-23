@@ -1,0 +1,265 @@
+{
+  "method": "Whisper local + alineación del guion; cortes entre frases",
+  "match": 0.965,
+  "cues": [
+    {
+      "voice": 1,
+      "text": "¡Bienvenidos a It's Time to Think! ¡ESTO VA A SER LO NUESTRO!",
+      "start": 0.0,
+      "end": 4.07,
+      "url": "./media/locuciones/frase-01.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Esta noche está permitido pensar! Incluso si nunca lo has hecho.",
+      "start": 4.07,
+      "end": 8.67,
+      "url": "./media/locuciones/frase-02.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡La mejor conversación puede empezar con un desconocido!",
+      "start": 8.67,
+      "end": 12.44,
+      "url": "./media/locuciones/frase-03.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Bienvenidos a It's Time to Think! No somos una secta. ¡Lo tenemos hasta por escrito!",
+      "start": 12.44,
+      "end": 17.55,
+      "url": "./media/locuciones/frase-04.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "En It's Time to Think no queremos cambiar el mundo. Bueno... ¡UN POQUITO SÍ!",
+      "start": 17.55,
+      "end": 22.65,
+      "url": "./media/locuciones/frase-05.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡No sabemos qué va a pasar esta noche! ¡Y ESO ES LO MEJOR!",
+      "start": 22.65,
+      "end": 26.62,
+      "url": "./media/locuciones/frase-06.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "Una cerveza, buenos amigos... ¡y alguna que otra pregunta incómoda!",
+      "start": 26.62,
+      "end": 31.17,
+      "url": "./media/locuciones/frase-07.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "En It's Time to Think no hacemos networking. ¡Hacemos amigos! Es bastante más peligroso.",
+      "start": 31.17,
+      "end": 36.34,
+      "url": "./media/locuciones/frase-08.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "Buscando sentido de la vida... Mientras tanto, ¡SÍRVASE OTRA CERVEZA!",
+      "start": 36.34,
+      "end": 40.79,
+      "url": "./media/locuciones/frase-09.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Cinco amigos montaron todo esto! Claramente tenían demasiado tiempo libre.",
+      "start": 40.79,
+      "end": 45.44,
+      "url": "./media/locuciones/frase-10.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "Si alguien te pregunta si quieres montar un thinkglao en tu ciudad... ¡HUYE!",
+      "start": 45.44,
+      "end": 50.19,
+      "url": "./media/locuciones/frase-11.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Hoy puede que cambies de opinión! No te preocupes, se te pasará.",
+      "start": 50.19,
+      "end": 54.5,
+      "url": "./media/locuciones/frase-12.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Nuestra misión es crear vínculos! El grupo de WhatsApp es un daño colateral.",
+      "start": 54.5,
+      "end": 59.24,
+      "url": "./media/locuciones/frase-13.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "Si alguien te pregunta dónde te ves dentro de cinco años... tienes permiso para cambiar de conversación.",
+      "start": 59.24,
+      "end": 64.89,
+      "url": "./media/locuciones/frase-14.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡No intentes parecer profundo! Ya habrá tiempo de decir tonterías durante el debate.",
+      "start": 64.89,
+      "end": 69.94,
+      "url": "./media/locuciones/frase-15.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "Puedes hablar de cualquier cosa. ¡Menos de oposiciones, hipotecas y cuánto cuesta vivir en Madrid! ¡ESTAMOS DE CELEBRACIÓN!",
+      "start": 69.94,
+      "end": 77.24,
+      "url": "./media/locuciones/frase-16.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡La vida es corta! ¡La tabla de quesos también! Tú verás qué haces.",
+      "start": 77.24,
+      "end": 82.15,
+      "url": "./media/locuciones/frase-17.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Esta noche está prohibido decir que estás hasta arriba de curro! Ya sabemos que eres importantísimo.",
+      "start": 82.15,
+      "end": 88.05,
+      "url": "./media/locuciones/frase-18.mp3"
+    },
+    {
+      "voice": 1,
+      "text": "¡Tu currículum no nos interesa! Tu teoría absurda sobre el sentido de la vida... ¡MUCHÍSIMO MÁS!",
+      "start": 88.05,
+      "end": 93.86,
+      "url": "./media/locuciones/frase-19.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡SOMOS UNA COMUNIDAD LIBRE! Por favor, seguid las instrucciones de la organización.",
+      "start": 93.86,
+      "end": 100.11,
+      "url": "./media/locuciones/frase-20.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡EN UNOS MINUTOS COMENZARÁN DIECIOCHO MINUTOS DE PENSAMIENTO! Sobreviviréis.",
+      "start": 100.11,
+      "end": 105.9,
+      "url": "./media/locuciones/frase-21.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡QUEDA TERMINANTEMENTE PROHIBIDO DECIR! \"Es que esto es muy complejo\"... ¡Y NO EXPLICAR NADA MÁS!",
+      "start": 105.9,
+      "end": 112.06,
+      "url": "./media/locuciones/frase-22.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "Nos han dicho muchas veces que somos un movimiento cultural, una comunidad de amigos, una iniciativa humanista... ¡Y HASTA UNA PEQUEÑA REVOLUCIÓN! Nosotros seguimos pensando que todo esto es una excusa extraordinariamente elaborada para juntar a gente que merece la pena alrededor de unas cervezas.",
+      "start": 112.06,
+      "end": 127.69,
+      "url": "./media/locuciones/frase-23.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡RECUERDEN! Los asistentes son futuros amigos. ¡Los amigos, futuros voluntarios! Y los voluntarios...  POBRES.",
+      "start": 127.69,
+      "end": 135.21,
+      "url": "./media/locuciones/frase-24.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡BIENVENIDOS A IT'S TIME TO THINK! Un lugar donde puedes pensar diferente... ¡siempre que estés de acuerdo en que pensar es importante!",
+      "start": 135.21,
+      "end": 143.09,
+      "url": "./media/locuciones/frase-25.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡EN BREVE COMENZARÁ UNA CHARLA DE DIECIOCHO MINUTOS! Seguida de cuarenta y cinco minutos de gente que no está de acuerdo.",
+      "start": 143.09,
+      "end": 148.68,
+      "url": "./media/locuciones/frase-26.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡LES RECORDAMOS QUE LOS DIECIOCHO MINUTOS SON DIECIOCHO! ¡NO DIECINUEVE!",
+      "start": 148.68,
+      "end": 152.13,
+      "url": "./media/locuciones/frase-27.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "Esta noche volvemos a reunirnos con una misión muy sencilla: ¡TRANSFORMAR CULTURALMENTE LA SOCIEDAD! Pero no os preocupéis, no esperamos conseguirlo todo antes de las diez. De hecho, para empezar nos conformamos con que conozcáis a alguien nuevo y no acabéis hablando exclusivamente de vuestro trabajo.",
+      "start": 152.13,
+      "end": 167.34,
+      "url": "./media/locuciones/frase-28.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "¡BIENVENIDOS A THINKGLAOS! Aquí pensamos en grande, bebemos en pequeño formato... ¡Y LUEGO NADIE SABE QUIÉN TIENE LAS LLAVES!",
+      "start": 167.34,
+      "end": 174.36,
+      "url": "./media/locuciones/frase-29.mp3"
+    },
+    {
+      "voice": 2,
+      "text": "Si te has sentado con tus cinco amigos de siempre... ¡ENHORABUENA! Has entendido exactamente lo contrario de lo que intentamos hacer.",
+      "start": 174.36,
+      "end": 180.73,
+      "url": "./media/locuciones/frase-30.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡QUERIDOS ASISTENTES! Esperamos que estéis disfrutando de vuestra conversación, de vuestra bebida y de esa EXTRAORDINARIA habilidad humana para formar corrillos justo delante de donde necesita pasar todo el mundo. ¡Dentro de muy poquito comenzaremos! Así que podéis ir buscando un buen sitio para disfrutar de lo que viene.",
+      "start": 180.73,
+      "end": 198.72,
+      "url": "./media/locuciones/frase-31.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡ATENCIÓN, ATENCIÓN! Sabemos que estáis creando vínculos. ¡Pero ahora necesitamos que os sentéis!",
+      "start": 198.72,
+      "end": 205.16,
+      "url": "./media/locuciones/frase-32.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡LOS QUE ESTÁIS HABLANDO AL FONDO! ¡Os queremos! ¡PERO SENTAOS!",
+      "start": 205.16,
+      "end": 209.14,
+      "url": "./media/locuciones/frase-33.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡EL FUET PUEDE ESPERAR! Bueno, vale... ¡COGE UN POQUITO MÁS!",
+      "start": 209.14,
+      "end": 212.89,
+      "url": "./media/locuciones/frase-34.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡NOS VAMOS SENTANDO! ¡VAMOS, VAMOS, VAMOS!",
+      "start": 212.89,
+      "end": 216.43,
+      "url": "./media/locuciones/frase-35.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡ÚLTIMA LLAMADA PARA LOS QUE ESTÁN JUNTO A LA CERVEZA! ¡SABEMOS QUIÉNES SOIS!",
+      "start": 216.43,
+      "end": 222.46,
+      "url": "./media/locuciones/frase-36.mp3"
+    },
+    {
+      "voice": 3,
+      "text": "¡TRES! ¡DOS! ¡UNO! ¡IT'S TIME TO THINK!",
+      "start": 222.46,
+      "end": 226.6,
+      "url": "./media/locuciones/frase-37.mp3"
+    }
+  ]
+}
