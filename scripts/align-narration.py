@@ -1,8 +1,9 @@
-import json,re,unicodedata,difflib,wave,subprocess
+import json,re,unicodedata,difflib,wave,subprocess,hashlib
 import numpy as np
 from pathlib import Path
 def tokens(text):
-    return re.findall(r'[a-z0-9]+',unicodedata.normalize('NFKD',text.lower()).encode('ascii','ignore').decode())
+    parts=re.findall(r'[a-z0-9]+',unicodedata.normalize('NFKD',text.lower()).encode('ascii','ignore').decode())
+    return [{'1':'uno','2':'dos','3':'tres','5':'cinco','18':'dieciocho'}.get(p,p) for p in parts]
 text=Path('../narraciones.md').read_text(encoding='utf-8')
 phrases=[]
 for number,block in enumerate(re.split(r'## Voz \d[^\n]*',text)[1:],1):
@@ -39,9 +40,13 @@ cues=[dict(voice=v,text=p,start=boundaries[i],end=boundaries[i+1]) for i,(v,p) i
 Path('public/media/locuciones').mkdir(exist_ok=True)
 ffmpeg=str(next(Path('.local/audio-tools').rglob('ffmpeg*.exe')).resolve())
 for i,c in enumerate(cues):
-    name=f'frase-{i+1:02d}.mp3';c['url']='./media/locuciones/'+name
+    name=f'voz-{i+1:02d}-pcm-v2.mp3';c['url']='./media/locuciones/'+name
     length=c['end']-c['start']
-    subprocess.run([ffmpeg,'-hide_banner','-loglevel','error','-ss',str(c['start']),'-i','../Audio_Previo_Thinkglao.wav','-t',str(length),'-af',f'afade=t=in:d=0.025,afade=t=out:st={max(0,length-.04)}:d=0.04','-b:a','192k','-y','public/media/locuciones/'+name],check=True)
+    with wave.open('../Audio_Previo_Thinkglao.wav') as source:
+        source.setpos(round(c['start']*rate));pcm=source.readframes(round(length*rate))
+    with wave.open('.local/exact-phrase.wav','wb') as target:
+        target.setnchannels(1);target.setsampwidth(2);target.setframerate(rate);target.writeframes(pcm)
+    subprocess.run([ffmpeg,'-hide_banner','-loglevel','error','-i','.local/exact-phrase.wav','-af',f'afade=t=in:d=0.015,afade=t=out:st={max(0,length-.025)}:d=0.025','-b:a','192k','-y','public/media/locuciones/'+name],check=True)
 Path('public/media/locuciones.json').write_text(json.dumps(dict(method='Whisper local + alineación del guion; cortes entre frases',match=round(matcher.ratio(),3),cues=cues),ensure_ascii=False,indent=2),encoding='utf-8')
 print('Frases:',len(cues),'Coincidencia:',round(matcher.ratio(),3))
 for i,c in enumerate(cues):print(i+1,c['voice'],c['start'],c['end'],c['text'][:50])
