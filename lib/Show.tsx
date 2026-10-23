@@ -93,6 +93,7 @@ export default function Show() {
     send({ type: "state", state: next });
   }
   function phase(p: Phase) {
+    send({ type: "reset" });
     update({ phase: p, offset: 0, started: Date.now(), running: true });
   }
   function ramp(target: number, ms = 1000) {
@@ -267,8 +268,9 @@ export default function Show() {
       clearTimeout(pending.current);
       clearTimeout(stop.current);
       voice.current?.pause();
-      duck.current = false;
-    }
+      if (!["ambiente", "llamada"].includes(s.phase)) duck.current = false;
+    } else if (duck.current && voice.current?.paused)
+      void voice.current.play().catch(() => {});
     if (intro.current) {
       intro.current.volume = s.voiceVolume;
       if (s.phase === "intro" && s.running)
