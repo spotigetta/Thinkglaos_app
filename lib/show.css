@@ -925,3 +925,139 @@ iframe.show-bg-video {
     opacity: 1 !important;
   }
 }
+/* Mesa de escritorio: tres decks, banco acotado y ajustes secundarios. */
+@media (min-width: 1100px) {
+  .desktop-desk {
+    max-width: none;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    grid-template-columns: 0.85fr 1.25fr 1fr;
+    gap: 12px;
+    padding: 16px;
+    align-content: start;
+  }
+  .desktop-desk > header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .desktop-desk > header h1 {
+    font-size: 25px;
+    margin: 0;
+  }
+  .desktop-desk > header p {
+    display: none;
+  }
+  .desktop-desk > header a {
+    font-size: 12px;
+  }
+  .desktop-desk .dj-live {
+    position: relative;
+    padding: 10px 14px;
+  }
+  .desktop-desk section {
+    padding: 16px;
+  }
+  .desktop-desk .show-monitor {
+    grid-column: 1;
+    justify-content: center;
+  }
+  .desktop-desk .show-monitor strong {
+    font-size: 70px;
+  }
+  .desktop-desk .scene-selector {
+    grid-column: 2/4;
+  }
+  .desktop-desk .scene-steps button {
+    min-height: 95px;
+  }
+  .desktop-desk .scene-selector > p {
+    display: none;
+  }
+  .desktop-desk section:nth-last-of-type(2) {
+    grid-column: 2/4;
+  }
+  .desktop-desk .show-cues {
+    max-height: 230px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .desktop-desk > section:last-of-type {
+    display: none;
+  }
+  .desktop-desk.desk-advanced > section:last-of-type {
+    display: block;
+  }
+  .desktop-desk label {
+    margin: 10px 0;
+  }
+  .desktop-desk section > p {
+    font-size: 11px;
+  }
+  .desktop-desk .show-notice {
+    grid-column: 1/-1;
+    margin: 0;
+  }
+  .desktop-desk section input[type="file"] {
+    max-width: 230px;
+  }
+}
+.show-brand img {
+  width: clamp(200px, 20vw, 340px) !important;
+  max-height: 145px !important;
+  padding: 13px !important;
+}
+.show-brand {
+  top: 3vh;
+}
+.show-brand span {
+  display: none;
+}
+.montaje .scene-ring {
+  border-width: 2px;
+  border-color: #ead17a38;
+  animation-duration: 32s;
+}
+.montaje .scene-atmosphere:after {
+  content: "IT’S TIME TO THINK";
+  position: absolute;
+  right: 6vw;
+  bottom: 24vh;
+  letter-spacing: 0.3em;
+  font-size: 12px;
+  color: #e7d49a88;
+  writing-mode: vertical-rl;
+  animation: scene-word-drift 24s ease-in-out infinite;
+}
+.montaje .scene-copy h1 {
+  background: linear-gradient(110deg, #fff4ce 20%, #e2c56c 50%, #fff4ce 80%);
+  background-size: 200% 100%;
+  background-clip: text;
+  color: transparent;
+  animation: montage-letter-light 18s ease-in-out infinite;
+}
+.montaje .scene-atmosphere > i {
+  filter: blur(45px);
+  opacity: 0.8;
+}
+.montaje .show-wash {
+  background:
+    linear-gradient(110deg, #041b17dc, #0f282575 65%, #0c151a65),
+    linear-gradient(0deg, #071713d9, transparent 65%);
+}
+@keyframes montage-letter-light {
+  0%,
+  25% {
+    background-position: 0% 50%;
+  }
+  65%,
+  100% {
+    background-position: 100% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .montaje .scene-copy h1 {
+    animation: none;
+  }
+}

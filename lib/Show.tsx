@@ -89,6 +89,10 @@ export default function Show() {
   const [speaking, setSpeaking] = useState(""),
     [query, setQuery] = useState(""),
     [bridge, setBridge] = useState(false);
+  const [externalMusic, setExternalMusic] = useState(false),
+    [advanced, setAdvanced] = useState(false);
+  const externalEnabled = useRef(false);
+  externalEnabled.current = externalMusic;
   current.current = s;
   const send = (m: { type: string; [key: string]: unknown }) => {
     if (m.type === "reset") seen.current.clear();
@@ -127,7 +131,8 @@ export default function Show() {
     duck.current = false;
     setSpeaking("");
     send({ type: "restore-music" });
-    window.postMessage({ type: "ITTT_MUSIC_RESTORE" }, location.origin);
+    if (externalEnabled.current)
+      window.postMessage({ type: "ITTT_MUSIC_RESTORE" }, location.origin);
     ramp(
       current.current.running &&
         ["montaje", "ambiente", "llamada", "salida"].includes(
@@ -145,7 +150,8 @@ export default function Show() {
     duck.current = true;
     setSpeaking(cue?.text || "Manolo Lama");
     send({ type: "duck-music" });
-    window.postMessage({ type: "ITTT_MUSIC_DUCK" }, location.origin);
+    if (externalEnabled.current)
+      window.postMessage({ type: "ITTT_MUSIC_DUCK" }, location.origin);
     voice.current.src = cue ? cue.url : "./media/audio-manolo-whatsapp.mp3";
     voice.current.volume = current.current.voiceVolume;
     void voice.current.play().catch(() => {
@@ -559,7 +565,9 @@ export default function Show() {
       </div>
     );
   return (
-    <div className="show-desk">
+    <div
+      className={"show-desk desktop-desk " + (advanced ? "desk-advanced" : "")}
+    >
       <audio
         ref={voice}
         onEnded={restore}
@@ -582,6 +590,9 @@ export default function Show() {
       <header>
         <a href="?">← Volver al equipo</a>
         <h1>Dirección de escena</h1>
+        <button onClick={() => setAdvanced((v) => !v)}>
+          {advanced ? "Cerrar ajustes" : "Ajustes y pantalla compartida"}
+        </button>
         <p>Una ventana para ti. Otra, limpia, para el público.</p>
         <button disabled={!cues.length} onClick={() => speak(cues[0])}>
           Probar voz ▶
@@ -765,6 +776,35 @@ export default function Show() {
       </section>
       <section>
         <h2>3 · Mezclador</h2>
+        <label>
+          <input
+            type="checkbox"
+            checked={externalMusic}
+            disabled={!bridge}
+            onChange={(e) => {
+              setExternalMusic(e.target.checked);
+              window.postMessage(
+                { type: "ITTT_MUSIC_ARM", enabled: e.target.checked },
+                location.origin,
+              );
+            }}
+          />
+          Bajar mi pestaña de música solo mientras habla una voz
+        </label>
+        <button
+          onClick={() => {
+            voice.current?.pause();
+            restore();
+            setExternalMusic(false);
+            window.postMessage(
+              { type: "ITTT_MUSIC_ARM", enabled: false },
+              location.origin,
+            );
+            update({ autoVoice: false, internalMusic: false });
+          }}
+        >
+          PARAR AUTOMATISMOS · música libre
+        </button>
         <details>
           <summary>Conectar YouTube Music o Spotify web</summary>
           <p>
