@@ -1,7 +1,9 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
 import "./show.css";
+import { stageLabels, sceneSeconds, visualScene } from "./show-scenes";
 type Phase =
+  | "montaje"
   | "ambiente"
   | "llamada"
   | "salida"
@@ -31,7 +33,7 @@ type State = {
   internalMusic: boolean;
 };
 const defaults: State = {
-  phase: "ambiente",
+  phase: "montaje",
   running: false,
   started: 0,
   offset: 0,
@@ -52,23 +54,13 @@ const fmt = (s: number) =>
     .padStart(2, "0")}:${Math.floor(Math.max(0, s) % 60)
     .toString()
     .padStart(2, "0")}`;
-const phrases = [
-  "La noche empieza contigo.",
-  "Una ciudad. Mil preguntas.",
-  "Nos paramos. Nos encontramos.",
-  "Tu curiosidad enciende la bombilla.",
-  "Aquí los desconocidos se convierten en amigos.",
-  "Piensa distinto. Escucha de verdad.",
-];
-const calls = [
-  "¡Vamos buscando sitio!",
-  "Coge tu cerveza. Ven a pensar.",
-  "El fuet puede esperar. Tú no.",
-  "Nos vamos sentando.",
-];
 export default function Show() {
   const projection = new URLSearchParams(location.search).has("projection");
-  const [s, set] = useState<State>(defaults),
+  const [s, set] = useState<State>(() => ({
+      ...defaults,
+      started: Date.now(),
+      running: true,
+    })),
     [now, tick] = useState(Date.now()),
     [notice, note] = useState(""),
     [online, connected] = useState(false),
@@ -111,7 +103,13 @@ export default function Show() {
     voice.current?.pause();
     restore();
     send({ type: "reset" });
-    update({ phase: p, offset: 0, started: Date.now(), running: true });
+    update({
+      phase: p,
+      offset: 0,
+      started: Date.now(),
+      running: true,
+      autoVoice: p === "ambiente" || p === "llamada",
+    });
   }
   function ramp(target: number, ms = 1000) {
     cancelAnimationFrame(fade.current);
@@ -132,7 +130,9 @@ export default function Show() {
     window.postMessage({ type: "ITTT_MUSIC_RESTORE" }, location.origin);
     ramp(
       current.current.running &&
-        ["ambiente", "llamada", "salida"].includes(current.current.phase)
+        ["montaje", "ambiente", "llamada", "salida"].includes(
+          current.current.phase,
+        )
         ? current.current.volume
         : 0,
     );
@@ -271,6 +271,7 @@ export default function Show() {
       update({
         scheduled: "",
         phase: "ambiente",
+        autoVoice: true,
         offset: 0,
         started: Date.now(),
         running: true,
@@ -315,7 +316,7 @@ export default function Show() {
     const active =
       s.internalMusic &&
       s.running &&
-      ["ambiente", "llamada", "salida"].includes(s.phase);
+      ["montaje", "ambiente", "llamada", "salida"].includes(s.phase);
     if (music.current) {
       if (active)
         void music.current.play().catch(() =>
@@ -395,11 +396,47 @@ export default function Show() {
       note("No se compartió ninguna pantalla.");
     }
   }
-  const index = Math.floor(t / (s.phase === "llamada" ? 3 : 12));
+  const index = Math.floor(t / sceneSeconds(s.phase));
+  const scene = visualScene(s.phase, index);
+  const graphic = ["montaje", "ambiente", "llamada", "salida"].includes(
+    s.phase,
+  );
+  const photoIndex = Math.floor(t / (s.phase === "montaje" ? 36 : 24));
+  const photoAt = (i: number) =>
+    photos[Math.max(0, i) % Math.max(1, photos.length)] ||
+    "./montage/photo-1.jpg";
+  const nextStage: Record<string, Phase> = {
+    montaje: "ambiente",
+    ambiente: "llamada",
+    llamada: "salida",
+    salida: "intro",
+    intro: "charla",
+    charla: "preguntas",
+    preguntas: "montaje",
+    pantalla: "montaje",
+  };
+  const nextText: Record<string, string> = {
+    montaje: "Empezar ambientillo · 30 min",
+    ambiente: "Invitar a sentarse",
+    llamada: "Acelerar y lanzar intro",
+    salida: "Lanzar intro ahora",
+    intro: "Saltar a la charla",
+    charla: "Pasar a preguntas",
+    preguntas: "Volver al montaje",
+    pantalla: "Volver al montaje",
+  };
   if (projection)
     return (
       <div
-        className={"show-output " + s.phase}
+        className={
+          "show-output " +
+          s.phase +
+          (s.running ? "" : " scene-paused") +
+          " visual-layout-" +
+          scene.layout +
+          " visual-accent-" +
+          scene.accent
+        }
         onClick={() => {
           if (s.running) void music.current?.play().catch(() => {});
           if (s.phase === "intro") void intro.current?.play().catch(() => {});
@@ -407,20 +444,33 @@ export default function Show() {
         }}
       >
         <div
-          className="show-visual"
-          key={Math.floor(index / 2)}
-          style={{
-            backgroundImage: `url('${photos[Math.floor(index / 2) % Math.max(1, photos.length)] || "./montage/photo-1.jpg"}')`,
-          }}
+          className="show-visual previous-photo"
+          style={{ backgroundImage: `url('${photoAt(photoIndex - 1)}')` }}
         />
-        {s.phase === "ambiente" && index % 5 === 3 && shorts.length > 0 && (
-          <iframe
-            className="show-bg-video"
-            title="Momentos ITTT"
-            src={`https://www.youtube-nocookie.com/embed/${shorts[index % shorts.length]}?autoplay=1&mute=1&controls=0&playsinline=1&rel=0`}
-            allow="autoplay"
-          />
+        <div
+          className="show-visual current-photo"
+          key={photoIndex}
+          style={{ backgroundImage: `url('${photoAt(photoIndex)}')` }}
+        />
+        {graphic && (
+          <div className="scene-atmosphere" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <span className="scene-ring" />
+            <span className="scene-orbit-word">THINK</span>
+          </div>
         )}
+        {["montaje", "ambiente"].includes(s.phase) &&
+          index % 5 === 3 &&
+          shorts.length > 0 && (
+            <iframe
+              className="show-bg-video"
+              title="Momentos ITTT"
+              src={`https://www.youtube-nocookie.com/embed/${shorts[index % shorts.length]}?autoplay=1&mute=1&controls=0&playsinline=1&rel=0`}
+              allow="autoplay"
+            />
+          )}
         <div className="show-wash" />
         <div className="show-brand">
           <img src="./assets/ittt.png" alt="IT’S TIME TO THINK" />
@@ -457,7 +507,10 @@ export default function Show() {
             playsInline
           />
         ) : (
-          <main key={index}>
+          <main
+            className={graphic ? "scene-copy" : ""}
+            key={graphic ? s.phase + index : s.phase}
+          >
             <small>
               {s.phase === "charla"
                 ? "18 MINUTOS. UNA IDEA."
@@ -467,25 +520,37 @@ export default function Show() {
                     ? "ENCONTRAMOS NUESTRO SITIO"
                     : s.phase === "salida"
                       ? "ENCENDEMOS LA BOMBILLA"
-                      : "CONSTRUYENDO COMUNIDAD"}
+                      : scene.copy[0]}
             </small>
             <h1>
               {["charla", "preguntas"].includes(s.phase)
                 ? fmt(duration - t)
                 : s.phase === "salida"
                   ? Math.max(1, 8 - Math.floor(t))
-                  : s.phase === "llamada"
-                    ? calls[index % calls.length]
-                    : phrases[index % phrases.length]}
+                  : scene.copy[1]}
             </h1>
-            <p>
-              {s.phase === "ambiente"
-                ? "Una cerveza. Una pregunta. Un futuro amigo."
-                : s.phase === "llamada"
-                  ? "Coge algo de beber. Acércate. Nos vamos sentando."
-                  : ""}
-            </p>
+            <p>{graphic ? scene.copy[2] : ""}</p>
           </main>
+        )}
+        {graphic && s.phase !== "salida" && (
+          <div className="scene-side-note" key={"note" + index}>
+            <small>
+              {s.phase === "montaje"
+                ? "EL SECRETO DE LA SALSA"
+                : "LA RECETA DE ESTA NOCHE"}
+            </small>
+            <span>
+              {
+                [
+                  "Curiosidad al 100%",
+                  "Hecho entre personas",
+                  "Buen rollo en construcción",
+                  "Aquí todos cuentan",
+                ][index % 4]
+              }
+            </span>
+            <i />
+          </div>
         )}
         <div className="show-orbit">
           PENSAR · ENCONTRARNOS · ESCUCHAR · COMPARTIR ·{" "}
@@ -542,7 +607,7 @@ export default function Show() {
           {Math.round(levels.music * 100)}% ·{" "}
           {speaking ? "Locución en directo" : "Voces listas"}
         </label>
-        <small>EN EMISIÓN · {s.phase.toUpperCase()}</small>
+        <small>EN PANTALLA · {stageLabels[s.phase]}</small>
         <strong>
           {["charla", "preguntas"].includes(s.phase)
             ? fmt(duration - t)
@@ -552,41 +617,69 @@ export default function Show() {
           {fmt(t)} transcurridos · {s.running ? "En marcha" : "Pausado"}
         </span>
       </section>
-      <section>
-        <h2>1 · Escena</h2>
-        <div className="show-actions">
-          {(
-            [
-              "ambiente",
-              "llamada",
-              "salida",
-              "intro",
-              "charla",
-              "preguntas",
-            ] as Phase[]
-          ).map((p, i) => (
+      <section className="scene-selector">
+        <h2>Elige el momento</h2>
+        <div className="scene-steps">
+          {(["montaje", "ambiente", "llamada"] as Phase[]).map((p, i) => (
             <button
               key={p}
+              aria-label={
+                p === "ambiente"
+                  ? "Ambiente"
+                  : p === "llamada"
+                    ? "Que se sienten"
+                    : "Montaje"
+              }
               aria-pressed={s.phase === p}
               onClick={() => phase(p)}
             >
-              {
-                [
-                  "Ambiente",
-                  "Que se sienten",
-                  "Acelerar → intro",
-                  "Lanzar intro",
-                  "Charla · 18 min",
-                  "Preguntas · 45 min",
-                ][i]
-              }
+              <span>0{i + 1}</span>
+              <b>{["Montaje", "Ambientillo", "A sentarse"][i]}</b>
+              <small>
+                {
+                  [
+                    "Suave · mientras preparamos",
+                    "30 min · frases y locuciones",
+                    "Más energía · llamada a sala",
+                  ][i]
+                }
+              </small>
             </button>
           ))}
         </div>
+        <button
+          className="scene-next"
+          onClick={() => phase(nextStage[s.phase])}
+        >
+          {nextText[s.phase]} <span aria-hidden="true">→</span>
+        </button>
+        <details>
+          <summary>Intro, charla y preguntas · selección directa</summary>
+          <div className="show-actions">
+            {(["salida", "intro", "charla", "preguntas"] as Phase[]).map(
+              (p, i) => (
+                <button
+                  key={p}
+                  aria-pressed={s.phase === p}
+                  onClick={() => phase(p)}
+                >
+                  {
+                    [
+                      "Acelerar → intro",
+                      "Lanzar intro",
+                      "Charla · 18 min",
+                      "Preguntas · 45 min",
+                    ][i]
+                  }
+                </button>
+              ),
+            )}
+          </div>
+        </details>
         <p>
-          La llamada dura lo que necesites. «Acelerar» hace una transición de 8
-          segundos y lanza la intro. Al acabar comienza la charla. Las preguntas
-          se inician manualmente.
+          El montaje no lanza locuciones. El ambientillo las reparte durante
+          media hora. «A sentarse» activa la llamada. Tú decides cuándo acelerar
+          y lanzar la intro.
         </p>
       </section>
       <section>

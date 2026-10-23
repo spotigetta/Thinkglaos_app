@@ -9,6 +9,9 @@ test("La mesa controla la proyección limpia, temporizadores e intro reversible"
   await expect(output.locator(".show-clock")).toBeVisible();
   await expect(output.getByRole("button")).toHaveCount(0);
   await page
+    .getByText("Intro, charla y preguntas · selección directa", { exact: true })
+    .click();
+  await page
     .getByRole("button", { name: "Charla · 18 min", exact: true })
     .click();
   await expect(output.locator("h1")).toContainText("17:");
@@ -48,6 +51,40 @@ test("La mesa controla la proyección limpia, temporizadores e intro reversible"
     .click();
   await expect(output.locator(".show-output")).toHaveClass(/llamada/);
   await expect(page.locator(".show-cues button")).toHaveCount(37);
+});
+
+test("Tres momentos claros: montaje tranquilo, ambientillo con voces y llamada con más energía", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const output = await popup;
+  await expect(output.locator(".show-output")).toHaveClass(/montaje/);
+  await expect(
+    page.getByLabel("Locuciones automáticas durante el previo"),
+  ).not.toBeChecked();
+  await page
+    .getByRole("button", { name: "Empezar ambientillo · 30 min", exact: true })
+    .click();
+  await expect(output.locator(".show-output")).toHaveClass(/ambiente/);
+  await expect(
+    page.getByLabel("Locuciones automáticas durante el previo"),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "Pausar", exact: true }).click();
+  await page.getByLabel("Posición de la fase").fill("28");
+  const first = await output.locator("h1").textContent();
+  await page.getByLabel("Posición de la fase").fill("56");
+  await expect(output.locator("h1")).not.toHaveText(first!);
+  await expect(output.locator(".scene-atmosphere")).toHaveCount(1);
+  await expect(output.getByAltText("IT’S TIME TO THINK")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Invitar a sentarse", exact: true })
+    .click();
+  await expect(output.locator(".show-output")).toHaveClass(/llamada/);
+  await expect(
+    page.getByRole("button", { name: "Acelerar y lanzar intro", exact: true }),
+  ).toBeVisible();
 });
 
 test("Una frase seleccionada suena completa desde la mesa sin proyector ni música", async ({
