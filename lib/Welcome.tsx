@@ -224,6 +224,9 @@ export function StartHere({
         </button>
       </div>
       <div className="start-tools">
+        <button aria-label="Modo montaje" onClick={onMontage}>
+          Pantalla de montaje sencilla
+        </button>
         <button onClick={onBook}>
           <BookOpen size={16} />
           Libro del voluntario
@@ -231,16 +234,18 @@ export function StartHere({
       </div>
       <button
         className="montage-launch"
-        aria-label="Modo montaje"
-        onClick={onMontage}
+        aria-label="Mesa de proyección"
+        onClick={() =>
+          window.open(window.location.pathname + "?control=1", "ittt-control")
+        }
       >
         <span className="montage-launch-icon">
           <Play fill="currentColor" />
         </span>
         <span>
           <small>ENCIENDE EL AMBIENTE</small>
-          <b>Pantalla de montaje</b>
-          <em>Vídeos, frases, música y reloj en vivo</em>
+          <b>Proyección y directo ↗</b>
+          <em>Mesa de control · segunda pantalla · locuciones y tiempos</em>
         </span>
         <ArrowRight />
       </button>
