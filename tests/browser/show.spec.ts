@@ -21,6 +21,7 @@ test("La mesa controla la proyección limpia, temporizadores e intro reversible"
     "src",
     "./share/laura-rodriguez.jpg",
   );
+  await page.getByRole("button", { name: "Tiempo y transporte", exact: true }).click();
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   const before = await output.locator("h1").textContent();
   await page.waitForTimeout(1100);
@@ -71,6 +72,7 @@ test("Tres momentos claros: montaje tranquilo, ambientillo con voces y llamada c
   await expect(
     page.getByLabel("Locuciones automáticas durante el previo"),
   ).toBeChecked();
+  await page.getByRole("button", { name: "Tiempo y transporte", exact: true }).click();
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   await page.getByLabel("Posición de la fase").fill("28");
   const first = await output.locator("h1").textContent();
