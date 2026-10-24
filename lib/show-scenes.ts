@@ -206,14 +206,223 @@ const seating = [
     "Ya casi estamos todos.",
   ],
 ];
+montage.push(
+  [
+    "ESTUDIO DE INGREDIENTES",
+    "La salsa empieza por las personas.",
+    "El resto lo vamos improvisando.",
+  ],
+  [
+    "DETRÁS DE LA BOMBILLA",
+    "Hoy el equipo tiene luz propia.",
+    "Gracias por poner el cuerpo y las ganas.",
+  ],
+  [
+    "CUÑA DE LA CASA",
+    "Si esto sale bien, será culpa de todos.",
+    "Especialmente del que trajo los abridores.",
+  ],
+  [
+    "PRUEBA DE SONIDO",
+    "Probando: uno, dos… muchas preguntas.",
+    "El micro está casi listo. La curiosidad, siempre.",
+  ],
+  [
+    "PREPARANDO LO EXTRAORDINARIO",
+    "Una mano ayuda. Un equipo transforma.",
+    "Lo pequeño también hace historia.",
+  ],
+  [
+    "DEPARTAMENTO DE BUEN ROLLO",
+    "Buscamos gente que se acerque.",
+    "No hace falta enviar currículum.",
+  ],
+  [
+    "LO QUE NO SALE EN EL CARTEL",
+    "Todo esto también es el Thinkglao.",
+    "El montaje. Las risas. El último cable.",
+  ],
+  [
+    "SERVICIO TÉCNICO DE LA COMUNIDAD",
+    "Conectando personas…",
+    "Esta conexión no necesita contraseña.",
+  ],
+  [
+    "RECETA SIN MEDIDAS",
+    "Un puñado de amigos. Ganas de liarla bien.",
+    "Remover con cuidado. Servir en comunidad.",
+  ],
+  [
+    "PREESTRENO",
+    "La mejor parte se prepara entre todos.",
+    "Esta noche también lleva vuestra firma.",
+  ],
+  [
+    "NOTA DEL DIRECTOR",
+    "Nadie monta una buena noche solo.",
+    "Por eso estamos aquí.",
+  ],
+  [
+    "APERTURA EN PROCESO",
+    "Falta poco. Ya se nota.",
+    "Las mesas están listas para otras historias.",
+  ],
+);
+atmosphere.push(
+  [
+    "INTERMEDIO CULTURAL",
+    "No somos expertos en todo.",
+    "Pero preguntamos con mucha ilusión.",
+  ],
+  [
+    "PATROCINADO POR LA CURIOSIDAD",
+    "La única suscripción es tener ganas.",
+    "Sin permanencia. Con posibles amigos.",
+  ],
+  [
+    "CUÑA DE SERVICIO PÚBLICO",
+    "Saludar no compromete a una hipoteca.",
+    "Puedes probar tranquilamente.",
+  ],
+  [
+    "ATENCIÓN A LA CLIENTELA",
+    "Si te quedas sin tema, pregunta.",
+    "Nos funciona desde el primer Thinkglao.",
+  ],
+  [
+    "EL SECRETO MEJOR GUARDADO",
+    "La salsa tiene nombres y apellidos.",
+    "Y alguno acaba de saludarte.",
+  ],
+  [
+    "CARTELERA DE HOY",
+    "Acción: conocer a alguien nuevo.",
+    "Drama: se ha acabado tu trozo de fuet.",
+  ],
+  [
+    "EN ESTA SALA",
+    "Se permite venir sin una gran teoría.",
+    "Hasta recomendamos dejarla respirar.",
+  ],
+  [
+    "ÚLTIMA HORA",
+    "Pensar en compañía mejora el ambiente.",
+    "Seguiremos informando entre cervezas.",
+  ],
+  [
+    "ESTA NOCHE NO HAY EXAMEN",
+    "Levanta una pregunta. Baja la guardia.",
+    "Lo de tomar apuntes es totalmente opcional.",
+  ],
+  [
+    "PRÓXIMAMENTE",
+    "Una conversación que no tenías prevista.",
+    "Disponible aquí. En persona. Sin algoritmo.",
+  ],
+  [
+    "LO ESTÁS HACIENDO BIEN",
+    "Si ya has saludado a alguien, vas bien.",
+    "Si no, todavía estás a tiempo.",
+  ],
+  [
+    "EL AMBIENTE SE CONTAGIA",
+    "Haz hueco en tu conversación.",
+    "Siempre cabe alguien más.",
+  ],
+  [
+    "AVISO DE NAVEGACIÓN",
+    "Has salido de tu burbuja.",
+    "Puede que encuentres buenas vistas.",
+  ],
+  [
+    "NO ES MAGIA",
+    "Son personas encontrándose.",
+    "Aunque a veces se le parece bastante.",
+  ],
+  [
+    "MÁS ALLÁ DEL TRABAJO",
+    "Hoy no te preguntamos a qué te dedicas.",
+    "Nos interesa qué te hace pensar.",
+  ],
+  [
+    "PREGUNTA DE CALENTAMIENTO",
+    "¿Y si el otro tiene un poquito de razón?",
+    "No hace falta contestar todavía.",
+  ],
+  [
+    "PUBLICIDAD SIN LETRA PEQUEÑA",
+    "La cerveza no piensa por ti.",
+    "La compañía ayuda bastante más.",
+  ],
+  [
+    "TENEMOS UN PLAN",
+    "Escuchar. Preguntar. Volver a vernos.",
+    "Los mejores planes dejan espacio.",
+  ],
+  [
+    "AVISO A LOS CORRILLOS",
+    "Vuestra conversación tiene buena pinta.",
+    "¿Cabe una persona más?",
+  ],
+  [
+    "ESTRENO EN EXCLUSIVA",
+    "La versión de ti que hace una pregunta.",
+    "Hoy, en esta misma sala.",
+  ],
+  [
+    "UNA PEQUEÑA REVOLUCIÓN",
+    "Menos respuestas rápidas. Más escucha.",
+    "Y una mesa donde nos quepamos todos.",
+  ],
+  [
+    "MANUAL DE LA SALSA",
+    "No hace falta caerle bien a todo el mundo.",
+    "Con empezar a conocernos, nos vale.",
+  ],
+  [
+    "CONEXIÓN ESTABLECIDA",
+    "Aquí la cobertura la pone la gente.",
+    "Acércate un poco más.",
+  ],
+  [
+    "QUÉ SUERTE COINCIDIR",
+    "Podríamos estar en cualquier sitio.",
+    "Y hemos elegido encontrarnos aquí.",
+  ],
+);
+seating.push(
+  [
+    "VAMOS ACERCÁNDONOS",
+    "Tu sitio te está esperando.",
+    "Coge la bebida. Deja paso. Ven con curiosidad.",
+  ],
+  [
+    "LLAMADA A SALA",
+    "El siguiente protagonista es una idea.",
+    "Buscamos público con buenas preguntas.",
+  ],
+  [
+    "NOS QUEDA LO MEJOR",
+    "Guardamos el móvil. Abrimos la escucha.",
+    "Ya se enciende la bombilla.",
+  ],
+  [
+    "CASI LISTOS",
+    "Último bocado. Primera fila.",
+    "Esta noche empieza de verdad.",
+  ],
+);
 export function visualScene(phase: string, index: number) {
   const pool =
     phase === "montaje" ? montage : phase === "llamada" ? seating : atmosphere;
-  const seed = (Math.max(0, index) * 11 + 3) % pool.length;
+  const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
+  const step = [11, 13, 17, 19, 23].find((n) => gcd(n, pool.length) === 1) || 1;
+  const seed = (Math.max(0, index) * step + 3) % pool.length;
   return {
     copy: pool[seed],
     layout: (index * 7 + 1) % 4,
     accent: (index * 3 + 1) % 5,
+    effect: (Math.max(0, index) * 5 + 2) % 8,
   };
 }
 export function sceneSeconds(phase: string) {

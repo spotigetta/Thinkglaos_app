@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
 import "./show.css";
+import { KineticText } from "./KineticText";
 import { stageLabels, sceneSeconds, visualScene } from "./show-scenes";
 type Phase =
   | "montaje"
@@ -568,11 +569,13 @@ export default function Show() {
                       : scene.copy[0]}
             </small>
             <h1>
-              {["charla", "preguntas"].includes(s.phase)
-                ? fmt(duration - t)
-                : s.phase === "salida"
-                  ? Math.max(1, 8 - Math.floor(t))
-                  : scene.copy[1]}
+              {["charla", "preguntas"].includes(s.phase) ? (
+                fmt(duration - t)
+              ) : s.phase === "salida" ? (
+                Math.max(1, 8 - Math.floor(t))
+              ) : (
+                <KineticText text={scene.copy[1]} effect={scene.effect} />
+              )}
             </h1>
             <p>{graphic ? scene.copy[2] : ""}</p>
           </main>
@@ -597,8 +600,16 @@ export default function Show() {
             <i />
           </div>
         )}
-        <div className="show-orbit">
-          PENSAR · ENCONTRARNOS · ESCUCHAR · COMPARTIR ·{" "}
+        <div className="show-orbit continuous-ticker" aria-hidden="true">
+          <div className="ticker-track">
+            {[0, 1].map((i) => (
+              <span className="ticker-copy" key={i}>
+                IT’S TIME TO THINK <i>✦</i> LA SALSA ERES TÚ <i>✦</i> NOS
+                PARAMOS · NOS ENCONTRAMOS <i>✦</i> CURIOSIDAD EN COMPAÑÍA{" "}
+                <i>✦</i> UNA BUENA PREGUNTA LO CAMBIA TODO <i>✦</i>{" "}
+              </span>
+            ))}
+          </div>
         </div>
         <audio ref={music} src={s.track} loop />
       </div>
