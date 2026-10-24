@@ -21,7 +21,9 @@ test("La mesa controla la proyección limpia, temporizadores e intro reversible"
     "src",
     "./share/laura-rodriguez.jpg",
   );
-  await page.getByRole("button", { name: "Tiempo y transporte", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Tiempo y transporte", exact: true })
+    .click();
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   const before = await output.locator("h1").textContent();
   await page.waitForTimeout(1100);
@@ -72,7 +74,9 @@ test("Tres momentos claros: montaje tranquilo, ambientillo con voces y llamada c
   await expect(
     page.getByLabel("Locuciones automáticas durante el previo"),
   ).toBeChecked();
-  await page.getByRole("button", { name: "Tiempo y transporte", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Tiempo y transporte", exact: true })
+    .click();
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   await page.getByLabel("Posición de la fase").fill("28");
   const first = await output.locator("h1").textContent();
@@ -120,4 +124,34 @@ test("Una frase seleccionada suena completa desde la mesa sin proyector ni músi
   await expect
     .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
     .toBeGreaterThan(0.1);
+});
+
+test("Los titulares permanecen visibles durante toda la escena y la cinta no tiene estrellas", async ({
+  page,
+}) => {
+  await page.goto("/?projection=1");
+  await page.locator(".kinetic-word").first().waitFor();
+  const samples = await page.evaluate(() => {
+    const main = document.querySelector("main.scene-copy")!;
+    const words = [...document.querySelectorAll(".kinetic-word")];
+    return [0, 1000, 6000, 12000, 23000].map((time) => {
+      for (const a of document.getAnimations()) a.currentTime = time;
+      return {
+        opacity: Number(getComputedStyle(main).opacity),
+        words: words.every((w) => {
+          const s = getComputedStyle(w);
+          return (
+            s.opacity === "1" && s.clipPath === "none" && s.filter === "none"
+          );
+        }),
+        color: getComputedStyle(document.querySelector("h1")!).color,
+      };
+    });
+  });
+  expect(
+    samples.every(
+      (s) => s.opacity >= 0.65 && s.words && s.color !== "rgba(0, 0, 0, 0)",
+    ),
+  ).toBe(true);
+  await expect(page.locator(".ticker-track")).not.toContainText("✦");
 });

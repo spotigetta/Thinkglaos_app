@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
 import "./show.css";
 import { KineticText } from "./KineticText";
@@ -604,9 +604,13 @@ export default function Show() {
           <div className="ticker-track">
             {[0, 1].map((i) => (
               <span className="ticker-copy" key={i}>
-                IT’S TIME TO THINK <i>✦</i> LA SALSA ERES TÚ <i>✦</i> NOS
-                PARAMOS · NOS ENCONTRAMOS <i>✦</i> CURIOSIDAD EN COMPAÑÍA{" "}
-                <i>✦</i> UNA BUENA PREGUNTA LO CAMBIA TODO <i>✦</i>{" "}
+                IT’S TIME TO THINK <span className="ticker-separator"> · </span>{" "}
+                LA SALSA ERES TÚ <span className="ticker-separator"> · </span>{" "}
+                NOS PARAMOS · NOS ENCONTRAMOS{" "}
+                <span className="ticker-separator"> · </span> CURIOSIDAD EN
+                COMPAÑÍA <span className="ticker-separator"> · </span> UNA BUENA
+                PREGUNTA LO CAMBIA TODO{" "}
+                <span className="ticker-separator"> · </span>{" "}
               </span>
             ))}
           </div>
