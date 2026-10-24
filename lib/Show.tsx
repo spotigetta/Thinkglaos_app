@@ -24,6 +24,7 @@ type State = {
   started: number;
   offset: number;
   volume: number;
+  duckLevel: number;
   voiceVolume: number;
   track: string;
   minutes: number;
@@ -38,6 +39,7 @@ const defaults: State = {
   started: 0,
   offset: 0,
   volume: 0.65,
+  duckLevel: 0.23,
   voiceVolume: 1,
   track: "./media/levels.mp3",
   minutes: 30,
@@ -143,6 +145,16 @@ export default function Show() {
         : 0,
     );
   }
+  useEffect(() => {
+    if (!projection && duck.current) {
+      send({ type: "duck-music" });
+      if (externalEnabled.current)
+        window.postMessage(
+          { type: "ITTT_MUSIC_DUCK", level: s.duckLevel },
+          location.origin,
+        );
+    }
+  }, [s.duckLevel]);
   function speak(cue?: Cue) {
     if (!voice.current) return;
     clearTimeout(pending.current);
@@ -152,7 +164,10 @@ export default function Show() {
     setSpeaking(cue?.text || "Manolo Lama");
     send({ type: "duck-music" });
     if (externalEnabled.current)
-      window.postMessage({ type: "ITTT_MUSIC_DUCK" }, location.origin);
+      window.postMessage(
+        { type: "ITTT_MUSIC_DUCK", level: current.current.duckLevel },
+        location.origin,
+      );
     voice.current.src = cue ? cue.url : "./media/audio-manolo-whatsapp.mp3";
     voice.current.volume = current.current.voiceVolume;
     void voice.current.play().catch(() => {
@@ -167,17 +182,23 @@ export default function Show() {
     channel.onmessage = (e) => {
       const m = e.data;
       if (projection) {
-        if (m.type === "duck-music")
+        if (m.type === "duck-music") {
+          duck.current = true;
           ramp(
-            current.current.internalMusic ? current.current.volume * 0.23 : 0,
+            current.current.internalMusic
+              ? current.current.volume * current.current.duckLevel
+              : 0,
             550,
           );
-        if (m.type === "restore-music")
+        }
+        if (m.type === "restore-music") {
+          duck.current = false;
           ramp(
             current.current.running && current.current.internalMusic
               ? current.current.volume
               : 0,
           );
+        }
         if (m.type === "state") set(m.state);
         if (m.type === "manolo") speak();
         if (m.type === "cue") speak(m.cue);
@@ -332,7 +353,16 @@ export default function Show() {
             text: "Pulsa una vez en la proyección para activar sonido y pantalla completa.",
           }),
         );
-      ramp(active ? (duck.current ? s.volume * 0.23 : s.volume) : 0);
+      ramp(
+        active
+          ? s.phase === "salida"
+            ? 0
+            : duck.current
+              ? s.volume * s.duckLevel
+              : s.volume
+          : 0,
+        s.phase === "salida" ? 7500 : 1000,
+      );
     }
     if (!s.running || !["ambiente", "llamada"].includes(s.phase)) {
       clearTimeout(pending.current);
@@ -353,7 +383,15 @@ export default function Show() {
       else intro.current.pause();
     }
     if (screen.current) screen.current.srcObject = stream.current;
-  }, [s.phase, s.running, s.volume, s.track, s.voiceVolume, s.internalMusic]);
+  }, [
+    s.phase,
+    s.running,
+    s.volume,
+    s.track,
+    s.voiceVolume,
+    s.internalMusic,
+    s.duckLevel,
+  ]);
   useEffect(() => {
     if (projection && intro.current && s.phase === "intro")
       intro.current.currentTime = s.offset;
@@ -794,6 +832,23 @@ export default function Show() {
       <section>
         <h2>3 · Mezclador</h2>
         <label>
+          Música durante la voz · {Math.round(s.duckLevel * 100)}% del nivel
+          normal
+          <input
+            aria-label="Nivel bajo de música durante las voces"
+            type="range"
+            min="0"
+            max="1"
+            step=".01"
+            value={s.duckLevel}
+            onChange={(e) => update({ duckLevel: Number(e.target.value) })}
+          />
+        </label>
+        <small>
+          0% silencia la música; 100% mantiene su nivel. Al terminar la voz
+          vuelve al volumen anterior.
+        </small>
+        <label>
           <input
             type="checkbox"
             checked={externalMusic}
@@ -855,6 +910,9 @@ export default function Show() {
           >
             <option value="./media/levels.mp3">Levels · Avicii</option>
             <option value="./media/disco-yes.mp3">Disco Yes · Tom Misch</option>
+            <option value="./media/disco-yes-previa-3min.mp3">
+              Disco Yes · previa 3:00 · salida suave
+            </option>
           </select>
         </label>
         <label>

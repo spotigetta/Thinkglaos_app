@@ -50,6 +50,10 @@ test("La extensión baja y restaura el volumen original sin aceptar órdenes de 
   now += 1000;
   [...timers.values()].forEach((cb) => cb());
   assert.ok(Math.abs(media.volume - 0.161) < 0.0001);
+  await listener({ duck: true, level: 0.5 }, sender);
+  now += 1000;
+  [...timers.values()].forEach((cb) => cb());
+  assert.ok(Math.abs(media.volume - 0.35) < 0.0001);
   await listener({ duck: false }, sender);
   now += 1000;
   [...timers.values()].forEach((cb) => cb());

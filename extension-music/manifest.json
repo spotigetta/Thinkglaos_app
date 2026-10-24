@@ -1,1 +1,22 @@
-{"manifest_version":3,"name":"Thinkglaos · Mezclador de música","version":"1.0.0","description":"Baja y recupera YouTube Music o Spotify web al reproducir una locución desde la mesa Thinkglaos.","permissions":["scripting"],"host_permissions":["https://music.youtube.com/*","https://open.spotify.com/*"],"background":{"service_worker":"background.js"},"content_scripts":[{"matches":["https://spotigetta.github.io/Thinkglaos_app/*","http://127.0.0.1:3000/*","http://localhost:3000/*"],"js":["bridge.js"]}]}
+﻿{
+  "manifest_version": 3,
+  "name": "Thinkglaos Â· Mezclador de mÃºsica",
+  "version": "1.1.0",
+  "description": "Baja y recupera YouTube Music o Spotify web al reproducir una locuciÃ³n desde la mesa Thinkglaos.",
+  "permissions": ["scripting"],
+  "host_permissions": [
+    "https://music.youtube.com/*",
+    "https://open.spotify.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://spotigetta.github.io/Thinkglaos_app/*",
+        "http://127.0.0.1:3000/*",
+        "http://localhost:3000/*"
+      ],
+      "js": ["bridge.js"]
+    }
+  ]
+}
