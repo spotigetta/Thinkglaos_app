@@ -53,7 +53,7 @@ test("La mesa controla la proyección limpia, temporizadores e intro reversible"
     .getByRole("button", { name: "Que se sienten", exact: true })
     .click();
   await expect(output.locator(".show-output")).toHaveClass(/llamada/);
-  await expect(page.locator(".show-cues button")).toHaveCount(37);
+  await expect(page.locator(".show-cues button")).toHaveCount(141);
 });
 
 test("Tres momentos claros: montaje tranquilo, ambientillo con voces y llamada con más energía", async ({
@@ -65,14 +65,12 @@ test("Tres momentos claros: montaje tranquilo, ambientillo con voces y llamada c
   const output = await popup;
   await expect(output.locator(".show-output")).toHaveClass(/montaje/);
   await expect(
-    page.getByLabel("Locuciones automáticas durante el previo"),
+    page.getByLabel("Locuciones automáticas en esta escena"),
   ).not.toBeChecked();
-  await page
-    .getByRole("button", { name: "Empezar ambientillo · 30 min", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Ambiente", exact: true }).click();
   await expect(output.locator(".show-output")).toHaveClass(/ambiente/);
   await expect(
-    page.getByLabel("Locuciones automáticas durante el previo"),
+    page.getByLabel("Locuciones automáticas en esta escena"),
   ).toBeChecked();
   await page
     .getByRole("button", { name: "Tiempo y transporte", exact: true })
@@ -97,7 +95,7 @@ test("Una frase seleccionada suena completa desde la mesa sin proyector ni músi
   page,
 }) => {
   await page.goto("/?control=1");
-  await expect(page.locator(".show-cues button")).toHaveCount(37);
+  await expect(page.locator(".show-cues button")).toHaveCount(141);
   await page.getByLabel("Buscar frase").fill("Esta noche está permitido");
   await page.locator(".show-cues button").click();
   const voice = page.locator("audio");
@@ -154,4 +152,111 @@ test("Los titulares permanecen visibles durante toda la escena y la cinta no tie
     ),
   ).toBe(true);
   await expect(page.locator(".ticker-track")).not.toContainText("✦");
+});
+
+test("El proyector anima incluso con Windows en movimiento reducido y permite apagarlo", async ({
+  page,
+  context,
+}) => {
+  await context.addInitScript(() => {});
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/?control=1");
+  const wait = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await wait;
+  await out.emulateMedia({ reducedMotion: "reduce" });
+  await expect(out.locator("html")).toHaveAttribute(
+    "data-projection-motion",
+    "full",
+  );
+  const track = out.locator(".ticker-track");
+  await expect
+    .poll(() => track.evaluate((e) => getComputedStyle(e).animationName))
+    .toBe("ticker-continuous");
+  const before = await track.evaluate((e) => getComputedStyle(e).transform);
+  await out.waitForTimeout(650);
+  expect(await track.evaluate((e) => getComputedStyle(e).transform)).not.toBe(
+    before,
+  );
+  await expect
+    .poll(() =>
+      out
+        .locator(".kinetic-word")
+        .first()
+        .evaluate((e) =>
+          e.getAnimations().some((a) => a.playState === "running"),
+        ),
+    )
+    .toBe(true);
+  await page.getByLabel("Animaciones del proyector").uncheck();
+  await expect
+    .poll(() => track.evaluate((e) => getComputedStyle(e).animationName))
+    .toBe("none");
+});
+
+test("Agradecimiento completo da paso al ambientillo y pizzas usa su propio banco", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  await expect(page.locator(".show-cues button")).toHaveCount(141);
+  await page
+    .getByRole("button", { name: "Agradecimiento · discurso", exact: true })
+    .click();
+  const voice = page.locator("audio");
+  await expect(voice).toHaveAttribute(
+    "src",
+    "./media/locuciones/oct25-g1-s2-16.mp3",
+  );
+  await expect
+    .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(0.1);
+  await voice.evaluate((e) => e.dispatchEvent(new Event("ended")));
+  await expect(page.locator(".show-monitor")).toContainText("Ambientillo");
+  await page
+    .getByRole("button", { name: "Pizzas · conversación", exact: true })
+    .click();
+  await expect(page.locator(".show-monitor")).toContainText("Pizzas");
+  await page.getByRole("button", { name: "Más frases", exact: true }).click();
+  await expect(page.getByLabel("Pausa entre locuciones")).toHaveValue("20");
+  await page.getByLabel("Filtrar voces por momento").selectOption("montaje");
+  await page.getByLabel("Buscar frase").fill("Ese fuet no se corta solo");
+  await page.locator(".show-cues button").click();
+  await expect(voice).toHaveAttribute(
+    "src",
+    "./media/locuciones/oct25-g1-s1-11.mp3",
+  );
+  await expect
+    .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(0.1);
+});
+
+test("La frecuencia espera al final de la voz y alterna la siguiente sin cortar", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/?control=1");
+  await expect(page.locator(".show-cues button")).toHaveCount(141);
+  await page.getByRole("button", { name: "Montaje", exact: true }).click();
+  await page.getByLabel("Pausa entre locuciones").fill("10");
+  await page.clock.runFor(11000);
+  const voice = page.locator("audio");
+  await expect(voice).toHaveAttribute(
+    "src",
+    "./media/locuciones/oct25-g1-s1-01.mp3",
+  );
+  await page.getByLabel("Pausa entre locuciones").fill("20");
+  await voice.evaluate((a: HTMLAudioElement) => {
+    a.pause();
+    a.dispatchEvent(new Event("ended"));
+  });
+  await page.clock.runFor(19000);
+  await expect(voice).toHaveAttribute(
+    "src",
+    "./media/locuciones/oct25-g1-s1-01.mp3",
+  );
+  await page.clock.runFor(2000);
+  await expect(voice).toHaveAttribute(
+    "src",
+    "./media/locuciones/oct25-g1-s2-01.mp3",
+  );
 });

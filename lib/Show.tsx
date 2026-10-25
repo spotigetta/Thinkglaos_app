@@ -1,9 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
 import "./show.css";
+import {
+  nextCue,
+  cueScenes,
+  voiceGap,
+  voiceSceneLabels,
+  type ShowCue,
+} from "./show-voices";
 import { KineticText } from "./KineticText";
 import { stageLabels, sceneSeconds, visualScene } from "./show-scenes";
 type Phase =
+  | "agradecimiento"
+  | "pizzas"
   | "montaje"
   | "ambiente"
   | "llamada"
@@ -12,13 +21,8 @@ type Phase =
   | "charla"
   | "preguntas"
   | "pantalla";
-type Cue = {
-  start: number;
-  end: number;
-  text: string;
-  voice: number;
-  url: string;
-};
+type Cue = ShowCue;
+
 type State = {
   phase: Phase;
   running: boolean;
@@ -33,6 +37,8 @@ type State = {
   autoCall: boolean;
   autoVoice: boolean;
   internalMusic: boolean;
+  voiceGap: number;
+  motion: boolean;
 };
 const defaults: State = {
   phase: "montaje",
@@ -48,6 +54,8 @@ const defaults: State = {
   autoCall: false,
   autoVoice: false,
   internalMusic: false,
+  voiceGap: 60,
+  motion: true,
 };
 const elapsed = (s: State) =>
   s.offset + (s.running ? (Date.now() - s.started) / 1000 : 0);
@@ -59,11 +67,20 @@ const fmt = (s: number) =>
     .padStart(2, "0")}`;
 export default function Show() {
   const projection = new URLSearchParams(location.search).has("projection");
-  const [s, set] = useState<State>(() => ({
-      ...defaults,
-      started: Date.now(),
-      running: true,
-    })),
+  const [s, set] = useState<State>(() => {
+      let saved: Partial<State> = {};
+      if (!projection)
+        try {
+          const p = JSON.parse(
+            localStorage.getItem("ittt-show-preferences-v1") || "{}",
+          );
+          saved = {
+            voiceGap: voiceGap(p.voiceGap),
+            motion: p.motion !== false,
+          };
+        } catch {}
+      return { ...defaults, ...saved, started: Date.now(), running: true };
+    }),
     [now, tick] = useState(Date.now()),
     [notice, note] = useState(""),
     [online, connected] = useState(false),
@@ -96,7 +113,18 @@ export default function Show() {
     [advanced, setAdvanced] = useState(false);
   const externalEnabled = useRef(false);
   externalEnabled.current = externalMusic;
+  const lastCue = useRef("");
+  const nextVoiceAt = useRef(5);
+  const gratitudePending = useRef(false);
+  const [bank, setBank] = useState("todas");
   const [deck, setDeck] = useState("voces");
+  useEffect(() => {
+    if (!projection)
+      localStorage.setItem(
+        "ittt-show-preferences-v1",
+        JSON.stringify({ voiceGap: s.voiceGap, motion: s.motion }),
+      );
+  }, [s.voiceGap, s.motion]);
   current.current = s;
   const send = (m: { type: string; [key: string]: unknown }) => {
     if (m.type === "reset") seen.current.clear();
@@ -109,6 +137,7 @@ export default function Show() {
   }
   function phase(p: Phase) {
     voice.current?.pause();
+    gratitudePending.current = false;
     restore();
     send({ type: "reset" });
     update({
@@ -116,8 +145,18 @@ export default function Show() {
       offset: 0,
       started: Date.now(),
       running: true,
-      autoVoice: p === "ambiente" || p === "llamada",
+      autoVoice: ["montaje", "ambiente", "llamada", "pizzas"].includes(p),
     });
+    if (p === "agradecimiento") {
+      const speech = cues.find((c) => cueScenes(c).includes("agradecimiento"));
+      if (speech) {
+        gratitudePending.current = true;
+        speak(speech);
+      } else
+        note(
+          "El discurso todavía se está cargando. Espera y vuelve a seleccionarlo.",
+        );
+    }
   }
   function ramp(target: number, ms = 1000) {
     cancelAnimationFrame(fade.current);
@@ -134,14 +173,21 @@ export default function Show() {
   function restore() {
     duck.current = false;
     setSpeaking("");
+    nextVoiceAt.current =
+      elapsed(current.current) + voiceGap(current.current.voiceGap);
     send({ type: "restore-music" });
     if (externalEnabled.current)
       window.postMessage({ type: "ITTT_MUSIC_RESTORE" }, location.origin);
     ramp(
       current.current.running &&
-        ["montaje", "ambiente", "llamada", "salida"].includes(
-          current.current.phase,
-        )
+        [
+          "montaje",
+          "ambiente",
+          "llamada",
+          "salida",
+          "pizzas",
+          "agradecimiento",
+        ].includes(current.current.phase)
         ? current.current.volume
         : 0,
     );
@@ -158,6 +204,11 @@ export default function Show() {
   }, [s.duckLevel]);
   function speak(cue?: Cue) {
     if (!voice.current) return;
+    if (!cue || !cueScenes(cue).includes("agradecimiento"))
+      gratitudePending.current = false;
+    if (cue) lastCue.current = cue.url;
+    nextVoiceAt.current =
+      elapsed(current.current) + voiceGap(current.current.voiceGap);
     clearTimeout(pending.current);
     pending.current = undefined;
     voice.current.pause();
@@ -172,6 +223,7 @@ export default function Show() {
     voice.current.src = cue ? cue.url : "./media/audio-manolo-whatsapp.mp3";
     voice.current.volume = current.current.voiceVolume;
     void voice.current.play().catch(() => {
+      gratitudePending.current = false;
       note("Audio bloqueado o no disponible. Vuelve a pulsar la frase.");
       restore();
     });
@@ -200,7 +252,13 @@ export default function Show() {
               : 0,
           );
         }
-        if (m.type === "state") set(m.state);
+        if (m.type === "state")
+          set({
+            ...defaults,
+            ...m.state,
+            motion: m.state.motion ?? defaults.motion,
+            voiceGap: voiceGap(m.state.voiceGap),
+          });
         if (m.type === "manolo") speak();
         if (m.type === "cue") speak(m.cue);
         if (m.type === "reset") seen.current.clear();
@@ -245,9 +303,16 @@ export default function Show() {
           introDuration: intro.current?.duration,
         });
     }, 500);
-    fetch("./media/locuciones.json?v=pcm-v2", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => setCues(d.cues))
+    Promise.all(
+      ["./media/locuciones.json?v=pcm-v2", "./media/locuciones-oct25.json"].map(
+        (url) =>
+          fetch(url, { cache: "no-store" }).then((r) => {
+            if (!r.ok) throw new Error("Guion no disponible");
+            return r.json();
+          }),
+      ),
+    )
+      .then(([original, extra]) => setCues([...original.cues, ...extra.cues]))
       .catch(() => note("No se pudo cargar el guion."));
     fetch("./montage/photos.json")
       .then((r) => r.json())
@@ -307,45 +372,55 @@ export default function Show() {
       });
   }, [now]);
   useEffect(() => {
+    nextVoiceAt.current = elapsed(current.current) + 5;
+    lastCue.current = "";
+  }, [s.phase]);
+  useEffect(() => {
+    nextVoiceAt.current = elapsed(current.current) + voiceGap(s.voiceGap);
+  }, [s.voiceGap, s.offset, s.autoVoice]);
+  useEffect(() => {
     if (
       projection ||
       !s.autoVoice ||
       !s.running ||
-      !["ambiente", "llamada"].includes(s.phase) ||
-      (voice.current && !voice.current.paused)
+      !["montaje", "ambiente", "llamada", "pizzas"].includes(s.phase) ||
+      !voice.current?.paused ||
+      t < nextVoiceAt.current
     )
       return;
-    const female = cues.filter((c) => c.voice === 1),
-      male = cues.filter((c) => c.voice === 2);
-    const pool =
-        s.phase === "llamada"
-          ? cues.filter((c) => c.voice === 3)
-          : Array.from(
-              { length: Math.max(female.length, male.length) },
-              (_, i) => [male[i], female[i]],
-            )
-              .flat()
-              .filter(Boolean),
-      slot = s.phase === "llamada" ? 180 : Math.max(60, s.minutes * 60 - 180);
-    const spoken = pool.reduce((sum, c) => sum + c.end - c.start, 0),
-      gap = Math.max(1, (slot - spoken - 10) / Math.max(1, pool.length));
-    let position = 5;
-    pool.forEach((c, i) => {
-      const at = position,
-        id = cues.indexOf(c);
-      position += c.end - c.start + gap;
-      if (t >= at && t < at + 3 && !seen.current.has(id)) {
-        seen.current.add(id);
-        speak(c);
-      }
-    });
+    const cue = nextCue(cues, s.phase, lastCue.current);
+    if (cue) speak(cue);
   }, [now]);
+  useEffect(() => {
+    if (projection)
+      document.documentElement.dataset.projectionMotion = s.motion
+        ? "full"
+        : "off";
+    return () => {
+      if (projection) delete document.documentElement.dataset.projectionMotion;
+    };
+  }, [s.motion]);
+  useEffect(() => {
+    if (!projection && voice.current) {
+      if (!s.running) {
+        voice.current.pause();
+        restore();
+      }
+    }
+  }, [s.running]);
   useEffect(() => {
     if (!projection) return;
     const active =
       s.internalMusic &&
       s.running &&
-      ["montaje", "ambiente", "llamada", "salida"].includes(s.phase);
+      [
+        "montaje",
+        "ambiente",
+        "llamada",
+        "salida",
+        "pizzas",
+        "agradecimiento",
+      ].includes(s.phase);
     if (music.current) {
       if (active)
         void music.current.play().catch(() =>
@@ -444,36 +519,46 @@ export default function Show() {
   }
   const index = Math.floor(t / sceneSeconds(s.phase));
   const scene = visualScene(s.phase, index);
-  const graphic = ["montaje", "ambiente", "llamada", "salida"].includes(
-    s.phase,
-  );
+  const graphic = [
+    "montaje",
+    "ambiente",
+    "llamada",
+    "salida",
+    "pizzas",
+    "agradecimiento",
+  ].includes(s.phase);
   const photoIndex = Math.floor(t / (s.phase === "montaje" ? 36 : 24));
   const photoAt = (i: number) =>
     photos[Math.max(0, i) % Math.max(1, photos.length)] ||
     "./montage/photo-1.jpg";
   const nextStage: Record<string, Phase> = {
-    montaje: "ambiente",
+    montaje: "agradecimiento",
+    agradecimiento: "ambiente",
+    pizzas: "montaje",
     ambiente: "llamada",
     llamada: "salida",
     salida: "intro",
     intro: "charla",
     charla: "preguntas",
-    preguntas: "montaje",
+    preguntas: "pizzas",
     pantalla: "montaje",
   };
   const nextText: Record<string, string> = {
-    montaje: "Empezar ambientillo · 30 min",
+    montaje: "Agradecer al equipo",
+    agradecimiento: "Empezar ambientillo · 30 min",
+    pizzas: "Volver al montaje",
     ambiente: "Invitar a sentarse",
     llamada: "Acelerar y lanzar intro",
     salida: "Lanzar intro ahora",
     intro: "Saltar a la charla",
     charla: "Pasar a preguntas",
-    preguntas: "Volver al montaje",
+    preguntas: "Pizzas y conversación",
     pantalla: "Volver al montaje",
   };
   if (projection)
     return (
       <div
+        data-motion={s.motion ? "full" : "off"}
         className={
           "show-output " +
           s.phase +
@@ -507,7 +592,7 @@ export default function Show() {
             <span className="scene-orbit-word">THINK</span>
           </div>
         )}
-        {["montaje", "ambiente"].includes(s.phase) &&
+        {["montaje", "ambiente", "pizzas"].includes(s.phase) &&
           index % 5 === 3 &&
           shorts.length > 0 && (
             <iframe
@@ -629,7 +714,12 @@ export default function Show() {
     >
       <audio
         ref={voice}
-        onEnded={restore}
+        onEnded={() => {
+          const advance = gratitudePending.current;
+          gratitudePending.current = false;
+          restore();
+          if (advance) phase("ambiente");
+        }}
         onError={() => {
           note("No se pudo cargar esta locución.");
           restore();
@@ -640,6 +730,7 @@ export default function Show() {
         <button
           onClick={() => {
             voice.current?.pause();
+            gratitudePending.current = false;
             restore();
           }}
         >
@@ -757,10 +848,25 @@ export default function Show() {
             )}
           </div>
         </details>
+        <div className="show-actions voice-moments">
+          <button onClick={() => phase("agradecimiento")}>
+            Agradecimiento · discurso
+          </button>
+          <button onClick={() => phase("pizzas")}>Pizzas · conversación</button>
+        </div>
+        <label>
+          <input
+            type="checkbox"
+            checked={s.motion}
+            onChange={(e) => update({ motion: e.target.checked })}
+          />{" "}
+          Animaciones del proyector
+        </label>
         <p>
-          El montaje no lanza locuciones. El ambientillo las reparte durante
-          media hora. «A sentarse» activa la llamada. Tú decides cuándo acelerar
-          y lanzar la intro.
+          El montaje tiene sus propias cuñas. El ambientillo las reparte durante
+          media hora. El agradecimiento da paso al ambientillo al terminar. «A
+          sentarse» activa la llamada. Tú decides cuándo acelerar y lanzar la
+          intro.
         </p>
       </section>
       <section>
@@ -881,6 +987,7 @@ export default function Show() {
         <button
           onClick={() => {
             voice.current?.pause();
+            gratitudePending.current = false;
             restore();
             setExternalMusic(false);
             window.postMessage(
@@ -980,7 +1087,7 @@ export default function Show() {
             checked={s.autoVoice}
             onChange={(e) => update({ autoVoice: e.target.checked })}
           />
-          Locuciones automáticas durante el previo
+          Locuciones automáticas en esta escena
         </label>
         <input
           aria-label="Buscar frase"
@@ -988,14 +1095,69 @@ export default function Show() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <small className="voice-next-status" role="status">
+          {speaking
+            ? "Voz en directo · la pausa comienza al terminar"
+            : s.autoVoice &&
+                s.running &&
+                ["montaje", "ambiente", "llamada", "pizzas"].includes(s.phase)
+              ? `Siguiente cuña en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
+              : "Automatismo desactivado en esta escena"}
+        </small>
+        <div className="voice-frequency">
+          <label>
+            Frecuencia · pausa entre frases: {s.voiceGap} s
+            <input
+              aria-label="Pausa entre locuciones"
+              type="range"
+              min="10"
+              max="240"
+              step="5"
+              value={s.voiceGap}
+              onChange={(e) =>
+                update({ voiceGap: voiceGap(Number(e.target.value)) })
+              }
+            />
+          </label>
+          <div className="show-actions">
+            <button onClick={() => update({ voiceGap: 120 })}>
+              Menos frases
+            </button>
+            <button onClick={() => update({ voiceGap: 60 })}>Normal</button>
+            <button onClick={() => update({ voiceGap: 20 })}>Más frases</button>
+            <button
+              onClick={() => {
+                const c = nextCue(cues, s.phase, lastCue.current);
+                if (c) speak(c);
+              }}
+            >
+              Siguiente frase ▶
+            </button>
+          </div>
+          <select
+            aria-label="Filtrar voces por momento"
+            value={bank}
+            onChange={(e) => setBank(e.target.value)}
+          >
+            <option value="todas">Todas las voces · {cues.length}</option>
+            {Object.entries(voiceSceneLabels).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
         <p>
-          {cues.length} fragmentos. Bloques 1 y 2 en los primeros{" "}
-          {s.minutes - 3} minutos; bloque 3 durante los 3 minutos de llamada.
-          Escucha o repite cualquier fragmento.
+          Voces intercaladas por escena. La pausa cuenta al terminar cada frase:
+          no se cortan ni se superponen. Charla y preguntas siempre sin cuñas
+          automáticas.
         </p>
         <div className="show-cues">
           {cues
             .map((c, i) => ({ c, i }))
+            .filter(
+              ({ c }) => bank === "todas" || cueScenes(c).includes(bank as any),
+            )
             .filter(({ c }) =>
               c.text.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
             )
@@ -1006,9 +1168,16 @@ export default function Show() {
                 onClick={() => speak(c)}
               >
                 <b>
-                  {i + 1} · Voz {c.voice} · {fmt(c.end - c.start)}
+                  {i + 1} ·{" "}
+                  {cueScenes(c)
+                    .map((p) => voiceSceneLabels[p])
+                    .join(" / ")}{" "}
+                  · {fmt(c.end - c.start)}
                 </b>
                 {c.text}
+                {c.note && (
+                  <small className="cue-recording-note">{c.note}</small>
+                )}
               </button>
             ))}
         </div>

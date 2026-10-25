@@ -1,4 +1,6 @@
 export const stageLabels: Record<string, string> = {
+  agradecimiento: "Gracias, equipo",
+  pizzas: "Pizzas y conversación",
   montaje: "Montaje · sin prisa",
   ambiente: "Ambientillo · 30 minutos",
   llamada: "A sentarse",
@@ -413,6 +415,42 @@ seating.push(
   ],
 );
 export function visualScene(phase: string, index: number) {
+  if (phase === "agradecimiento")
+    return {
+      copy: [
+        "EL VERDADERO SECRETO DE LA SALSA",
+        "Gracias por hacerlo posible.",
+        "Lo mejor de esta noche sois las personas que la preparáis.",
+      ],
+      layout: 3,
+      accent: 0,
+      effect: 7,
+    };
+  if (phase === "pizzas") {
+    const messages = [
+      [
+        "LA CONVERSACIÓN SIGUE",
+        "Una pizza. Otra buena pregunta.",
+        "Haz sitio en tu mesa. Y en tu conversación.",
+      ],
+      [
+        "ROMPE EL CORRILLO",
+        "El siguiente amigo está ahí al lado.",
+        "Conoce a alguien nuevo. La salsa la pones tú.",
+      ],
+      [
+        "SIN PRISA",
+        "Comparte el último trozo.",
+        "Las mejores conversaciones no miran el reloj.",
+      ],
+    ];
+    return {
+      copy: messages[index % messages.length],
+      layout: index % 4,
+      accent: index % 5,
+      effect: index % 8,
+    };
+  }
   const pool =
     phase === "montaje" ? montage : phase === "llamada" ? seating : atmosphere;
   const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);

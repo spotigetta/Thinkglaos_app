@@ -1,0 +1,1410 @@
+{
+  "method": "Whisper local con marcas de palabra, alineación al guion y mínimos de energía entre frases",
+  "cues": [
+    {
+      "start": 0.6799999999999999,
+      "end": 5.39,
+      "text": "Qué bonito es el voluntariado cuando todavía no te han pedido que cargues mesas.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-01.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 5.39,
+      "end": 11.72,
+      "text": "Hay una diferencia muy fina entre coordinar y mirar cómo trabajan los demás.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-02.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 11.72,
+      "end": 17.7,
+      "text": "Un saludo a los que han llegado pronto para ayudar y ahora están esperando a que alguien les diga qué hacer.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-03.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 17.7,
+      "end": 25.24,
+      "text": "El verdadero espíritu de It's Time to Think se descubre cuando alguien pregunta quién se encarga de recoger.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-04.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 25.24,
+      "end": 31.46,
+      "text": "Atención, el proyector funciona. Rogamos no tocar absolutamente nada.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-05.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 31.46,
+      "end": 37.89,
+      "text": "El evento empieza a las ocho. La discusión sobre dónde colocar la mesa principal empezó a las cinco.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-06.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 37.89,
+      "end": 43.53,
+      "text": "A los voluntarios de cocina les recordamos que probar el queso no significa comerse media tabla.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-07.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 43.53,
+      "end": 48.74,
+      "text": "La dignidad humana empieza por reconocer que nadie merece una cerveza caliente.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-08.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 48.74,
+      "end": 55.615,
+      "text": "Si alguien dice que en Toledo nunca pasa nada, podéis enseñarle las fotos de los voluntarios cargando mesas.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-09.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 55.615,
+      "end": 58.71,
+      "text": "Menos pensar y más montar.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-10.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 58.71,
+      "end": 61.09,
+      "text": "Ese fuet no se corta solo.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-11.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 61.09,
+      "end": 68.58,
+      "text": "Dicen que el dinero no da la felicidad. Pero compra queso y cerveza, que para un thinkglao es un comienzo bastante razonable.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-12.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.909
+    },
+    {
+      "start": 68.58,
+      "end": 74.73,
+      "text": "El montaje está prácticamente terminado. Una expresión que llevamos utilizando desde hace dos horas.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-13.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 74.73,
+      "end": 81.38,
+      "text": "A todos los voluntarios que estáis aquí trabajando gratis os recordamos que todavía estáis a tiempo de pedir un aumento del cien por cien.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-14.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.833
+    },
+    {
+      "start": 81.38,
+      "end": 90.045,
+      "text": "Tenemos un problema con el micrófono. Se oye perfectamente cuando nadie habla y deja de funcionar cuando empieza el ponente.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-15.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 90.045,
+      "end": 99.1,
+      "text": "Me dice uno que ha leído un libro sobre cómo aprender a delegar. Le digo que qué tal y dice que estupendo, que se lo ha dado a su mujer para que lo lea por él.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-16.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 99.1,
+      "end": 102.29,
+      "text": "Un poquito de alegría, voluntario.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-17.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 102.29,
+      "end": 105.23,
+      "text": "Qué bonito está quedando esto, por cierto.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-18.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 105.23,
+      "end": 108.805,
+      "text": "Cuidado con el cable, artista.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-19.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 108.805,
+      "end": 115.77,
+      "text": "Esa mesa lleva torcida desde que hemos llegado. Pero bueno, si nadie dice nada, yo tampoco.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-20.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 115.77,
+      "end": 121.995,
+      "text": "A mí lo que me preocupa es que esto quede tan bien que nos pidan montarlo otra vez.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-21.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.944
+    },
+    {
+      "start": 121.995,
+      "end": 131.76,
+      "text": "Me pregunto si los grandes filósofos de la historia habrían sido capaces de organizar un thinkglao, en plan, Platón con el thinkómetro y Aristóteles de voluntario.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-22.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.923
+    },
+    {
+      "start": 131.76,
+      "end": 142.84,
+      "text": "A veces pensamos que necesitamos grandes campañas de comunicación para llenar un thinkglao y luego resulta que lo más eficaz sigue siendo un amigo escribiéndole a otro por WhatsApp para decirle que venga porque va a estar muy bien aunque no tenga ni idea de qué va.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-23.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.979
+    },
+    {
+      "start": 142.84,
+      "end": 154.51,
+      "text": "Tengo un amigo que dice que es una persona muy espiritual y que no le importan las cosas materiales. El otro día le pedí que me prestara el coche para llevar las mesas y me dijo que el desapego material había que trabajarlo poco a poco.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-24.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 154.51,
+      "end": 172.9,
+      "text": "El otro día llega uno al montaje y dice que él está para lo que haga falta. Le digo que perfecto, que coja las mesas. Me dice que tiene la espalda regular. Le digo que coloque las sillas. Me dice que tiene la rodilla fastidiada. Le digo que corte el fuet y me responde que está haciendo ayuno intermitente. Al final le pusimos a vigilar la puerta y dice que nunca había trabajado tanto.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-25.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 172.9,
+      "end": 183.02,
+      "text": "Qué curioso que en It's Time to Think defendamos que lo pequeño es hermoso y luego cada vez que alguien propone una idea nueva terminemos imaginando cómo llevarla a veinte ciudades y organizar un encuentro internacional.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-26.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 183.02,
+      "end": 197.08,
+      "text": "A mí estas cosas de los eventos modernos me hacen mucha gracia porque antes cogías cuatro mesas, ponías unas cervezas y ya estaba todo montado pero ahora parece que necesitamos un equipo de producción, tres ordenadores y una persona dedicada exclusivamente a decidir la temperatura de las luces.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-27.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 197.08,
+      "end": 209.74,
+      "text": "No quiero alarmar a nadie pero si el sonido funciona perfectamente a la primera probablemente sea porque todavía no hemos conectado algo importante y convendría revisar toda la instalación antes de celebrar una victoria que podría resultar prematura.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-28.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 209.74,
+      "end": 215.86,
+      "text": "No sé quién ha decidido que para montar un evento hacen falta tantas reuniones previas pero tengo la sospecha de que algunas personas disfrutan más hablando de cómo vamos a organizar las cosas que organizándolas realmente.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-29.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.5,
+      "automatic": false,
+      "note": "Solo manual: la grabación original omite parte de esta frase."
+    },
+    {
+      "start": 215.86,
+      "end": 229.205,
+      "text": "A los toledanos de toda la vida les tenemos un cariño enorme y precisamente por eso queremos recordarles que existe una posibilidad bastante interesante que consiste en conocer a personas que no estuvieron en su comunión ni compartieron patio de colegio con sus primos.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-30.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 229.205,
+      "end": 242.94,
+      "text": "No sé si os habéis dado cuenta de que estamos montando un evento con música, cervezas, pizzas y gente con ganas de conocer a otras personas y aun así estoy convencido de que mañana alguien dirá que en Toledo no hay ambiente y que para hacer planes interesantes hay que irse a Madrid.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-31.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.962
+    },
+    {
+      "start": 242.94,
+      "end": 258.615,
+      "text": "Llevamos años hablando de la importancia de recuperar las humanidades y de volver a poner a la persona en el centro de nuestra sociedad pero creo que ha llegado el momento de abordar una cuestión igualmente trascendental y es por qué nadie consigue cortar el fuet con el mismo grosor dos veces seguidas.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-32.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.981
+    },
+    {
+      "start": 258.615,
+      "end": 271.275,
+      "text": "Uno de los grandes principios de It's Time to Think es que lo pequeño es hermoso y eso explica perfectamente por qué dedicamos tanto tiempo a colocar pequeños trozos de queso en pequeñas tablas que después desaparecerán en aproximadamente cuatro minutos.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-33.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 271.275,
+      "end": 284.915,
+      "text": "En It's Time to Think creemos que el proceso importa tanto como el resultado y es una filosofía muy bonita que conviene recordar especialmente cuando llevamos tres horas montando algo que los asistentes disfrutarán durante veinte minutos y que después tendremos que desmontar completamente.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-34.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.978
+    },
+    {
+      "start": 284.915,
+      "end": 297.95,
+      "text": "No queremos crear expectativas innecesarias pero conviene recordar que de esta comunidad han salido amistades, proyectos y parejas así que si alguien te propone quedar para preparar el próximo thinkglao quizá deberías prestar atención al entusiasmo con el que lo dice.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-35.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.951
+    },
+    {
+      "start": 297.95,
+      "end": 310.44,
+      "text": "No sé si habéis observado que siempre hay alguien que pregunta cómo puede ayudar justo cuando prácticamente hemos terminado todo y que después se muestra profundamente decepcionado porque ya no queda ninguna tarea importante que asignarle.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-36.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 310.44,
+      "end": 320.42,
+      "text": "Un saludo a todos los que habéis descubierto que hacer amigos de adultos no es tan complicado cuando dejas de esperar a que aparezcan por arte de magia y empiezas a hacer cosas con personas que tienen ganas de construir algo.",
+      "voice": 4,
+      "url": "./media/locuciones/oct25-g1-s1-37.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 320.42,
+      "end": 326.94,
+      "text": "Un buen anfitrión se reconoce porque lleva dos horas trabajando para que los demás se sientan como en casa.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-01.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 326.94,
+      "end": 338.26,
+      "text": "Qué suerte tenemos de conocer a gente que cuando le propones hacer algo bueno no empieza enumerando todas las razones por las que es imposible sino que te pregunta cuándo quedamos para empezar.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-02.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.97
+    },
+    {
+      "start": 338.26,
+      "end": 353.27,
+      "text": "Uno de los grandes misterios de It's Time to Think es cómo conseguimos convencer a gente extraordinariamente preparada para que dedique su tiempo libre a cortar fuet, mover muebles y recoger basura y que encima nos dé las gracias por haberle invitado.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-03.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.977
+    },
+    {
+      "start": 353.27,
+      "end": 370.34,
+      "text": "Me gustaría reconocer públicamente el trabajo de todas esas personas que no salen en las fotos, que no presentan los eventos y que no aparecen en los vídeos pero que consiguen que todo funcione mientras los demás estamos demasiado ocupados explicando lo importante que es la humildad, Bravo.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-04.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 370.34,
+      "end": 385.31,
+      "text": "Una de las cosas más bonitas de It's Time to Think es que aquí nadie está obligado a venir y precisamente por eso tiene tanto valor que haya personas dispuestas a regalar una tarde entera para que otros puedan disfrutar de una experiencia especial, sois unos cracks.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-05.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 385.31,
+      "end": 402.42,
+      "text": "Hay una cosa que nunca terminaremos de entender y es cómo conseguimos que personas perfectamente razonables, con trabajos, estudios, familias y una vida bastante ocupada, decidan que su plan ideal para esta tarde es venir a cortar fuet y cargar mesas. Algo tiene que tener esta gente, sois tremendos.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-06.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.939
+    },
+    {
+      "start": 402.42,
+      "end": 415.84,
+      "text": "A todos los voluntarios que habéis conseguido convencer a vuestros amigos para que vengan esta noche os recordamos que ahora tenéis una responsabilidad moral bastante importante y es conseguir que se lo pasen tan bien que quieran volver.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-07.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 415.84,
+      "end": 429.66,
+      "text": "A los que habéis traído herramientas de casa, habéis puesto vuestro coche, habéis conseguido material prestado o habéis adelantado dinero para que todo salga adelante, gracias por demostrar que las grandes cosas se construyen con pequeños gestos muy concretos.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-08.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 429.66,
+      "end": 448.22,
+      "text": "Y antes de que empiece todo queremos recordar algo muy sencillo. Lo mejor de It's Time to Think no son las luces, ni las pizzas, ni las charlas, ni siquiera los eventos. Lo mejor sois las personas que conseguís que todo esto ocurra, gracias y disfrutadlo.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-09.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 448.22,
+      "end": 460.42,
+      "text": "Me gustaría que cuando todo estuviese en silencio os quedarais mirando la escena y a la gente y disfrutando sus caras y que penséis que habéis sido vosotros.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-10.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.964
+    },
+    {
+      "start": 460.42,
+      "end": 475.605,
+      "text": "La grandeza de una persona no se mide por la importancia de las cosas que hace sino por el amor que pone en ellas y por eso una mesa preparada con cariño puede tener más valor humano que un discurso brillante pronunciado para recibir aplausos.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-11.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 475.605,
+      "end": 488.57,
+      "text": "Servir tiene algo de extraordinario porque consiste en dejar de preguntarte durante un rato qué puedes conseguir tú y empezar a preguntarte qué puedes hacer para que la vida de otra persona sea un poquito mejor.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-12.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 488.57,
+      "end": 500.91,
+      "text": "Una sonrisa al recibir a alguien puede parecer un gesto insignificante y sin embargo para una persona que llega sola a un lugar desconocido puede ser exactamente lo que necesitaba.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-13.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 500.91,
+      "end": 514.98,
+      "text": "Los constructores de las grandes catedrales dedicaban su vida a levantar edificios que probablemente nunca verían terminados y sin embargo cada piedra tenía sentido porque formaba parte de algo que iba mucho más allá de ellos.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-14.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 514.98,
+      "end": 531.03,
+      "text": "A veces no somos conscientes de cuánto bien puede hacer una persona que simplemente decide estar disponible para los demás. Gracias a todos los que hoy habéis elegido estar aquí y poner vuestras manos, vuestro tiempo y vuestro corazón al servicio de otros.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-15.mp3",
+      "scenes": [
+        "montaje"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 531.03,
+      "end": 607.56,
+      "text": "A nosotros, equipo de voluntarios, queremos daros las gracias. Gracias por dar esta oportunidad a tanta gente para ilusionarse, pensar y volver a empezar. A veces una cena y un par de copas de vino son suficientes para que dos personas que llevaban tiempo distanciadas vuelvan a hablar de verdad. O alguien te pregunta por eso que llevas meses guardándote y que nadie se había atrevido a sacar, y de repente te quitas un peso enorme de encima. Otras veces basta con que uno dé el primer paso, pida perdón y una conversación que parecía imposible termine en un abrazo. O que alguien te dé las gracias de corazón y te alegre una semana entera. Y es que nunca sabemos lo que puede significar para alguien una conversación, una pregunta o simplemente sentirse escuchado, porque igual esta noche alguien viene con mil cosas en la cabeza y a nosotros nos importa porque nuestra misión es que se marche más ligero y recupere con los vínculos la esperanza de seguir adelante en busca del sentido de la vida. Y nosotros tenemos la suerte de preparar el lugar donde pueden pasar todas esas cosas, y cambiar el rumbo de tantas vidas. . Que al final, de eso va servir a los demás.",
+      "voice": 5,
+      "url": "./media/locuciones/oct25-g1-s2-16.mp3",
+      "scenes": [
+        "agradecimiento"
+      ],
+      "block": "Generación 1 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_03AM.wav",
+      "alignment": 0.981
+    },
+    {
+      "start": 0,
+      "end": 5.02,
+      "text": "Si has venido a conocer gente interesante, intenta no pasarte toda la noche hablando de ti.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-01.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 5.02,
+      "end": 11.7,
+      "text": "En It's Time to Think creemos que todo el mundo tiene algo que aportar. Algunos todavía estamos esperando.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-02.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 11.7,
+      "end": 17.395,
+      "text": "Si llevas media hora hablando con alguien y todavía no sabes cómo se llama, vas por buen camino.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-03.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 17.395,
+      "end": 24.34,
+      "text": "Dicen que las mejores cosas de la vida son gratis. Aquí hemos tenido que cobrar entrada porque el queso no se paga solo.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-04.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.957
+    },
+    {
+      "start": 24.34,
+      "end": 30.42,
+      "text": "En It's Time to Think nos gustan las preguntas difíciles. Sobre todo cuando no nos toca responderlas.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-05.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 30.42,
+      "end": 38.83,
+      "text": "Los voluntarios de It's Time to Think son gente extraordinaria. Principalmente porque siguen viniendo después de descubrir todo lo que hay que recoger.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-06.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 38.83,
+      "end": 46.82,
+      "text": "Nos encanta que la gente tenga ideas propias. Lo que no nos gusta tanto es que nos las expliquen durante cuarenta minutos sin respirar.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-07.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 46.82,
+      "end": 53.03,
+      "text": "El mundo está fatal, sí. Pero esta noche vamos a intentar no dedicarle las tres horas a quejarnos.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-08.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 53.03,
+      "end": 60.22,
+      "text": "Hay conversaciones que te cambian la vida y otras que te hacen cambiar de mesa. Ambas son experiencias humanas.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-09.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 60.22,
+      "end": 65.88,
+      "text": "Qué necesidad tenemos de ponernos tan intensos con lo bien que estábamos tomando una cerveza.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-10.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 65.88,
+      "end": 70.23,
+      "text": "Un saludo a quienes han venido sin saber muy bien a dónde les traían.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-11.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 70.23,
+      "end": 76.43,
+      "text": "Por cierto, si te han presentado a siete personas seguidas y no recuerdas ningún nombre, bienvenido al club.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-12.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.944
+    },
+    {
+      "start": 76.43,
+      "end": 81.79,
+      "text": "Seguro que hay algún cuñao' que coge la cerveza del cubo diciendo: \"Cuida' que se ahoga\".",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-13.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.812
+    },
+    {
+      "start": 81.79,
+      "end": 88.47,
+      "text": "Buenas noches a todos los que habéis decidido hacer algo mínimamente interesante con vuestro tiempo libre.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-14.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 88.47,
+      "end": 95.54,
+      "text": "Por favor, si estáis ligando, hacedlo con naturalidad. La organización no ofrece asistencia técnica en estos casos.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-15.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 95.54,
+      "end": 102.28,
+      "text": "Si alguien te ha preguntado tres veces si vienes al próximo thinkglao, igual no le interesa solamente la filosofía.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-16.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.947
+    },
+    {
+      "start": 102.28,
+      "end": 108.11,
+      "text": "Hay miradas esta noche que tienen bastante más contenido que los dieciocho minutos del ponente.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-17.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 108.11,
+      "end": 114.75,
+      "text": "A los que estáis buscando una señal para acercaros a esa persona, considerad esto vuestra señal.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-18.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 114.75,
+      "end": 122.21,
+      "text": "En Toledo cuesta muchísimo conocer gente nueva, pero esta noche hay algunos que están recuperando el tiempo perdido.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-19.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 122.21,
+      "end": 124.795,
+      "text": "Uy, uy, uy, aquí está pasando algo.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-20.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.571
+    },
+    {
+      "start": 124.795,
+      "end": 127.61,
+      "text": "Menos Platón y más acción.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-21.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 127.61,
+      "end": 130.09,
+      "text": "Qué miraditas tenemos esta noche.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-22.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 130.09,
+      "end": 133.16,
+      "text": "Venga, que la vergüenza no paga entrada.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-23.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 133.16,
+      "end": 136.82,
+      "text": "Mucho pensamiento libre y muy poquito primer paso.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-24.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 136.82,
+      "end": 141.29,
+      "text": "A ver si nos soltamos un poquito, que algunos lleváis más tensión acumulada que las cuestas del Casco.",
+      "voice": 6,
+      "url": "./media/locuciones/oct25-g2-s1-25.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 141.29,
+      "end": 147.07,
+      "text": "A todos los que lleváis un rato intentando descubrir de qué va el tema de hoy, mucha suerte.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-01.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 147.07,
+      "end": 153.61,
+      "text": "No os preocupéis por quedar bien. Aquí estamos todos haciendo bastante el ridículo intentando entender la vida.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-02.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 153.61,
+      "end": 158.06,
+      "text": "Se agradece que hayáis venido tan guapos para sentaros en el suelo.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-03.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 158.06,
+      "end": 163.05,
+      "text": "Un aplauso mental para quienes han organizado todo esto sin cobrar un duro.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-04.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 163.05,
+      "end": 169.05,
+      "text": "Toledo, vamos a ver si esta noche conseguimos que pase algo que no estuviera previsto desde el martes.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-05.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 169.05,
+      "end": 173.79,
+      "text": "A ver, que esto es un thinkglao, no una reunión de vecinos. Un poquito de alegría.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-06.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.875
+    },
+    {
+      "start": 173.79,
+      "end": 182.75,
+      "text": "Hay una cosa que me fascina de Toledo. Todo el mundo dice que no hay ambiente, pero cuando se organiza algo nuevo, da una pereza tremenda salir.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-07.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 182.75,
+      "end": 188.83,
+      "text": "Un aplauso para los que han conseguido convencer a sus amigos de venir. Sabemos que no ha sido fácil.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-08.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.737
+    },
+    {
+      "start": 188.83,
+      "end": 197.88,
+      "text": "Qué tranquilidad debe de dar levantarse por la mañana sabiendo exactamente quiénes son los buenos, quiénes son los malos y qué debería hacer todo el mundo con su vida.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-09.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.931
+    },
+    {
+      "start": 197.88,
+      "end": 205.32,
+      "text": "Se abre oficialmente la temporada de conversaciones que empiezan con un «una cosa rápida» y terminan dos horas después.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-10.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.947
+    },
+    {
+      "start": 205.32,
+      "end": 212.49,
+      "text": "El ponente ya ha cumplido sus dieciocho minutos. Ahora podéis seguir dándole la chapa sin límite de tiempo.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-11.mp3",
+      "scenes": [
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.944
+    },
+    {
+      "start": 212.49,
+      "end": 218.75,
+      "text": "Si te estás riendo demasiado de los chistes de alguien, quizá deberías plantearte qué está pasando.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-12.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 218.75,
+      "end": 224.58,
+      "text": "Por favor, evitad convertir la cola de las pizzas en una continuación del turno de preguntas.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-13.mp3",
+      "scenes": [
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 224.58,
+      "end": 231.46,
+      "text": "Si llevas veinte minutos explicando algo y la otra persona ha empezado a mirar hacia las pizzas, igual es momento de terminar.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-14.mp3",
+      "scenes": [
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 231.46,
+      "end": 237.58,
+      "text": "La organización recuerda que nadie está obligado a tener una opinión interesante después de la tercera cerveza.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-15.mp3",
+      "scenes": [
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 237.58,
+      "end": 243.95,
+      "text": "No hace falta que os marchéis a Madrid para conocer gente nueva. Tenemos algunos ejemplares interesantes aquí mismo.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-16.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 243.95,
+      "end": 252.27,
+      "text": "Esta noche tenemos música, cerveza, pizza y gente interesante. Ya solo falta que los toledanos pongáis un poquito de vuestra parte.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-17.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 252.27,
+      "end": 258.87,
+      "text": "En Toledo llevamos siglos construyendo murallas pero hoy toca tirar alguna, aunque sea la que separa dos corrillos.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-18.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 0.944
+    },
+    {
+      "start": 258.87,
+      "end": 264.8,
+      "text": "En Toledo es más fácil encontrarte con alguien cinco veces por la calle que proponerle tomar una cerveza.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-19.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 264.8,
+      "end": 270.76,
+      "text": "Hay gente que dice que en Toledo no se conoce a nadie nuevo. Luego lleva seis años rechazando todos los planes que le proponen.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-20.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 270.76,
+      "end": 276.91,
+      "text": "Nos hemos acostumbrado tanto a tener razón que cuando alguien nos da un buen argumento lo vivimos casi como una agresión personal.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-21.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 276.91,
+      "end": 282.76,
+      "text": "Qué bonito sería que nos interesara tanto la vida de los demás como nos interesa que los demás se enteren de la nuestra.",
+      "voice": 7,
+      "url": "./media/locuciones/oct25-g2-s2-22.mp3",
+      "scenes": [
+        "ambiente",
+        "pizzas"
+      ],
+      "block": "Generación 2 · voz 2",
+      "source": "Generated Audio October 25, 2026 - 10_10AM.wav",
+      "alignment": 1.0
+    },
+    {
+      "start": 0,
+      "end": 45.3,
+      "text": "Mi amigo Ramiro se ha hecho voluntario de It's Time to Think. Ramiro no vale pa ná, pero el tío tiene una voluntad que no veas. El otro día le digo que tenemos que montar el sonido y que primero hay que hacer una prueba de micro. Cuando llego al local me encuentro a Ramiro sentado delante del micrófono con un examen escrito. Le digo Ramiro qué estás haciendo, picha. Y dice que está haciendo la prueba de micro pero que hay preguntas que no se sabe y que si le puedo soplar la tercera. Digo Ramiro, que era probar si se escucha bien. Y me dice ah bueno, pues entonces apruébame, que yo he escuchado todas las preguntas perfectamente.",
+      "voice": 8,
+      "url": "./media/locuciones/oct25-g3-s1-01.mp3",
+      "scenes": [
+        "montaje",
+        "pizzas"
+      ],
+      "block": "Generación 3 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_15AM.wav",
+      "alignment": 0.835,
+      "note": "Relato completo con las improvisaciones de la grabación."
+    },
+    {
+      "start": 45.3,
+      "end": 96.4,
+      "text": "A Ramiro le encargaron que controlara los dieciocho minutos de la charla. Le dije Ramiro, cuando queden cinco minutos tienes que avisar al ponente. A los trece minutos se levanta, se acerca al ponente y le dice al oído que le quedan 5 minutos El hombre se quedó blanco. Cortó el thinkglao, se puso a llamar a su mujer llorando.  Le digo Ramiro, pero qué le has dicho. Y dice que le he avisado como tú me has pedido. Digo sí, pero cinco minutos para terminar la CHARLA. Y dice ah, pues eso explícaselo tú.",
+      "voice": 8,
+      "url": "./media/locuciones/oct25-g3-s1-02.mp3",
+      "scenes": [
+        "montaje",
+        "pizzas"
+      ],
+      "block": "Generación 3 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_15AM.wav",
+      "alignment": 0.905,
+      "note": "Relato completo con las improvisaciones de la grabación."
+    },
+    {
+      "start": 96.4,
+      "end": 138.9,
+      "text": "El otro día le encargamos a Ramiro que hiciera sentir a los asistentes como en su propia casa. A los diez minutos viene una señora a quejarse de que un voluntario le ha pedido que se quite los zapatos al entrar. Le digo Ramiro, tú qué has hecho, por qué les quitas los zapatos. Y dice porque mi madre no deja entrar a nadie con zapatos en el salón. Digo Ramiro, PERO que esto es un evento. Y dice pues díselo a tu madre, que la mía tiene las cosas mu claras.",
+      "voice": 8,
+      "url": "./media/locuciones/oct25-g3-s1-03.mp3",
+      "scenes": [
+        "montaje",
+        "pizzas"
+      ],
+      "block": "Generación 3 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_15AM.wav",
+      "alignment": 0.913,
+      "note": "Relato completo con las improvisaciones de la grabación."
+    },
+    {
+      "start": 138.9,
+      "end": 187.56,
+      "text": "Mi amigo Ramiro se ha metido de voluntario en una cosa que se llama It's Time to Think. Digo Ramiro tú sabes inglés. Dice yo inglés no sé pero como pone think me han dicho que ahí se piensa mucho. Digo pues tú vas a durar poquito. Total que el primer día le hacen una entrevista y le preguntan qué puede aportar al equipo. Dice yo tengo coche, tengo tiempo libre y soy una persona muy resolutiva. Le preguntan si sabe trabajar bajo presión. Dice hombre, yo he estado casado dos veces y tengo tres hijos adolescentes. A mí no me vengáis con presiones eh Y le preguntan cuál es su mayor defecto. Dice que es demasiado sincero. Le dicen que eso no tiene por qué ser un defecto. Y dice me importa una mierda lo que tú pienses. Lo cogieron de voluntario, en fin, bienvenido.",
+      "voice": 8,
+      "url": "./media/locuciones/oct25-g3-s1-04.mp3",
+      "scenes": [
+        "montaje",
+        "pizzas"
+      ],
+      "block": "Generación 3 · voz 1",
+      "source": "Generated Audio October 25, 2026 - 10_15AM.wav",
+      "alignment": 0.891,
+      "note": "Relato completo con las improvisaciones de la grabación."
+    }
+  ]
+}
