@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
+import { VoiceMix, normalizedVoiceUrl, clampVoiceBoost } from "./voice-mix";
 import "./show.css";
 import {
   nextCue,
@@ -31,6 +32,7 @@ type State = {
   volume: number;
   duckLevel: number;
   voiceVolume: number;
+  voiceBoost: number;
   track: string;
   minutes: number;
   scheduled: string;
@@ -46,8 +48,9 @@ const defaults: State = {
   started: 0,
   offset: 0,
   volume: 0.65,
-  duckLevel: 0.23,
+  duckLevel: 0.12,
   voiceVolume: 1,
+  voiceBoost: 1.5,
   track: "./media/levels.mp3",
   minutes: 30,
   scheduled: "",
@@ -77,6 +80,11 @@ export default function Show() {
           saved = {
             voiceGap: voiceGap(p.voiceGap),
             motion: p.motion !== false,
+            voiceBoost: clampVoiceBoost(p.voiceBoost),
+            duckLevel:
+              typeof p.duckLevel === "number"
+                ? Math.max(0, Math.min(1, p.duckLevel))
+                : defaults.duckLevel,
           };
         } catch {}
       return { ...defaults, ...saved, started: Date.now(), running: true };
@@ -114,6 +122,7 @@ export default function Show() {
   const externalEnabled = useRef(false);
   externalEnabled.current = externalMusic;
   const lastCue = useRef("");
+  const voiceMix = useRef<VoiceMix | null>(null);
   const nextVoiceAt = useRef(5);
   const gratitudePending = useRef(false);
   const [bank, setBank] = useState("todas");
@@ -122,9 +131,14 @@ export default function Show() {
     if (!projection)
       localStorage.setItem(
         "ittt-show-preferences-v1",
-        JSON.stringify({ voiceGap: s.voiceGap, motion: s.motion }),
+        JSON.stringify({
+          voiceGap: s.voiceGap,
+          motion: s.motion,
+          voiceBoost: s.voiceBoost,
+          duckLevel: s.duckLevel,
+        }),
       );
-  }, [s.voiceGap, s.motion]);
+  }, [s.voiceGap, s.motion, s.voiceBoost, s.duckLevel]);
   current.current = s;
   const send = (m: { type: string; [key: string]: unknown }) => {
     if (m.type === "reset") seen.current.clear();
@@ -220,8 +234,15 @@ export default function Show() {
         { type: "ITTT_MUSIC_DUCK", level: current.current.duckLevel },
         location.origin,
       );
-    voice.current.src = cue ? cue.url : "./media/audio-manolo-whatsapp.mp3";
+    voice.current.src = normalizedVoiceUrl(
+      cue ? cue.url : "./media/audio-manolo-whatsapp.mp3",
+    );
     voice.current.volume = current.current.voiceVolume;
+    if (!voiceMix.current) voiceMix.current = new VoiceMix(voice.current);
+    voiceMix.current.setBoost(current.current.voiceBoost);
+    void voiceMix.current
+      .resume()
+      .catch(() => note("Pulsa Probar voz para activar el sonido de la mesa."));
     void voice.current.play().catch(() => {
       gratitudePending.current = false;
       note("Audio bloqueado o no disponible. Vuelve a pulsar la frase.");
@@ -258,6 +279,7 @@ export default function Show() {
             ...m.state,
             motion: m.state.motion ?? defaults.motion,
             voiceGap: voiceGap(m.state.voiceGap),
+            voiceBoost: clampVoiceBoost(m.state.voiceBoost),
           });
         if (m.type === "manolo") speak();
         if (m.type === "cue") speak(m.cue);
@@ -336,6 +358,8 @@ export default function Show() {
       clearTimeout(pending.current);
       clearTimeout(stop.current);
       stream.current?.getTracks().forEach((t) => t.stop());
+      voiceMix.current?.close();
+      voiceMix.current = null;
     };
   }, []);
   const t =
@@ -355,6 +379,9 @@ export default function Show() {
   useEffect(() => {
     if (voice.current) voice.current.volume = s.voiceVolume;
   }, [s.voiceVolume]);
+  useEffect(() => {
+    voiceMix.current?.setBoost(s.voiceBoost);
+  }, [s.voiceBoost]);
   useEffect(() => {
     if (
       !projection &&
@@ -440,11 +467,25 @@ export default function Show() {
         s.phase === "salida" ? 7500 : 1000,
       );
     }
-    if (!s.running || !["ambiente", "llamada"].includes(s.phase)) {
+    if (
+      !s.running ||
+      !["montaje", "ambiente", "llamada", "agradecimiento", "pizzas"].includes(
+        s.phase,
+      )
+    ) {
       clearTimeout(pending.current);
       clearTimeout(stop.current);
       voice.current?.pause();
-      if (!["ambiente", "llamada"].includes(s.phase)) duck.current = false;
+      if (
+        ![
+          "montaje",
+          "ambiente",
+          "llamada",
+          "agradecimiento",
+          "pizzas",
+        ].includes(s.phase)
+      )
+        duck.current = false;
     } else if (duck.current && voice.current?.paused)
       void voice.current.play().catch(() => {});
     if (intro.current) {
@@ -727,6 +768,26 @@ export default function Show() {
       />
       <div className="dj-live">
         <b>{speaking || "Voces listas · selecciona una frase"}</b>
+        <label className="voice-boost-control">
+          Refuerzo de voz · {Math.round(s.voiceBoost * 100)}%
+          <input
+            aria-label="Refuerzo de voz"
+            type="range"
+            min=".5"
+            max="3"
+            step=".1"
+            value={s.voiceBoost}
+            onChange={(e) =>
+              update({ voiceBoost: clampVoiceBoost(Number(e.target.value)) })
+            }
+          />
+          <meter
+            aria-label="Nivel real de voz"
+            min="0"
+            max="1"
+            value={voiceMix.current?.peak() || 0}
+          />
+        </label>
         <button
           onClick={() => {
             voice.current?.pause();

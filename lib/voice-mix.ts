@@ -1,0 +1,55 @@
+export function normalizedVoiceUrl(source: string) {
+  return "./media/voces-master-v1/" + source.split("/").pop();
+}
+
+export function clampVoiceBoost(value: number) {
+  return Math.max(0.5, Math.min(3, Number.isFinite(value) ? value : 1.5));
+}
+
+/** A single graph per audio element: extra gain with peak protection and a real meter. */
+export class VoiceMix {
+  readonly context = new AudioContext();
+  private gain = this.context.createGain();
+  private limiter = this.context.createDynamicsCompressor();
+  private analyser = this.context.createAnalyser();
+  private samples = new Float32Array(1024);
+
+  constructor(audio: HTMLAudioElement) {
+    const source = this.context.createMediaElementSource(audio);
+    this.limiter.threshold.value = -5;
+    this.limiter.knee.value = 0;
+    this.limiter.ratio.value = 20;
+    this.limiter.attack.value = 0.003;
+    this.limiter.release.value = 0.15;
+    this.analyser.fftSize = 1024;
+    source
+      .connect(this.gain)
+      .connect(this.limiter)
+      .connect(this.analyser)
+      .connect(this.context.destination);
+  }
+
+  setBoost(value: number) {
+    this.gain.gain.setTargetAtTime(
+      clampVoiceBoost(value),
+      this.context.currentTime,
+      0.035,
+    );
+  }
+
+  resume() {
+    return this.context.resume();
+  }
+
+  peak() {
+    this.analyser.getFloatTimeDomainData(this.samples);
+    return this.samples.reduce(
+      (peak, value) => Math.max(peak, Math.abs(value)),
+      0,
+    );
+  }
+
+  close() {
+    void this.context.close();
+  }
+}

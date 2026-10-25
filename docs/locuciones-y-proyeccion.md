@@ -20,3 +20,9 @@ El selector Animaciones del proyector controla explícitamente esta salida, incl
 `scripts/prepare-oct25-narration.py` usa los WAV y el Markdown originales en la carpeta superior, transcripciones locales con marcas de palabra bajo `.local/Generated Audio ... .json`, NumPy y ffmpeg local. Alinea guion y palabras, busca mínimos de energía entre frases, extrae muestras PCM por posición exacta y aplica fundidos de 10/20 ms en los bordes. Los relatos incluyen límites revisados para conservar las improvisaciones. No sobrescribe los originales.
 
 Se publica `public/media/locuciones-oct25.json` y los MP3 correspondientes. Las herramientas, transcripciones de trabajo y originales WAV no se incluyen en Pages.
+
+## Nivel de voz
+
+La mesa reproduce copias en `media/voces-master-v1`, conservando los recortes originales. `scripts/normalize-show-voices.py` mide las 141 cuñas y Manolo, aplica ganancia constante hacia −16 LUFS con un limitador con sobremuestreo y vuelve a medir cada archivo publicado. `media/voice-master-v1.json` registra los niveles anteriores, posteriores y los picos reales. Tras regenerar recortes, hay que regenerar también los masters.
+
+El refuerzo de voz de la mesa va del 50 al 300%, comienza al 150% y usa un compresor para controlar picos. El medidor de la cabecera mide la señal después del refuerzo. El ajuste se recuerda en este navegador. El nivel habitual de música durante las voces comienza al 12% del volumen normal y sigue siendo editable; el volumen de voz y de música tienen recorridos independientes.

@@ -1280,6 +1280,20 @@ iframe.show-bg-video {
   margin-top: 8px;
   color: #ebce83;
 }
+.voice-boost-control {
+  min-width: 230px;
+  max-width: 300px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.voice-boost-control input {
+  width: 100%;
+}
+.voice-boost-control meter {
+  height: 7px;
+  width: 100%;
+  display: block;
+}
 @media (max-width: 800px) {
   .voice-frequency {
     grid-template-columns: 1fr;

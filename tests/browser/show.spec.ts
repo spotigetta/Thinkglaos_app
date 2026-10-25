@@ -101,7 +101,7 @@ test("Una frase seleccionada suena completa desde la mesa sin proyector ni músi
   const voice = page.locator("audio");
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/voz-02-pcm-v2.mp3",
+    "./media/voces-master-v1/voz-02-pcm-v2.mp3",
   );
   await expect
     .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
@@ -117,7 +117,7 @@ test("Una frase seleccionada suena completa desde la mesa sin proyector ni músi
   await page.locator(".show-cues button").click();
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/voz-37-pcm-v2.mp3",
+    "./media/voces-master-v1/voz-37-pcm-v2.mp3",
   );
   await expect
     .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
@@ -205,7 +205,7 @@ test("Agradecimiento completo da paso al ambientillo y pizzas usa su propio banc
   const voice = page.locator("audio");
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/oct25-g1-s2-16.mp3",
+    "./media/voces-master-v1/oct25-g1-s2-16.mp3",
   );
   await expect
     .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
@@ -223,7 +223,7 @@ test("Agradecimiento completo da paso al ambientillo y pizzas usa su propio banc
   await page.locator(".show-cues button").click();
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/oct25-g1-s1-11.mp3",
+    "./media/voces-master-v1/oct25-g1-s1-11.mp3",
   );
   await expect
     .poll(() => voice.evaluate((a: HTMLAudioElement) => a.currentTime))
@@ -242,7 +242,7 @@ test("La frecuencia espera al final de la voz y alterna la siguiente sin cortar"
   const voice = page.locator("audio");
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/oct25-g1-s1-01.mp3",
+    "./media/voces-master-v1/oct25-g1-s1-01.mp3",
   );
   await page.getByLabel("Pausa entre locuciones").fill("20");
   await voice.evaluate((a: HTMLAudioElement) => {
@@ -252,11 +252,95 @@ test("La frecuencia espera al final de la voz y alterna la siguiente sin cortar"
   await page.clock.runFor(19000);
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/oct25-g1-s1-01.mp3",
+    "./media/voces-master-v1/oct25-g1-s1-01.mp3",
   );
   await page.clock.runFor(2000);
   await expect(voice).toHaveAttribute(
     "src",
-    "./media/locuciones/oct25-g1-s2-01.mp3",
+    "./media/voces-master-v1/oct25-g1-s2-01.mp3",
   );
+});
+
+test("La voz normalizada produce señal real, admite refuerzo y recuerda el ajuste", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  await expect(page.locator(".show-cues button")).toHaveCount(141);
+  await page.getByLabel("Buscar frase").fill("Qué bonito es el voluntariado");
+  await page.locator(".show-cues button").click();
+  await expect(page.locator("audio")).toHaveAttribute(
+    "src",
+    "./media/voces-master-v1/oct25-g1-s1-01.mp3",
+  );
+  await expect
+    .poll(() =>
+      page
+        .getByLabel("Nivel real de voz")
+        .evaluate((m: HTMLMeterElement) => m.value),
+    )
+    .toBeGreaterThan(0.05);
+  await page.getByLabel("Refuerzo de voz").fill("3");
+  await expect(page.getByLabel("Refuerzo de voz")).toHaveValue("3");
+  await page.reload();
+  await expect(page.getByLabel("Refuerzo de voz")).toHaveValue("3");
+});
+
+test("Montaje y pizzas mantienen la música baja al ajustar una voz en directo", async ({
+  page,
+}) => {
+  await page.goto("/?projection=1");
+  for (const phase of ["montaje", "pizzas", "agradecimiento"]) {
+    await page.evaluate((phase) => {
+      const channel = new BroadcastChannel("ittt-show-v1");
+      (window as any).audioTestChannel = channel;
+      channel.postMessage({
+        type: "state",
+        state: {
+          phase,
+          running: true,
+          started: Date.now(),
+          offset: 0,
+          volume: 0.6,
+          duckLevel: 0.1,
+          voiceVolume: 1,
+          internalMusic: true,
+          minutes: 30,
+          motion: true,
+        },
+      });
+    }, phase);
+    await expect(page.locator(".show-output")).toHaveClass(new RegExp(phase));
+    await page.evaluate(() =>
+      (window as any).audioTestChannel.postMessage({ type: "duck-music" }),
+    );
+    await expect
+      .poll(() =>
+        page.locator("audio").evaluate((a: HTMLAudioElement) => a.volume),
+      )
+      .toBeLessThan(0.08);
+    await page.evaluate(
+      (phase) =>
+        (window as any).audioTestChannel.postMessage({
+          type: "state",
+          state: {
+            phase,
+            running: true,
+            started: Date.now(),
+            offset: 0,
+            volume: 0.6,
+            duckLevel: 0.1,
+            voiceVolume: 0.8,
+            internalMusic: true,
+            minutes: 30,
+            motion: true,
+          },
+        }),
+      phase,
+    );
+    await page.waitForTimeout(1300);
+    expect(
+      await page.locator("audio").evaluate((a: HTMLAudioElement) => a.volume),
+    ).toBeLessThan(0.08);
+    await page.evaluate(() => (window as any).audioTestChannel.close());
+  }
 });

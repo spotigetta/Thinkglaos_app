@@ -1,0 +1,1000 @@
+{
+  "targetLUFS": -16,
+  "truePeakTargetDB": -2,
+  "files": [
+    {
+      "source": "./media/locuciones/voz-01-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-01-pcm-v2.mp3",
+      "beforeLUFS": -16.13,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.29
+    },
+    {
+      "source": "./media/locuciones/voz-02-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-02-pcm-v2.mp3",
+      "beforeLUFS": -18.99,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-03-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-03-pcm-v2.mp3",
+      "beforeLUFS": -19.7,
+      "afterLUFS": -16.14,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-04-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-04-pcm-v2.mp3",
+      "beforeLUFS": -19.41,
+      "afterLUFS": -16.28,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-05-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-05-pcm-v2.mp3",
+      "beforeLUFS": -20.32,
+      "afterLUFS": -16.23,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/voz-06-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-06-pcm-v2.mp3",
+      "beforeLUFS": -18.33,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-07-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-07-pcm-v2.mp3",
+      "beforeLUFS": -18.44,
+      "afterLUFS": -16.16,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/voz-08-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-08-pcm-v2.mp3",
+      "beforeLUFS": -18.0,
+      "afterLUFS": -16.56,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/voz-09-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-09-pcm-v2.mp3",
+      "beforeLUFS": -17.61,
+      "afterLUFS": -16.44,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-10-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-10-pcm-v2.mp3",
+      "beforeLUFS": -18.61,
+      "afterLUFS": -16.54,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-11-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-11-pcm-v2.mp3",
+      "beforeLUFS": -17.4,
+      "afterLUFS": -16.39,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-12-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-12-pcm-v2.mp3",
+      "beforeLUFS": -16.99,
+      "afterLUFS": -16.46,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-13-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-13-pcm-v2.mp3",
+      "beforeLUFS": -18.33,
+      "afterLUFS": -16.42,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-14-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-14-pcm-v2.mp3",
+      "beforeLUFS": -18.88,
+      "afterLUFS": -16.2,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-15-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-15-pcm-v2.mp3",
+      "beforeLUFS": -18.06,
+      "afterLUFS": -16.44,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-16-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-16-pcm-v2.mp3",
+      "beforeLUFS": -17.41,
+      "afterLUFS": -16.37,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-17-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-17-pcm-v2.mp3",
+      "beforeLUFS": -20.51,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-18-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-18-pcm-v2.mp3",
+      "beforeLUFS": -20.41,
+      "afterLUFS": -16.28,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-19-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-19-pcm-v2.mp3",
+      "beforeLUFS": -19.1,
+      "afterLUFS": -16.49,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-20-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-20-pcm-v2.mp3",
+      "beforeLUFS": -19.58,
+      "afterLUFS": -16.33,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-21-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-21-pcm-v2.mp3",
+      "beforeLUFS": -16.07,
+      "afterLUFS": -16.32,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-22-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-22-pcm-v2.mp3",
+      "beforeLUFS": -21.77,
+      "afterLUFS": -16.44,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/voz-23-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-23-pcm-v2.mp3",
+      "beforeLUFS": -23.85,
+      "afterLUFS": -16.42,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/voz-24-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-24-pcm-v2.mp3",
+      "beforeLUFS": -17.87,
+      "afterLUFS": -16.42,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-25-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-25-pcm-v2.mp3",
+      "beforeLUFS": -19.3,
+      "afterLUFS": -16.51,
+      "truePeakDB": -2.21
+    },
+    {
+      "source": "./media/locuciones/voz-26-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-26-pcm-v2.mp3",
+      "beforeLUFS": -19.32,
+      "afterLUFS": -16.34,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-27-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-27-pcm-v2.mp3",
+      "beforeLUFS": -20.26,
+      "afterLUFS": -16.31,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-28-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-28-pcm-v2.mp3",
+      "beforeLUFS": -23.31,
+      "afterLUFS": -16.37,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/voz-29-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-29-pcm-v2.mp3",
+      "beforeLUFS": -21.32,
+      "afterLUFS": -16.59,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/voz-30-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-30-pcm-v2.mp3",
+      "beforeLUFS": -22.57,
+      "afterLUFS": -16.43,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-31-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-31-pcm-v2.mp3",
+      "beforeLUFS": -18.84,
+      "afterLUFS": -16.47,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/voz-32-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-32-pcm-v2.mp3",
+      "beforeLUFS": -20.15,
+      "afterLUFS": -16.29,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-33-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-33-pcm-v2.mp3",
+      "beforeLUFS": -18.3,
+      "afterLUFS": -16.22,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-34-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-34-pcm-v2.mp3",
+      "beforeLUFS": -21.86,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-35-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-35-pcm-v2.mp3",
+      "beforeLUFS": -16.23,
+      "afterLUFS": -16.29,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/voz-36-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-36-pcm-v2.mp3",
+      "beforeLUFS": -18.76,
+      "afterLUFS": -16.57,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/voz-37-pcm-v2.mp3",
+      "url": "./media/voces-master-v1/voz-37-pcm-v2.mp3",
+      "beforeLUFS": -17.31,
+      "afterLUFS": -16.21,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-01.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-01.mp3",
+      "beforeLUFS": -26.72,
+      "afterLUFS": -16.43,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-02.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-02.mp3",
+      "beforeLUFS": -24.39,
+      "afterLUFS": -16.16,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-03.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-03.mp3",
+      "beforeLUFS": -20.01,
+      "afterLUFS": -16.44,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-04.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-04.mp3",
+      "beforeLUFS": -23.04,
+      "afterLUFS": -16.18,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-05.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-05.mp3",
+      "beforeLUFS": -20.67,
+      "afterLUFS": -16.59,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-06.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-06.mp3",
+      "beforeLUFS": -20.76,
+      "afterLUFS": -16.19,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-07.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-07.mp3",
+      "beforeLUFS": -22.46,
+      "afterLUFS": -16.18,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-08.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-08.mp3",
+      "beforeLUFS": -26.11,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-09.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-09.mp3",
+      "beforeLUFS": -23.5,
+      "afterLUFS": -16.31,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-10.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-10.mp3",
+      "beforeLUFS": -26.52,
+      "afterLUFS": -16.47,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-11.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-11.mp3",
+      "beforeLUFS": -26.75,
+      "afterLUFS": -16.36,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-12.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-12.mp3",
+      "beforeLUFS": -25.29,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-13.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-13.mp3",
+      "beforeLUFS": -25.12,
+      "afterLUFS": -16.59,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-14.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-14.mp3",
+      "beforeLUFS": -24.09,
+      "afterLUFS": -16.2,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-15.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-15.mp3",
+      "beforeLUFS": -23.58,
+      "afterLUFS": -16.55,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-16.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-16.mp3",
+      "beforeLUFS": -24.62,
+      "afterLUFS": -16.45,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-17.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-17.mp3",
+      "beforeLUFS": -21.91,
+      "afterLUFS": -16.31,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-18.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-18.mp3",
+      "beforeLUFS": -28.6,
+      "afterLUFS": -16.37,
+      "truePeakDB": -2.21
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-19.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-19.mp3",
+      "beforeLUFS": -20.9,
+      "afterLUFS": -16.56,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-20.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-20.mp3",
+      "beforeLUFS": -25.66,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-21.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-21.mp3",
+      "beforeLUFS": -24.37,
+      "afterLUFS": -16.44,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-22.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-22.mp3",
+      "beforeLUFS": -24.18,
+      "afterLUFS": -16.44,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-23.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-23.mp3",
+      "beforeLUFS": -21.71,
+      "afterLUFS": -16.2,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-24.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-24.mp3",
+      "beforeLUFS": -21.46,
+      "afterLUFS": -16.34,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-25.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-25.mp3",
+      "beforeLUFS": -20.8,
+      "afterLUFS": -16.49,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-26.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-26.mp3",
+      "beforeLUFS": -22.82,
+      "afterLUFS": -16.17,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-27.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-27.mp3",
+      "beforeLUFS": -23.37,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-28.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-28.mp3",
+      "beforeLUFS": -23.23,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-29.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-29.mp3",
+      "beforeLUFS": -21.16,
+      "afterLUFS": -16.24,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-30.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-30.mp3",
+      "beforeLUFS": -20.08,
+      "afterLUFS": -16.3,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-31.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-31.mp3",
+      "beforeLUFS": -19.76,
+      "afterLUFS": -16.58,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-32.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-32.mp3",
+      "beforeLUFS": -18.84,
+      "afterLUFS": -16.15,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-33.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-33.mp3",
+      "beforeLUFS": -19.09,
+      "afterLUFS": -16.23,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-34.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-34.mp3",
+      "beforeLUFS": -20.32,
+      "afterLUFS": -16.55,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-35.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-35.mp3",
+      "beforeLUFS": -21.71,
+      "afterLUFS": -16.47,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-36.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-36.mp3",
+      "beforeLUFS": -22.19,
+      "afterLUFS": -16.41,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s1-37.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s1-37.mp3",
+      "beforeLUFS": -21.56,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-01.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-01.mp3",
+      "beforeLUFS": -22.71,
+      "afterLUFS": -16.1,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-02.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-02.mp3",
+      "beforeLUFS": -21.99,
+      "afterLUFS": -16.22,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-03.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-03.mp3",
+      "beforeLUFS": -21.23,
+      "afterLUFS": -16.28,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-04.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-04.mp3",
+      "beforeLUFS": -22.61,
+      "afterLUFS": -16.46,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-05.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-05.mp3",
+      "beforeLUFS": -22.17,
+      "afterLUFS": -16.3,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-06.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-06.mp3",
+      "beforeLUFS": -21.49,
+      "afterLUFS": -16.35,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-07.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-07.mp3",
+      "beforeLUFS": -22.67,
+      "afterLUFS": -16.16,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-08.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-08.mp3",
+      "beforeLUFS": -23.88,
+      "afterLUFS": -16.28,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-09.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-09.mp3",
+      "beforeLUFS": -21.12,
+      "afterLUFS": -16.24,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-10.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-10.mp3",
+      "beforeLUFS": -21.34,
+      "afterLUFS": -16.2,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-11.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-11.mp3",
+      "beforeLUFS": -20.71,
+      "afterLUFS": -16.55,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-12.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-12.mp3",
+      "beforeLUFS": -21.28,
+      "afterLUFS": -16.16,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-13.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-13.mp3",
+      "beforeLUFS": -20.16,
+      "afterLUFS": -16.21,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-14.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-14.mp3",
+      "beforeLUFS": -21.84,
+      "afterLUFS": -16.21,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-15.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-15.mp3",
+      "beforeLUFS": -22.06,
+      "afterLUFS": -16.22,
+      "truePeakDB": -2.2
+    },
+    {
+      "source": "./media/locuciones/oct25-g1-s2-16.mp3",
+      "url": "./media/voces-master-v1/oct25-g1-s2-16.mp3",
+      "beforeLUFS": -22.12,
+      "afterLUFS": -16.3,
+      "truePeakDB": -2.2
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-01.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-01.mp3",
+      "beforeLUFS": -18.78,
+      "afterLUFS": -16.15,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-02.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-02.mp3",
+      "beforeLUFS": -18.9,
+      "afterLUFS": -16.19,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-03.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-03.mp3",
+      "beforeLUFS": -18.23,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-04.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-04.mp3",
+      "beforeLUFS": -18.44,
+      "afterLUFS": -16.55,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-05.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-05.mp3",
+      "beforeLUFS": -19.42,
+      "afterLUFS": -16.31,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-06.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-06.mp3",
+      "beforeLUFS": -18.82,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-07.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-07.mp3",
+      "beforeLUFS": -19.39,
+      "afterLUFS": -16.36,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-08.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-08.mp3",
+      "beforeLUFS": -18.91,
+      "afterLUFS": -16.5,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-09.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-09.mp3",
+      "beforeLUFS": -20.79,
+      "afterLUFS": -16.52,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-10.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-10.mp3",
+      "beforeLUFS": -18.41,
+      "afterLUFS": -16.46,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-11.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-11.mp3",
+      "beforeLUFS": -15.39,
+      "afterLUFS": -16.27,
+      "truePeakDB": -2.59
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-12.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-12.mp3",
+      "beforeLUFS": -20.33,
+      "afterLUFS": -16.16,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-13.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-13.mp3",
+      "beforeLUFS": -19.3,
+      "afterLUFS": -16.35,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-14.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-14.mp3",
+      "beforeLUFS": -17.71,
+      "afterLUFS": -16.54,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-15.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-15.mp3",
+      "beforeLUFS": -19.7,
+      "afterLUFS": -16.34,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-16.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-16.mp3",
+      "beforeLUFS": -18.37,
+      "afterLUFS": -16.54,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-17.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-17.mp3",
+      "beforeLUFS": -21.05,
+      "afterLUFS": -16.18,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-18.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-18.mp3",
+      "beforeLUFS": -18.11,
+      "afterLUFS": -16.26,
+      "truePeakDB": -2.53
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-19.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-19.mp3",
+      "beforeLUFS": -18.83,
+      "afterLUFS": -16.36,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-20.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-20.mp3",
+      "beforeLUFS": -16.31,
+      "afterLUFS": -16.29,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-21.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-21.mp3",
+      "beforeLUFS": -16.95,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-22.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-22.mp3",
+      "beforeLUFS": -21.12,
+      "afterLUFS": -16.2,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-23.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-23.mp3",
+      "beforeLUFS": -15.79,
+      "afterLUFS": -16.27,
+      "truePeakDB": -2.29
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-24.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-24.mp3",
+      "beforeLUFS": -18.63,
+      "afterLUFS": -16.49,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s1-25.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s1-25.mp3",
+      "beforeLUFS": -18.98,
+      "afterLUFS": -16.29,
+      "truePeakDB": -2.26
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-01.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-01.mp3",
+      "beforeLUFS": -21.76,
+      "afterLUFS": -16.52,
+      "truePeakDB": -2.22
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-02.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-02.mp3",
+      "beforeLUFS": -20.77,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-03.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-03.mp3",
+      "beforeLUFS": -20.9,
+      "afterLUFS": -16.57,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-04.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-04.mp3",
+      "beforeLUFS": -20.28,
+      "afterLUFS": -16.47,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-05.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-05.mp3",
+      "beforeLUFS": -20.88,
+      "afterLUFS": -16.39,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-06.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-06.mp3",
+      "beforeLUFS": -19.9,
+      "afterLUFS": -16.49,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-07.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-07.mp3",
+      "beforeLUFS": -20.6,
+      "afterLUFS": -16.49,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-08.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-08.mp3",
+      "beforeLUFS": -18.85,
+      "afterLUFS": -16.49,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-09.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-09.mp3",
+      "beforeLUFS": -21.5,
+      "afterLUFS": -16.45,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-10.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-10.mp3",
+      "beforeLUFS": -21.66,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-11.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-11.mp3",
+      "beforeLUFS": -21.0,
+      "afterLUFS": -16.5,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-12.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-12.mp3",
+      "beforeLUFS": -24.3,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-13.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-13.mp3",
+      "beforeLUFS": -21.04,
+      "afterLUFS": -16.38,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-14.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-14.mp3",
+      "beforeLUFS": -21.41,
+      "afterLUFS": -16.37,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-15.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-15.mp3",
+      "beforeLUFS": -19.78,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-16.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-16.mp3",
+      "beforeLUFS": -22.48,
+      "afterLUFS": -16.46,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-17.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-17.mp3",
+      "beforeLUFS": -21.2,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-18.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-18.mp3",
+      "beforeLUFS": -18.46,
+      "afterLUFS": -16.41,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-19.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-19.mp3",
+      "beforeLUFS": -19.31,
+      "afterLUFS": -16.43,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-20.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-20.mp3",
+      "beforeLUFS": -18.36,
+      "afterLUFS": -16.46,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-21.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-21.mp3",
+      "beforeLUFS": -18.35,
+      "afterLUFS": -16.41,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/locuciones/oct25-g2-s2-22.mp3",
+      "url": "./media/voces-master-v1/oct25-g2-s2-22.mp3",
+      "beforeLUFS": -21.44,
+      "afterLUFS": -16.4,
+      "truePeakDB": -2.21
+    },
+    {
+      "source": "./media/locuciones/oct25-g3-s1-01.mp3",
+      "url": "./media/voces-master-v1/oct25-g3-s1-01.mp3",
+      "beforeLUFS": -20.42,
+      "afterLUFS": -16.48,
+      "truePeakDB": -2.24
+    },
+    {
+      "source": "./media/locuciones/oct25-g3-s1-02.mp3",
+      "url": "./media/voces-master-v1/oct25-g3-s1-02.mp3",
+      "beforeLUFS": -19.56,
+      "afterLUFS": -16.57,
+      "truePeakDB": -2.21
+    },
+    {
+      "source": "./media/locuciones/oct25-g3-s1-03.mp3",
+      "url": "./media/voces-master-v1/oct25-g3-s1-03.mp3",
+      "beforeLUFS": -20.39,
+      "afterLUFS": -16.34,
+      "truePeakDB": -2.23
+    },
+    {
+      "source": "./media/locuciones/oct25-g3-s1-04.mp3",
+      "url": "./media/voces-master-v1/oct25-g3-s1-04.mp3",
+      "beforeLUFS": -20.13,
+      "afterLUFS": -16.39,
+      "truePeakDB": -2.25
+    },
+    {
+      "source": "./media/audio-manolo-whatsapp.mp3",
+      "url": "./media/voces-master-v1/audio-manolo-whatsapp.mp3",
+      "beforeLUFS": -10.91,
+      "afterLUFS": -16.26,
+      "truePeakDB": -5.73
+    }
+  ]
+}
