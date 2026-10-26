@@ -1403,6 +1403,7 @@ export default function Show() {
             <MusicVibesControl
               onActivate={activate}
               settings={s.vibes}
+              trackKey={externalTrack.title + " / " + externalTrack.artist}
               phase={s.phase}
               active={ownsDesk}
               music={music}

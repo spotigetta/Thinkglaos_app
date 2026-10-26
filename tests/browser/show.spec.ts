@@ -416,7 +416,9 @@ test("Pausar, reiniciar o ajustar no libera la música externa de la escena", as
     await expect
       .poll(() => page.evaluate(() => (window as any).__lastMixGoal))
       .toBe(0);
-    expect(await page.evaluate(() => (window as any).__lastPlaybackStop)).toBe(scene !== "A sentarse");
+    expect(await page.evaluate(() => (window as any).__lastPlaybackStop)).toBe(
+      scene !== "A sentarse",
+    );
     await page.evaluate(() => ((window as any).__mixOrders = []));
     await page.getByRole("button", { name: "Pausar", exact: true }).click();
     await page.getByLabel("Posición de la fase").fill("30");
@@ -575,10 +577,15 @@ test("Las vibes reaccionan a audio real de una pestaña, permiten umbral y estil
     .not.toBe("0");
   await page.waitForTimeout(800);
   await expect(out.getByTestId("music-vibes")).toHaveCount(0);
-  await page.getByLabel("Estilo de vibes").selectOption("contrast");
+  await page.getByLabel("Inversión total", { exact: true }).check();
   await page.getByLabel("Umbral de graves").fill("0.02");
   await expect(out.locator(".vibe-contrast")).toHaveCount(1);
-  await page.getByLabel("Estilo de vibes").selectOption("shapes");
+  await page
+    .getByLabel("Inversión total", { exact: true })
+    .uncheck()
+    .catch(() => {});
+  await page.getByLabel("Anillos", { exact: true }).check();
+  await page.getByLabel("Inversión total", { exact: true }).uncheck();
   await page.getByRole("button", { name: "Probar pulso" }).click();
   await expect(out.locator(".vibe-shapes")).toHaveCount(1);
   await out.waitForTimeout(150);
@@ -623,7 +630,8 @@ test("Las vibes de A sentarse leen la música local automáticamente", async ({
   const out = await popup;
   await page.getByLabel("Vibes al ritmo de la música").check();
   await expect(page.getByLabel("Escenas de vibes")).toHaveValue("llamada");
-  await page.getByLabel("Estilo de vibes").selectOption("halo");
+  await page.getByLabel("Halos", { exact: true }).check();
+  await page.getByLabel("Inversión total", { exact: true }).uncheck();
   await page.getByLabel("Umbral de graves").fill("0.02");
   await page.getByRole("button", { name: "A sentarse", exact: true }).click();
   await expect
@@ -643,7 +651,7 @@ test("Las vibes de A sentarse leen la música local automáticamente", async ({
   await expect(out.getByTestId("music-vibes")).toHaveCount(0);
 });
 
-test("El flash invierte todos los colores al cien por cien y vuelve limpio en unos 120 ms", async ({
+test("El flash invierte todos los colores al cien por cien y vuelve limpio en un pulso proporcional", async ({
   page,
 }) => {
   await page.goto("/?control=1");
@@ -653,9 +661,11 @@ test("El flash invierte todos los colores al cien por cien y vuelve limpio en un
   await page.getByRole("button", { name: "Charla", exact: true }).click();
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   await page.getByLabel("Vibes al ritmo de la música").check();
-  await expect(page.getByLabel("Estilo de vibes")).toHaveValue("contrast");
+  await expect(
+    page.getByLabel("Inversión total", { exact: true }),
+  ).toBeChecked();
   await page.getByLabel("Escenas de vibes").selectOption("counters");
-  await page.getByLabel("Duración del flash").fill("0.5");
+  await page.getByLabel("Intensidad base de vibes").fill("0.5");
   await page.getByRole("button", { name: "Probar pulso" }).click();
   const flash = out.locator(".vibe-contrast");
   await expect(flash).toHaveCount(1);
@@ -673,11 +683,11 @@ test("El flash invierte todos los colores al cien por cien y vuelve limpio en un
   });
   expect(active.opacity).toBe("1");
   expect(active.blend).toBe("difference");
-  expect(active.duration).toBe("0.12s");
+  expect(active.duration).toBe("0.18s");
   expect(active.play).toBe("running");
   await out.screenshot({ path: ".local/full-inversion.png" });
   await flash.evaluate((el) => {
-    el.getAnimations()[0].currentTime = 121;
+    el.getAnimations()[0].currentTime = 181;
   });
   await expect(flash).toHaveCSS("opacity", "0");
   await page.getByLabel("Vibes al ritmo de la música").uncheck();
@@ -737,4 +747,51 @@ test("Un agudo fuerte no dispara el flash, pero un grave más suave sí", async 
     )
     .toBeGreaterThan(0.3);
   await page.getByLabel("Vibes al ritmo de la música").uncheck();
+});
+test("Selección múltiple, variación por minutos, persistencia y nuevos grafismos con texto reactivo", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page.getByLabel("Prisma", { exact: true }).check();
+  await page.getByLabel("Túnel", { exact: true }).check();
+  await page.getByLabel("Inversión total", { exact: true }).uncheck();
+  await page.getByLabel("Variación de vibes").selectOption("minutes");
+  await page.getByLabel("Minutos entre efectos").fill("0.25");
+  await page.getByLabel("Intensidad base de vibes").fill("0.3");
+  await page.getByRole("button", { name: "Probar pulso" }).click();
+  await expect(out.locator(".vibe-prism, .vibe-tunnel")).toHaveCount(1);
+  expect(
+    await out.locator("main h1").evaluate((el) => el.getAnimations().length),
+  ).toBeGreaterThan(0);
+  await page.reload();
+  await expect(page.getByLabel("Prisma", { exact: true })).toBeChecked();
+  await expect(page.getByLabel("Túnel", { exact: true })).toBeChecked();
+  await expect(
+    page.getByLabel("Inversión total", { exact: true }),
+  ).not.toBeChecked();
+  await expect(page.getByLabel("Variación de vibes")).toHaveValue("minutes");
+  await expect(page.getByLabel("Intensidad base de vibes")).toHaveValue("0.3");
+  // Inspect each new shader-like CSS effect in the actual projector.
+  for (const [name, cls] of [
+    ["Prisma", "prism"],
+    ["Túnel", "tunnel"],
+    ["Rayos", "rays"],
+  ]) {
+    await page.getByLabel(name, { exact: true }).check();
+    for (const other of ["Prisma", "Túnel", "Rayos"].filter((x) => x !== name))
+      await page.getByLabel(other, { exact: true }).uncheck();
+    await page.getByRole("button", { name: "Probar pulso" }).click();
+    await expect(out.locator(`.vibe-${cls}`)).toHaveCount(1);
+    await out.waitForTimeout(70);
+    expect(
+      await out
+        .locator(`.vibe-${cls} i`)
+        .first()
+        .evaluate((el) => el.getAnimations().length),
+    ).toBeGreaterThan(0);
+  }
 });

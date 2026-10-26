@@ -2451,3 +2451,135 @@ iframe.show-bg-video {
     opacity: 0;
   }
 }
+.vibe-palette {
+  margin: 6px 0;
+  border: 1px solid #ffffff25;
+  border-radius: 12px;
+  padding: 10px;
+}
+.vibe-palette legend {
+  font-size: 12px;
+  color: #fee185;
+}
+.vibe-palette > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+.vibes-controls .vibe-palette label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px;
+  border-radius: 8px;
+  background: #ffffff08;
+}
+.vibe-palette input {
+  accent-color: #fee185;
+}
+.vibe-palette label:has(input:checked) {
+  background: #fee18522;
+  color: #fee185;
+}
+.vibe-palette button {
+  margin-top: 8px;
+}
+.vibe-prism {
+  mix-blend-mode: screen;
+}
+.vibe-prism i {
+  position: absolute;
+  inset: -30%;
+  background: conic-gradient(
+    from 30deg,
+    transparent 0 30%,
+    #fee18580 35%,
+    transparent 40% 60%,
+    #9388d8a0 68%,
+    transparent 75%
+  );
+  animation: vibe-prism-turn 850ms cubic-bezier(0.16, 0.7, 0.25, 1) both;
+}
+.vibe-prism i:nth-child(2) {
+  inset: 5%;
+  animation-direction: reverse;
+}
+.vibe-prism i:nth-child(n + 3) {
+  display: none;
+}
+.vibe-tunnel i {
+  position: absolute;
+  inset: 10%;
+  border: 2vmin solid #fee185;
+  border-radius: 15%;
+  animation: vibe-depth 1000ms cubic-bezier(0.16, 0.7, 0.25, 1) both;
+}
+.vibe-tunnel i:nth-child(2) {
+  inset: 20%;
+  border-color: #b2a3ff;
+  animation-delay: 50ms;
+}
+.vibe-tunnel i:nth-child(3) {
+  inset: 30%;
+  border-color: #fff6dd;
+  animation-delay: 100ms;
+}
+.vibe-tunnel i:nth-child(4) {
+  inset: 40%;
+  animation-delay: 150ms;
+}
+.vibe-rays {
+  mix-blend-mode: screen;
+}
+.vibe-rays i {
+  position: absolute;
+  left: -30%;
+  top: 15%;
+  width: 160%;
+  height: 2vmin;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #fee185,
+    #fff6dd,
+    transparent
+  );
+  box-shadow: 0 0 35px #fee18580;
+  animation: vibe-ray-slide 850ms ease-out both;
+}
+.vibe-rays i:nth-child(2) {
+  top: 35%;
+  animation-delay: 35ms;
+}
+.vibe-rays i:nth-child(3) {
+  top: 65%;
+  animation-delay: 70ms;
+}
+.vibe-rays i:nth-child(4) {
+  top: 85%;
+  animation-delay: 105ms;
+}
+@keyframes vibe-prism-turn {
+  from {
+    transform: rotate(var(--vibe-turn)) scale(0.8);
+  }
+  to {
+    transform: rotate(calc(var(--vibe-turn) + 65deg)) scale(1.15);
+  }
+}
+@keyframes vibe-depth {
+  from {
+    transform: perspective(800px) rotateZ(-8deg) scale(0.6);
+  }
+  to {
+    transform: perspective(800px) rotateZ(6deg) scale(1.6);
+  }
+}
+@keyframes vibe-ray-slide {
+  from {
+    transform: translateX(-45%) rotate(-12deg);
+  }
+  to {
+    transform: translateX(45%) rotate(8deg);
+  }
+}

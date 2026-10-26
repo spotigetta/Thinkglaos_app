@@ -58,3 +58,53 @@ test("Solo los graves disparan: los medios y agudos fuertes no contribuyen", () 
   activeBin = Math.round((80 * 2048) / 48000); // golpe de bombo
   assert.ok(analyserEnergy(analyser, bins, 48000) > 0.6);
 });
+import {
+  VibesDirector,
+  selectedVibes,
+  proportionalIntensity,
+} from "../lib/music-vibes";
+test("La selección múltiple migra mezclas antiguas y nunca queda vacía", () => {
+  assert.equal(selectedVibes({ style: "mixed" }).length, 7);
+  assert.deepEqual(selectedVibes({ styles: ["wave", "wave", "halo"] }), [
+    "wave",
+    "halo",
+  ]);
+  assert.deepEqual(selectedVibes({ styles: [] }), ["contrast"]);
+});
+test("La intensidad parte de una base y crece proporcionalmente al exceso sobre el umbral", () => {
+  assert.equal(proportionalIntensity(0.3, 0.4, 0.4), 0.3);
+  assert.ok(proportionalIntensity(0.3, 0.7, 0.4) > 0.3);
+  assert.equal(proportionalIntensity(0.3, 1, 0.4), 1);
+  assert.ok(
+    proportionalIntensity(0.3, 0.7, 0.6) < proportionalIntensity(0.3, 0.7, 0.4),
+  );
+});
+test("La dirección mantiene tramos, cambia por canción o minutos y no recorre una lista por golpe", () => {
+  const settings = readVibes({
+    styles: ["halo", "wave", "tunnel"],
+    rotation: "song",
+  });
+  const d = new VibesDirector(() => 0.99);
+  const first = d.choose(settings, "song-a", 0);
+  for (let i = 1; i < 50; i++)
+    assert.equal(d.choose(settings, "song-a", i * 500), first);
+  const second = d.choose(settings, "song-b", 25000);
+  assert.notEqual(first, second);
+  const timed = { ...settings, rotation: "minutes" as const, minutes: 1 };
+  const t = new VibesDirector(() => 0.5);
+  const a = t.choose(timed, "song-a", 0);
+  assert.equal(t.choose(timed, "song-a", 59999), a);
+  assert.notEqual(t.choose(timed, "song-a", 60000), a);
+  const musical = { ...settings, rotation: "musical" as const, threshold: 0.3 };
+  const m = new VibesDirector(() => 0.5);
+  const quiet = m.choose(musical, "song-a", 0);
+  for (let i = 0; i < 1000; i++) {
+    m.sample(0.1, i * 25);
+    m.choose(musical, "song-a", i * 25);
+  }
+  for (let i = 1000; i < 1200; i++) {
+    m.sample(0.9, i * 25);
+    m.choose(musical, "song-a", i * 25);
+  }
+  assert.notEqual(m.choose(musical, "song-a", 30000), quiet);
+});
