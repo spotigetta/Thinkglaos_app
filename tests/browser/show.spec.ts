@@ -209,3 +209,84 @@ test("El montaje muestra el reparto automático hasta las 19:25 y no repite una 
     page.getByText("19:25 · locuciones de montaje finalizadas"),
   ).toBeVisible();
 });
+
+test("El panel completo baja hasta la frase 141 y permite seleccionarla", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 700 });
+  await page.goto("/?control=1");
+  await expect(page.locator(".show-cues button")).toHaveCount(141);
+  const size = await page.evaluate(() => ({
+    page: document.documentElement.scrollHeight,
+    view: innerHeight,
+  }));
+  expect(size.page).toBeGreaterThan(size.view * 2);
+  await page.getByRole("link", { name: "Frases ↓" }).click();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
+  const last = page.locator(".show-cues button").last();
+  await last.scrollIntoViewIfNeeded();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
+  await last.click();
+  await expect
+    .poll(() =>
+      page
+        .locator("audio")
+        .first()
+        .evaluate((a: HTMLAudioElement) => a.src),
+    )
+    .toContain("/media/voces-master-v1/");
+});
+
+test("Charla y preguntas se pausan, ajustan y terminan sin cambiar de fase, con un aviso por final", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-10-29T20:00:00+01:00") });
+  await page.addInitScript(() => {
+    (window as any).__chimes = 0;
+    const original = AudioContext.prototype.createOscillator;
+    AudioContext.prototype.createOscillator = function (...args) {
+      (window as any).__chimes++;
+      return original.apply(this, args);
+    };
+  });
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const output = await popup;
+  await page.getByRole("button", { name: "Charla", exact: true }).click();
+  await expect(output.locator(".show-output")).toHaveClass(/charla/);
+  await page.getByRole("button", { name: "Pausar", exact: true }).click();
+  const still = await output.locator("h1").textContent();
+  await page.clock.fastForward(120000);
+  expect(await output.locator("h1").textContent()).toBe(still);
+  await page.getByLabel("Posición de la fase").fill("600");
+  await expect(output.locator("h1")).toHaveText("08:00");
+  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  await page.getByLabel("Posición de la fase").fill("1079");
+  await page.clock.fastForward(2500);
+  await expect(output.locator("h1")).toHaveText("00:00");
+  await expect(
+    page.getByText("Tiempo terminado · esperando tu señal"),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Finalizado" })).toBeDisabled();
+  expect(await page.evaluate(() => (window as any).__chimes)).toBe(5);
+  await expect(output.locator(".show-output")).toHaveClass(/charla/);
+  await expect(output.locator(".show-clock")).toHaveCount(0);
+  await output.screenshot({ path: ".local/counter-charla.png" });
+  await page.getByRole("button", { name: "Reiniciar", exact: true }).click();
+  await expect(output.locator("h1")).toHaveText("18:00");
+  await expect(
+    page.getByRole("button", { name: "Continuar", exact: true }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Preguntas", exact: true }).click();
+  await page.getByLabel("Posición de la fase").fill("2699");
+  await page.clock.fastForward(2500);
+  await expect(output.locator("h1")).toHaveText("00:00");
+  await expect(output.locator(".show-output")).toHaveClass(/preguntas/);
+  expect(await page.evaluate(() => (window as any).__chimes)).toBe(10);
+  await page.getByRole("button", { name: "−30 s", exact: true }).click();
+  await expect(output.locator("h1")).toHaveText("00:30");
+  await expect(
+    page.getByRole("button", { name: "Continuar", exact: true }),
+  ).toBeEnabled();
+});

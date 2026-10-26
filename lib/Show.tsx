@@ -14,6 +14,7 @@ import {
 } from "./show-voices";
 import { KineticText } from "./KineticText";
 import { stageLabels, sceneSeconds, visualScene } from "./show-scenes";
+import { playTimerChime } from "./timer-chime";
 type Phase =
   | "agradecimiento"
   | "pizzas"
@@ -112,7 +113,7 @@ export default function Show() {
   const bus = useRef<BroadcastChannel | null>(null),
     win = useRef<Window | null>(null),
     current = useRef(s),
-    seen = useRef(new Set<number>()),
+    seen = useRef(new Set<string>()),
     music = useRef<HTMLAudioElement>(null),
     voice = useRef<HTMLAudioElement>(null),
     intro = useRef<HTMLVideoElement>(null),
@@ -627,22 +628,17 @@ export default function Show() {
     )
       phase("llamada");
     if (s.phase === "salida" && t >= 8 && !projection) phase("intro");
-    if (["charla", "preguntas"].includes(s.phase) && t >= duration) {
-      if (!projection) update({ running: false, offset: duration });
-      else if (!seen.current.has(-duration)) {
-        seen.current.add(-duration);
-        const a = new AudioContext();
-        [440, 660, 330].forEach((f, i) => {
-          const o = a.createOscillator(),
-            g = a.createGain();
-          o.frequency.value = f;
-          g.gain.value = 0.12;
-          o.connect(g).connect(a.destination);
-          o.start(a.currentTime + i * 0.17);
-          o.stop(a.currentTime + i * 0.17 + 0.14);
-        });
-        setTimeout(() => void a.close(), 1000);
+    if (
+      !projection &&
+      ["charla", "preguntas"].includes(s.phase) &&
+      t >= duration
+    ) {
+      const alarm = `${s.phase}:${s.started}`;
+      if (!seen.current.has(alarm)) {
+        seen.current.add(alarm);
+        if (voiceMix.current) playTimerChime(voiceMix.current.context);
       }
+      update({ running: false, offset: duration });
     }
   }, [now]);
   async function share() {
@@ -797,9 +793,13 @@ export default function Show() {
           >
             <small>
               {s.phase === "charla"
-                ? "18 MINUTOS. UNA IDEA."
+                ? t >= duration
+                  ? "TIEMPO · TÚ DECIDES CUÁNDO SEGUIR"
+                  : "18 MINUTOS. UNA IDEA."
                 : s.phase === "preguntas"
-                  ? "AHORA, TUS PREGUNTAS."
+                  ? t >= duration
+                    ? "PREGUNTAS TERMINADAS · SEGUIMOS JUNTOS"
+                    : "AHORA, TUS PREGUNTAS."
                   : s.phase === "llamada"
                     ? "ENCONTRAMOS NUESTRO SITIO"
                     : s.phase === "salida"
@@ -815,7 +815,17 @@ export default function Show() {
                 <KineticText text={scene.copy[1]} effect={scene.effect} />
               )}
             </h1>
-            <p>{graphic ? scene.copy[2] : ""}</p>
+            <p>
+              {graphic
+                ? scene.copy[2]
+                : ["charla", "preguntas"].includes(s.phase)
+                  ? t >= duration
+                    ? "El contador espera tu señal desde la mesa."
+                    : s.running
+                      ? "La conversación está en marcha."
+                      : "Tiempo en pausa."
+                  : ""}
+            </p>
           </main>
         )}
         {graphic && s.phase !== "salida" && (
@@ -944,6 +954,17 @@ export default function Show() {
     ["pizzas", "Pizzas"],
   ];
   const montagePlan = montagePace(cues, montagePlayed.current, new Date(now));
+  const timedPhase = ["charla", "preguntas"].includes(s.phase);
+  const timerEnded = timedPhase && t >= duration;
+  function seekTime(seconds: number) {
+    const offset = Math.max(0, Math.min(duration, seconds));
+    update({
+      offset,
+      started: Date.now(),
+      running:
+        timedPhase && offset === duration ? false : current.current.running,
+    });
+  }
   return (
     <div className="dj-console">
       <audio
@@ -970,6 +991,9 @@ export default function Show() {
         <a href="?">← Equipo</a>
         <img src="./assets/ittt.png" alt="ITTT" />
         <b>MESA DE DIRECTO</b>
+        <a href="#banco-frases" className="jump-to-voices">
+          Frases ↓
+        </a>
         <span>{online ? "● Proyector conectado" : "○ Sin proyector"}</span>
         <button
           onClick={() => {
@@ -1013,6 +1037,15 @@ export default function Show() {
               ? fmt(duration - t)
               : madridClock(new Date(now)).time}
           </strong>
+          {timedPhase && (
+            <p className="timer-state" role="status">
+              {timerEnded
+                ? "Tiempo terminado · esperando tu señal"
+                : s.running
+                  ? "Temporizador en marcha"
+                  : "Temporizador en pausa"}
+            </p>
+          )}
           <button
             className="scene-next"
             onClick={() => {
@@ -1024,34 +1057,30 @@ export default function Show() {
           </button>
           <div className="transport-buttons">
             <button
+              disabled={timerEnded}
               onClick={() =>
                 update({ running: !s.running, offset: t, started: Date.now() })
               }
             >
-              {s.running ? "Pausar" : "Continuar"}
+              {timerEnded ? "Finalizado" : s.running ? "Pausar" : "Continuar"}
             </button>
             <button
               onClick={() => {
                 if (s.phase === "montaje") montagePlayed.current.clear();
                 voice.current?.pause();
                 restore();
-                update({ offset: 0, started: Date.now() });
+                send({ type: "reset" });
+                update({
+                  offset: 0,
+                  started: Date.now(),
+                  running: timedPhase ? false : true,
+                });
               }}
             >
               Reiniciar
             </button>
-            <button
-              onClick={() =>
-                update({ offset: Math.max(0, t - 30), started: Date.now() })
-              }
-            >
-              −30 s
-            </button>
-            <button
-              onClick={() => update({ offset: t + 30, started: Date.now() })}
-            >
-              +30 s
-            </button>
+            <button onClick={() => seekTime(t - 30)}>−30 s</button>
+            <button onClick={() => seekTime(t + 30)}>+30 s</button>
           </div>
           <label>
             Posición · {fmt(t)}
@@ -1061,9 +1090,7 @@ export default function Show() {
               min="0"
               max={duration}
               value={Math.min(duration, t)}
-              onChange={(e) =>
-                update({ offset: Number(e.target.value), started: Date.now() })
-              }
+              onChange={(e) => seekTime(Number(e.target.value))}
             />
           </label>
           <div className="automatic-options">
@@ -1214,7 +1241,7 @@ export default function Show() {
             Extensión de música · actualizar
           </a>
         </section>
-        <section className="console-voices">
+        <section className="console-voices" id="banco-frases">
           <h2>Intervenciones</h2>
           <div className="voice-now" role="status">
             {speaking ||

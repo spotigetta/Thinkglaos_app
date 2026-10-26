@@ -1759,3 +1759,137 @@ iframe.show-bg-video {
     height: 40px;
   }
 }
+/* Let the entire desk scroll; the phrase bank is no longer trapped in a short inner pane. */
+.dj-console {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+  grid-template-rows: auto auto auto auto;
+}
+.console-grid {
+  align-items: start;
+  min-height: auto;
+}
+.console-grid > section {
+  overflow: visible;
+  min-height: auto;
+}
+.console-voices {
+  scroll-margin-top: 150px;
+}
+.console-voices .show-cues {
+  overflow: visible;
+  max-height: none;
+  min-height: 0;
+  flex: none;
+}
+.console-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #0b1717f2;
+  padding: 6px 0;
+  backdrop-filter: blur(18px);
+}
+.phase-strip {
+  position: sticky;
+  top: 62px;
+  z-index: 49;
+  background: #0b1717ed;
+  padding: 5px 0;
+  backdrop-filter: blur(14px);
+}
+.jump-to-voices {
+  border: 1px solid #4a654e;
+  border-radius: 9px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.timer-state {
+  font-size: 12px;
+  color: #e9d291;
+  margin: 0 0 12px;
+}
+/* The projector counters stay on their own scene, with the speaker poster visible. */
+.show-output.charla,
+.show-output.preguntas {
+  background:
+    radial-gradient(ellipse at 70% 25%, #255446 0%, transparent 45%),
+    radial-gradient(ellipse at 12% 82%, #3a3520 0%, transparent 44%), #071b19;
+}
+.show-output.charla::before,
+.show-output.preguntas::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  z-index: 0;
+  opacity: 0.65;
+  background:
+    radial-gradient(circle at 34% 32%, #63896557 0 3%, transparent 24%),
+    radial-gradient(circle at 66% 65%, #e1bb5a33 0 2%, transparent 25%);
+  animation: counter-atmosphere 23s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.show-output.charla::after,
+.show-output.preguntas::after {
+  content: "";
+  position: absolute;
+  inset: 11vh 3vw 8vh;
+  z-index: 0;
+  border: 1px solid #d5bf7047;
+  border-radius: 40px 180px 65px 120px;
+  box-shadow:
+    0 0 90px #6d996d20,
+    inset 0 0 90px #d9b75b13;
+  transform: rotate(-1.5deg);
+  pointer-events: none;
+}
+.charla main,
+.preguntas main,
+.show-speaker {
+  z-index: 2;
+}
+.show-output.charla main h1,
+.show-output.preguntas main h1 {
+  background: linear-gradient(125deg, #fff7da 25%, #dfbd74 70%, #b1d8b0);
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 14px 32px #030c0b90);
+}
+.show-output.charla main p,
+.show-output.preguntas main p {
+  color: #d6dbcc;
+  font-size: clamp(18px, 1.7vw, 28px);
+}
+.show-output.charla .show-speaker img,
+.show-output.preguntas .show-speaker img {
+  border: 2px solid #eedda393;
+  box-shadow:
+    0 28px 95px #010e0ce0,
+    0 0 65px #c7a85622;
+  animation: poster-hover 12s ease-in-out infinite alternate;
+}
+@keyframes counter-atmosphere {
+  to {
+    transform: translate(4%, -3%) rotate(9deg) scale(1.06);
+  }
+}
+@keyframes poster-hover {
+  to {
+    transform: translateY(-10px) rotate(0.5deg);
+  }
+}
+@media (max-width: 1000px) {
+  .phase-strip {
+    top: 90px;
+  }
+  .console-header {
+    flex-wrap: wrap;
+  }
+  .console-grid > section {
+    min-height: 0;
+  }
+  .console-voices .show-cues {
+    max-height: none;
+  }
+}

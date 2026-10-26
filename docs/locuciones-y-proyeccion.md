@@ -44,3 +44,6 @@ Al agotarse los 18 minutos de charla y durante Pizzas aparece un QR grande gener
 
 ### Montaje hasta las 19:25
 La mesa reparte automáticamente las 55 locuciones de montaje hasta las 19:25, hora de Madrid. Cuenta la duración real de cada corte y divide el tiempo restante entre las frases todavía pendientes; ninguna se repite. Al terminar cada frase, al continuar tras una pausa o al empezar más tarde recalcula los silencios. Cuando ya no cabe una frase completa antes de las 19:25, deja de iniciarla. El control manual de frecuencia se conserva para el ambientillo y las demás escenas. **Reiniciar** vuelve a incluir todas las frases de montaje desde la hora actual.
+
+### Contadores de charla y preguntas
+La mesa permite pausar, continuar, mover la posición ±30 segundos o con el deslizador, y reiniciar. Al reiniciar un contador queda en 18:00 o 45:00 **en pausa**, listo para continuar. Al llegar naturalmente a cero se detiene, permanece en esa escena y suena una cuña original breve de cinco notas cómicas; cambiar de escena sigue siendo manual. Mover el control directamente a cero no dispara la alarma. El proyector muestra el cartel de Laura sobre un fondo dinámico durante los contadores, sin reloj de pared. El banco de frases forma parte del desplazamiento normal de la mesa y el acceso «Frases ↓» salta a él.
