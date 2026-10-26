@@ -4,6 +4,7 @@ import {
   BeatDetector,
   analyserEnergy,
   vibesInScene,
+  flashDuration,
   type VibesSettings,
   type MusicPulse,
 } from "./music-vibes";
@@ -15,6 +16,7 @@ class CapturedMusic {
   private bins = new Uint8Array(512);
   constructor(readonly stream: MediaStream) {
     this.analyser.fftSize = 1024;
+    this.analyser.smoothingTimeConstant = 0.25;
     this.context.createMediaStreamSource(stream).connect(this.analyser);
   }
   energy() {
@@ -101,7 +103,7 @@ export function MusicVibesControl({
           power: energy,
           style: settings.style,
         });
-    }, 40);
+    }, 25);
     return () => {
       clearInterval(id);
       capture.current?.close();
@@ -188,7 +190,7 @@ export function MusicVibesControl({
             >
               <option value="mixed">Mezcla de estilos</option>
               <option value="halo">Halos de color</option>
-              <option value="contrast">Contrastes e inversión</option>
+              <option value="contrast">Flash · inversión total</option>
               <option value="shapes">Anillos y figuras</option>
               <option value="wave">Ondas deslizantes</option>
             </select>
@@ -208,9 +210,15 @@ export function MusicVibesControl({
             />
           </label>
           <label>
-            Intensidad · {Math.round(settings.intensity * 100)}%
+            {settings.style === "contrast"
+              ? `Duración del flash · ${flashDuration(settings.intensity)} ms`
+              : `Intensidad · ${Math.round(settings.intensity * 100)}%`}
             <input
-              aria-label="Intensidad de vibes"
+              aria-label={
+                settings.style === "contrast"
+                  ? "Duración del flash"
+                  : "Intensidad de vibes"
+              }
               type="range"
               min=".02"
               max="1"
@@ -293,6 +301,7 @@ export function MusicVibesOverlay({
       style={
         {
           "--vibe-power": settings.intensity,
+          "--vibe-flash-duration": `${flashDuration(settings.intensity)}ms`,
           "--vibe-turn": `${(pulse.id * 47) % 360}deg`,
         } as React.CSSProperties
       }

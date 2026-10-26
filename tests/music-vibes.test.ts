@@ -6,6 +6,7 @@ import {
   readVibes,
   vibesInScene,
   analyserEnergy,
+  flashDuration,
 } from "../lib/music-vibes";
 test("Los pulsos requieren señal por encima del umbral y respetan la separación mínima", () => {
   const d = new BeatDetector();
@@ -16,6 +17,20 @@ test("Los pulsos requieren señal por encima del umbral y respetan la separació
   assert.equal(d.sample(0.8, 0.4, 800), true);
   const high = new BeatDetector();
   assert.equal(high.sample(0.5, 0.9, 0), false);
+});
+
+test("El detector sigue golpes cada 480 ms y no repite flashes sobre un tono sostenido", () => {
+  const beats = new BeatDetector();
+  for (let i = 0; i < 8; i++) {
+    beats.sample(0.1, 0.4, i * 480 - 50);
+    assert.equal(beats.sample(0.8, 0.4, i * 480), true);
+  }
+  const sustained = new BeatDetector();
+  assert.equal(sustained.sample(0.8, 0.4, 0), true);
+  for (let time = 25; time < 5000; time += 25)
+    assert.equal(sustained.sample(0.8, 0.4, time), false);
+  assert.equal(defaultVibes.style, "contrast");
+  assert.equal(flashDuration(0.5), 120);
 });
 test("Las vibes comienzan apagadas, se centran en sentarse y respetan la intro limpia", () => {
   assert.equal(defaultVibes.enabled, false);

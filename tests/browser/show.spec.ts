@@ -640,3 +640,44 @@ test("Las vibes de A sentarse leen la música local automáticamente", async ({
   ).not.toBeChecked();
   await expect(out.getByTestId("music-vibes")).toHaveCount(0);
 });
+
+test("El flash invierte todos los colores al cien por cien y vuelve limpio en unos 120 ms", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByRole("button", { name: "Charla", exact: true }).click();
+  await page.getByRole("button", { name: "Pausar", exact: true }).click();
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await expect(page.getByLabel("Estilo de vibes")).toHaveValue("contrast");
+  await page.getByLabel("Escenas de vibes").selectOption("counters");
+  await page.getByLabel("Duración del flash").fill("0.5");
+  await page.getByRole("button", { name: "Probar pulso" }).click();
+  const flash = out.locator(".vibe-contrast");
+  await expect(flash).toHaveCount(1);
+  const active = await flash.evaluate((el) => {
+    const animation = el.getAnimations()[0];
+    animation.pause();
+    animation.currentTime = 40;
+    const s = getComputedStyle(el);
+    return {
+      opacity: s.opacity,
+      blend: s.mixBlendMode,
+      duration: s.animationDuration,
+      play: s.animationPlayState,
+    };
+  });
+  expect(active.opacity).toBe("1");
+  expect(active.blend).toBe("difference");
+  expect(active.duration).toBe("0.12s");
+  expect(active.play).toBe("running");
+  await out.screenshot({ path: ".local/full-inversion.png" });
+  await flash.evaluate((el) => {
+    el.getAnimations()[0].currentTime = 121;
+  });
+  await expect(flash).toHaveCSS("opacity", "0");
+  await page.getByLabel("Vibes al ritmo de la música").uncheck();
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+});

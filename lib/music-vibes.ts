@@ -18,7 +18,7 @@ export const defaultVibes: VibesSettings = {
   enabled: false,
   threshold: 0.38,
   intensity: 0.45,
-  style: "mixed",
+  style: "contrast",
   scope: "llamada",
 };
 const clamp = (x: unknown, fallback: number) =>
@@ -61,13 +61,13 @@ export class BeatDetector {
   private average = 0;
   private armed = true;
   sample(energy: number, threshold: number, now: number) {
-    this.average = this.average * 0.94 + energy * 0.06;
+    const baseline = this.average;
+    this.average = this.average * 0.9 + energy * 0.1;
     if (energy < threshold * 0.8) this.armed = true;
     const onset =
       this.armed ||
-      energy > this.previous + 0.035 ||
-      energy > this.average * 1.15;
-    const fire = energy >= threshold && onset && now - this.last >= 650;
+      (energy > this.previous + 0.012 && energy > baseline * 1.08);
+    const fire = energy >= threshold && onset && now - this.last >= 400;
     this.previous = energy;
     if (fire) {
       this.last = now;
@@ -95,5 +95,9 @@ export function analyserEnergy(
   let bass = 0;
   for (let i = low; i < Math.min(high, bins.length); i++) bass += bins[i] / 255;
   bass /= high - low;
-  return Math.max(0, Math.min(1, 0.55 * Math.min(1, rms * 4) + 0.45 * bass));
+  return Math.max(0, Math.min(1, 0.3 * Math.min(1, rms * 4) + 0.7 * bass));
+}
+
+export function flashDuration(intensity: number) {
+  return Math.round(60 + Math.max(0, Math.min(1, intensity)) * 120);
 }

@@ -131,7 +131,11 @@ export default function Show() {
               p.introGainVersion === 2 && typeof p.introVolume === "number"
                 ? Math.max(0, Math.min(3, p.introVolume))
                 : 2,
-            vibes: readVibes(p.vibes),
+            vibes: readVibes(
+              p.vibesVersion === 2
+                ? p.vibes
+                : { ...p.vibes, style: "contrast" },
+            ),
             duckLevel:
               typeof p.duckLevel === "number"
                 ? Math.max(0, Math.min(1, p.duckLevel))
@@ -237,6 +241,7 @@ export default function Show() {
           introVolume: s.introVolume,
           introGainVersion: 2,
           vibes: s.vibes,
+          vibesVersion: 2,
           duckLevel: s.duckLevel,
         }),
       );

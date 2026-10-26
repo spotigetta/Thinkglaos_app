@@ -25,6 +25,7 @@ export class VoiceMix {
     this.limiter.attack.value = 0.003;
     this.limiter.release.value = 0.15;
     this.analyser.fftSize = 1024;
+    this.analyser.smoothingTimeConstant = 0.25;
     source
       .connect(this.gain)
       .connect(this.limiter)

@@ -2431,3 +2431,23 @@ iframe.show-bg-video {
     transform: translateX(90vw) rotate(-25deg);
   }
 }
+/* A crisp, total color reversal on the musical transient, then a clean return. */
+.show-output .vibe-contrast {
+  background: #fff;
+  mix-blend-mode: difference;
+  animation: vibe-full-inversion var(--vibe-flash-duration, 120ms) steps(1, end)
+    both;
+}
+.show-output .music-vibes,
+.show-output .music-vibes * {
+  animation-play-state: running !important;
+}
+@keyframes vibe-full-inversion {
+  0%,
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
