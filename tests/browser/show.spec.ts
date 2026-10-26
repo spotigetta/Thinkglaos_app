@@ -1059,3 +1059,47 @@ test("Sin extensión el botón informa y nunca solicita compartir pantalla", asy
   ).toBeVisible();
   expect(await page.evaluate(() => (window as any).__shareRequests)).toBe(0);
 });
+test("El panel de dirección musical muestra la selección y estima el pulso del audio directo", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.addEventListener("message", (e) => {
+      if (e.source === window && e.data?.type === "ITTT_MUSIC_PING")
+        window.postMessage(
+          { type: "ITTT_MUSIC_READY", version: 2.3 },
+          location.origin,
+        );
+    });
+  });
+  await page.goto("/?control=1");
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page
+    .getByRole("button", { name: "Seleccionar todos", exact: true })
+    .click();
+  await page.getByLabel("Variación de vibes").selectOption("musical");
+  await page.evaluate(() => {
+    const start = Date.now();
+    (window as any).__directorSignal = setInterval(() => {
+      const t = Date.now() - start;
+      const bands =
+        t < 4000
+          ? { bass: 0.08, mid: 0.25, high: 0.7, air: 0.6 }
+          : {
+              bass: (t - 4000) % 500 < 110 ? 0.95 : 0.12,
+              mid: 0.5,
+              high: 0.3,
+              air: 0.2,
+            };
+      window.postMessage(
+        { type: "ITTT_SPECTRUM_FRAME", bands },
+        location.origin,
+      );
+    }, 25);
+  });
+  const status = page.getByTestId("vibes-director");
+  await expect(status).toContainText("Aurora", { timeout: 6500 });
+  await expect(status).toContainText("BPM", { timeout: 10000 });
+  await page.getByLabel("Variación de vibes").selectOption("fixed");
+  await expect(status).toHaveCount(0);
+  await page.evaluate(() => clearInterval((window as any).__directorSignal));
+});

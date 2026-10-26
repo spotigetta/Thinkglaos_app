@@ -2948,3 +2948,23 @@ iframe.show-bg-video {
 .spectral-meters > :nth-child(4) i {
   background: #fff6dd;
 }
+.vibes-director {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid #fee18535;
+  border-radius: 12px;
+  background: linear-gradient(125deg, #fee18512, #b2a3ff0a);
+}
+.vibes-director b {
+  color: #fee185;
+  font-size: 12px;
+}
+.vibes-director span {
+  color: #dcd4ff;
+  font-size: 11px;
+}
+.vibes-director small {
+  line-height: 1.4;
+}

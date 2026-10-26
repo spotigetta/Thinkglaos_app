@@ -3,6 +3,8 @@ import { VoiceMix } from "./voice-mix";
 import {
   BeatDetector,
   VibesDirector,
+  musicalSectionLabels,
+  type DirectorStatus,
   vibeStyles,
   selectedVibes,
   proportionalIntensity,
@@ -47,6 +49,9 @@ export function MusicVibesControl({
     extensionReady = useRef(false),
     externalListening = useRef(false);
   const [nativeAudio, setNativeAudio] = useState(false);
+  const [direction, setDirection] = useState<DirectorStatus>(() =>
+    director.current.status(),
+  );
   const [spectrum, setSpectrum] = useState<MusicBands>(silentBands);
   const [level, setLevel] = useState(0),
     [source, setSource] = useState("Música local al sentarse"),
@@ -142,10 +147,20 @@ export function MusicVibesControl({
           ? extensionBands.current
           : silentBands;
       const energy = bands.bass;
-      director.current.sample(energy, Date.now());
+      const stamp = Date.now();
+      const beat = detector.current.sample(energy, settings.threshold, stamp);
+      director.current.sample(bands, stamp, beat);
+      const style = director.current.choose(
+        settings,
+        local
+          ? music.current?.currentSrc || "local"
+          : latest.current.trackKey || "",
+        stamp,
+      );
       if (frame++ % 3 === 0) {
         setLevel(energy);
         setSpectrum(bands);
+        setDirection(director.current.status());
         setSource(
           local
             ? "Música local en directo"
@@ -156,18 +171,6 @@ export function MusicVibesControl({
       }
       if (!vibesInScene(settings, phase) || Date.now() < previewUntil.current)
         return;
-      const beat = detector.current.sample(
-        energy,
-        settings.threshold,
-        Date.now(),
-      );
-      const style = director.current.choose(
-        settings,
-        local
-          ? music.current?.currentSrc || "local"
-          : latest.current.trackKey || "",
-        Date.now(),
-      );
       const spectral = style === "halo" || style === "aurora";
       if (beat || (spectral && frame % 4 === 0))
         onPulse({
@@ -283,12 +286,27 @@ export function MusicVibesControl({
                 })
               }
             >
-              <option value="musical">Por tramos y energía musical</option>
+              <option value="musical">Dirección musical inteligente</option>
               <option value="song">Al cambiar de canción</option>
               <option value="minutes">Cada cierto tiempo</option>
               <option value="fixed">Mantener el efecto</option>
             </select>
           </label>
+          {settings.rotation === "musical" && (
+            <div className="vibes-director" data-testid="vibes-director">
+              <b>
+                {musicalSectionLabels[direction.section]} ·{" "}
+                {vibeStyles.find((s) => s.id === direction.style)?.name ||
+                  "Escuchando"}
+              </b>
+              <span>
+                {direction.bpm
+                  ? "≈ " + direction.bpm + " BPM · cambios sobre el pulso"
+                  : "Midiendo estructura y bandas"}
+              </span>
+              <small>{direction.reason}</small>
+            </div>
+          )}
           {settings.rotation === "minutes" && (
             <label>
               Cambiar cada {settings.minutes} min
@@ -428,9 +446,11 @@ export function MusicVibesControl({
             </small>
           )}
           <small>
-            Solo bombo y graves de 45–150 Hz. Umbral bajo: más pulsos. La base
-            crece con la señal. Los cambios musicales mantienen cada estilo al
-            menos 20 segundos; estiman tramos, no identifican estribillos.
+            Los flashes siguen el bombo de 45–150 Hz; la dirección usa las
+            cuatro bandas. Umbral bajo: más pulsos. La base crece con la señal.
+            La dirección estima subidas, picos y descansos; usa el ritmo cuando
+            es fiable y recupera motivos en tramos parecidos. No identifica
+            estribillos por su letra.
           </small>
           <a href="./downloads/thinkglaos-mezclador.zip" download>
             Descargar extensión de audio directo 2.3
