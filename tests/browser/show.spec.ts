@@ -183,3 +183,29 @@ test("Selección rápida de voz no permite restauraciones antiguas", async ({
     )
     .toBe(true);
 });
+
+test("El montaje muestra el reparto automático hasta las 19:25 y no repite una frase", async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date("2026-10-29T17:00:00+01:00") });
+  await page.goto("/?control=1");
+  await expect(page.getByText("Montaje · hasta las 19:25")).toBeVisible();
+  await expect(page.getByLabel("Pausa entre locuciones")).toHaveCount(0);
+  const pace = page.locator(".montage-pace");
+  await expect(pace).toContainText(/frases pendientes · pausa calculada 02:/);
+  const before = Number((await pace.textContent())!.match(/(\d+) frases/)![1]);
+  await page.getByRole("button", { name: "Activar mesa", exact: true }).click();
+  await page.getByRole("button", { name: "Siguiente voz ▶" }).click();
+  await page
+    .locator("audio")
+    .first()
+    .evaluate((audio: HTMLAudioElement) => {
+      audio.pause();
+      audio.dispatchEvent(new Event("ended"));
+    });
+  await expect(pace).toContainText(`${before - 1} frases pendientes`);
+  await page.clock.setFixedTime(new Date("2026-10-29T19:25:01+01:00"));
+  await expect(
+    page.getByText("19:25 · locuciones de montaje finalizadas"),
+  ).toBeVisible();
+});

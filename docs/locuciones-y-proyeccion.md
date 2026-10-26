@@ -41,3 +41,6 @@ Los medidores de voz, música local e intro leen señal real. La salida app repr
 El botón de vídeo de prueba reproduce un short del catálogo oficial durante un máximo de 30 s. Baja la cama solo cuando YouTube confirma reproducción, recupera en pausa/buffering/fin/error y permite cortar al instante desmarcando la prueba. El reproductor usa la API oficial: https://developers.google.com/youtube/iframe_api_reference. Si el proveedor bloquea reproducción automática, se cancela la intervención y se recupera la música.
 
 Al agotarse los 18 minutos de charla y durante Pizzas aparece un QR grande generado localmente, con el enlace exacto del grupo de WhatsApp. El logo ITTT permanece visible.
+
+### Montaje hasta las 19:25
+La mesa reparte automáticamente las 55 locuciones de montaje hasta las 19:25, hora de Madrid. Cuenta la duración real de cada corte y divide el tiempo restante entre las frases todavía pendientes; ninguna se repite. Al terminar cada frase, al continuar tras una pausa o al empezar más tarde recalcula los silencios. Cuando ya no cabe una frase completa antes de las 19:25, deja de iniciarla. El control manual de frecuencia se conserva para el ambientillo y las demás escenas. **Reiniciar** vuelve a incluir todas las frases de montaje desde la hora actual.

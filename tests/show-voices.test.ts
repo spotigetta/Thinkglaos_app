@@ -1,7 +1,13 @@
 ﻿import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { sceneCues, nextCue, voiceGap, type ShowCue } from "../lib/show-voices";
+import {
+  sceneCues,
+  nextCue,
+  voiceGap,
+  montagePace,
+  type ShowCue,
+} from "../lib/show-voices";
 const extra: ShowCue[] = JSON.parse(
   fs.readFileSync("public/media/locuciones-oct25.json", "utf8"),
 ).cues;
@@ -61,4 +67,38 @@ test("La rotación alterna voces sin perder frases y vuelve a empezar al complet
   assert.equal(voiceGap(0), 10);
   assert.equal(voiceGap(500), 240);
   assert.equal(voiceGap(NaN), 60);
+});
+
+test("El montaje reparte cada audio y sus pausas hasta las 19:25, incluso tras detenerse", () => {
+  const start = new Date("2026-10-29T17:00:00+01:00").getTime();
+  const pool = sceneCues(all, "montaje");
+  const played = new Set<string>();
+  let elapsed = 0;
+  for (let i = 0; i < pool.length; i++) {
+    const pace = montagePace(all, played, new Date(start + elapsed * 1000));
+    assert.equal(pace.remaining.length, pool.length - i);
+    assert.ok(pace.gap > 0);
+    if (i === 10) {
+      const before = pace.gap;
+      elapsed += 1800; // Una pausa de media hora comprime las siguientes pausas.
+      assert.ok(
+        montagePace(all, played, new Date(start + elapsed * 1000)).gap < before,
+      );
+    }
+    const revised = montagePace(all, played, new Date(start + elapsed * 1000));
+    const cue = revised.remaining[0];
+    elapsed += revised.gap + cue.end - cue.start;
+    played.add(cue.url);
+  }
+  assert.equal(played.size, pool.length);
+  assert.ok(Math.abs(elapsed - 8700) < 1);
+  assert.equal(
+    montagePace(all, played, new Date(start + elapsed * 1000)).remaining.length,
+    0,
+  );
+  assert.equal(
+    montagePace(all, new Set(), new Date("2026-10-29T19:25:01+01:00"))
+      .secondsLeft,
+    0,
+  );
 });

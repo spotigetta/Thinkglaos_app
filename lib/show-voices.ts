@@ -48,3 +48,41 @@ export function nextCue(
 export function voiceGap(value: number) {
   return Math.max(10, Math.min(240, Number.isFinite(value) ? value : 60));
 }
+
+/** Distribute each remaining montage cue once across the time left until 19:25 Madrid time. */
+export function montagePace(
+  cues: ShowCue[],
+  played: ReadonlySet<string>,
+  now: Date,
+) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Madrid",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const part = (name: string) =>
+    Number(parts.find((item) => item.type === name)?.value || 0);
+  const secondsLeft = Math.max(
+    0,
+    19 * 3600 +
+      25 * 60 -
+      (part("hour") * 3600 + part("minute") * 60 + part("second")),
+  );
+  const remaining = sceneCues(cues, "montaje").filter(
+    (cue) => !played.has(cue.url),
+  );
+  const audioSeconds = remaining.reduce(
+    (sum, cue) => sum + Math.max(0, cue.end - cue.start),
+    0,
+  );
+  return {
+    secondsLeft,
+    remaining,
+    audioSeconds,
+    gap: remaining.length
+      ? Math.max(0, (secondsLeft - audioSeconds) / remaining.length)
+      : 0,
+  };
+}

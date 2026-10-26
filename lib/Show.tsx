@@ -7,6 +7,7 @@ import "./show.css";
 import {
   nextCue,
   cueScenes,
+  montagePace,
   voiceGap,
   voiceSceneLabels,
   type ShowCue,
@@ -154,6 +155,9 @@ export default function Show() {
   const voiceGeneration = useRef(0);
   const voiceMix = useRef<VoiceMix | null>(null);
   const nextVoiceAt = useRef(5);
+  const montagePlayed = useRef(new Set<string>());
+  const automaticCue = useRef<Cue | null>(null);
+  const cuesRef = useRef<Cue[]>([]);
   const gratitudePending = useRef(false);
   const [bank, setBank] = useState("todas");
 
@@ -170,6 +174,7 @@ export default function Show() {
       );
   }, [s.voiceGap, s.motion, s.voiceBoost, s.duckLevel]);
   current.current = s;
+  cuesRef.current = cues;
   const send = (m: { type: string; [key: string]: unknown }) => {
     if (m.type === "reset") seen.current.clear();
     if (m.type === "state" && !projection && !ownsDesk.current) return;
@@ -188,6 +193,8 @@ export default function Show() {
     )
       return;
     lastPhaseClick.current = Date.now();
+    if (p === "montaje") montagePlayed.current.clear();
+    automaticCue.current = null;
     if (p === "llamada" && music.current) music.current.currentTime = 0;
     videoActive.current = false;
     update({ intervention: "" });
@@ -259,10 +266,26 @@ export default function Show() {
   }
   function restore() {
     setSpeaking("");
-    nextVoiceAt.current =
-      elapsed(current.current) + voiceGap(current.current.voiceGap);
+    scheduleNextVoice();
     foreground.current = false;
     reconcileMix();
+  }
+  function scheduleNextVoice() {
+    const state = current.current;
+    const gap =
+      state.phase === "montaje"
+        ? (() => {
+            const pace = montagePace(
+              cuesRef.current,
+              montagePlayed.current,
+              new Date(),
+            );
+            return pace.secondsLeft && pace.remaining.length
+              ? pace.gap
+              : Infinity;
+          })()
+        : voiceGap(state.voiceGap);
+    nextVoiceAt.current = elapsed(state) + gap;
   }
   useEffect(() => {
     reconcileMix();
@@ -275,14 +298,14 @@ export default function Show() {
     s.track,
     externalMusic,
   ]);
-  function speak(cue?: Cue) {
+  function speak(cue?: Cue, automatic = false) {
     if (!voice.current) return;
     const generation = ++voiceGeneration.current;
     if (!cue || !cueScenes(cue).includes("agradecimiento"))
       gratitudePending.current = false;
     if (cue) lastCue.current = cue.url;
-    nextVoiceAt.current =
-      elapsed(current.current) + voiceGap(current.current.voiceGap);
+    automaticCue.current = automatic && cue ? cue : null;
+    nextVoiceAt.current = Infinity;
     voice.current.pause();
     setSpeaking(cue?.text || "Manolo Lama");
     videoActive.current = false;
@@ -301,6 +324,9 @@ export default function Show() {
     void voice.current.play().catch(() => {
       if (generation !== voiceGeneration.current) return;
       gratitudePending.current = false;
+      if (automaticCue.current?.url === cue?.url && cue)
+        montagePlayed.current.add(cue.url);
+      automaticCue.current = null;
       note("Audio bloqueado o no disponible. Vuelve a pulsar la frase.");
       restore();
     });
@@ -500,12 +526,13 @@ export default function Show() {
       });
   }, [now]);
   useEffect(() => {
-    nextVoiceAt.current = elapsed(current.current) + 5;
+    if (s.phase === "montaje") montagePlayed.current.clear();
     lastCue.current = "";
+    scheduleNextVoice();
   }, [s.phase]);
   useEffect(() => {
-    nextVoiceAt.current = elapsed(current.current) + voiceGap(s.voiceGap);
-  }, [s.voiceGap, s.offset, s.autoVoice]);
+    if (voice.current?.paused) scheduleNextVoice();
+  }, [s.voiceGap, s.offset, s.autoVoice, s.running, cues]);
   useEffect(() => {
     if (
       projection ||
@@ -518,8 +545,17 @@ export default function Show() {
       t < nextVoiceAt.current
     )
       return;
-    const cue = nextCue(cues, s.phase, lastCue.current);
-    if (cue) speak(cue);
+    if (s.phase === "montaje") {
+      const pace = montagePace(cues, montagePlayed.current, new Date(now));
+      const cue = pace.remaining.find(
+        (candidate) => candidate.end - candidate.start <= pace.secondsLeft,
+      );
+      if (cue) speak(cue, true);
+      else nextVoiceAt.current = Infinity;
+    } else {
+      const cue = nextCue(cues, s.phase, lastCue.current);
+      if (cue) speak(cue, true);
+    }
   }, [now]);
   useEffect(() => {
     if (projection)
@@ -846,6 +882,7 @@ export default function Show() {
       </div>
     );
   function activate() {
+    if (!ownsDesk.current) scheduleNextVoice();
     ownsDesk.current = true;
     localStorage.setItem("ittt-active-desk-v2", deskId.current);
     setArmed(true);
@@ -906,6 +943,7 @@ export default function Show() {
     ["preguntas", "Preguntas"],
     ["pizzas", "Pizzas"],
   ];
+  const montagePlan = montagePace(cues, montagePlayed.current, new Date(now));
   return (
     <div className="dj-console">
       <audio
@@ -913,10 +951,16 @@ export default function Show() {
         onEnded={() => {
           const advance = gratitudePending.current;
           gratitudePending.current = false;
+          if (automaticCue.current && current.current.phase === "montaje")
+            montagePlayed.current.add(automaticCue.current.url);
+          automaticCue.current = null;
           restore();
           if (advance) phase("ambiente");
         }}
         onError={() => {
+          if (automaticCue.current && current.current.phase === "montaje")
+            montagePlayed.current.add(automaticCue.current.url);
+          automaticCue.current = null;
           note("No se pudo cargar la voz.");
           restore();
         }}
@@ -988,6 +1032,7 @@ export default function Show() {
             </button>
             <button
               onClick={() => {
+                if (s.phase === "montaje") montagePlayed.current.clear();
                 voice.current?.pause();
                 restore();
                 update({ offset: 0, started: Date.now() });
@@ -1175,16 +1220,24 @@ export default function Show() {
             {speaking ||
               (s.intervention
                 ? "Vídeo en proyección"
-                : armed && s.autoVoice
-                  ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
-                  : "Listo para empezar")}
+                : s.phase === "montaje" && !montagePlan.remaining.length
+                  ? "Montaje completo · todas las frases reproducidas"
+                  : s.phase === "montaje" && !montagePlan.secondsLeft
+                    ? "19:25 · locuciones de montaje finalizadas"
+                    : armed && s.autoVoice
+                      ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
+                      : "Listo para empezar")}
           </div>
           <div className="transport-buttons">
             <button
               onClick={() => {
                 activate();
-                const cue = nextCue(cues, s.phase, lastCue.current);
-                if (cue) speak(cue);
+                const cue =
+                  s.phase === "montaje"
+                    ? montagePace(cues, montagePlayed.current, new Date())
+                        .remaining[0]
+                    : nextCue(cues, s.phase, lastCue.current);
+                if (cue) speak(cue, s.phase === "montaje");
               }}
             >
               Siguiente voz ▶
@@ -1210,20 +1263,33 @@ export default function Show() {
               Manolo
             </button>
           </div>
-          <label>
-            Pausa entre frases · {s.voiceGap} s
-            <input
-              aria-label="Pausa entre locuciones"
-              type="range"
-              min="10"
-              max="240"
-              step="5"
-              value={s.voiceGap}
-              onChange={(e) =>
-                update({ voiceGap: voiceGap(Number(e.target.value)) })
-              }
-            />
-          </label>
+          {s.phase === "montaje" ? (
+            <p className="montage-pace" role="status">
+              <b>Montaje · hasta las 19:25</b>
+              <span>
+                {montagePlan.remaining.length} frases pendientes · pausa
+                calculada {fmt(montagePlan.gap)}
+              </span>
+              <small>
+                Se reajusta al empezar, pausar o terminar cada locución.
+              </small>
+            </p>
+          ) : (
+            <label>
+              Pausa entre frases · {s.voiceGap} s
+              <input
+                aria-label="Pausa entre locuciones"
+                type="range"
+                min="10"
+                max="240"
+                step="5"
+                value={s.voiceGap}
+                onChange={(e) =>
+                  update({ voiceGap: voiceGap(Number(e.target.value)) })
+                }
+              />
+            </label>
+          )}
           <div className="video-switch">
             <label>
               <input
@@ -1276,7 +1342,10 @@ export default function Show() {
                   aria-pressed={speaking === c.text}
                   onClick={() => {
                     activate();
-                    speak(c);
+                    speak(
+                      c,
+                      s.phase === "montaje" && cueScenes(c).includes("montaje"),
+                    );
                   }}
                 >
                   <small>
