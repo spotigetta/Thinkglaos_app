@@ -2583,3 +2583,298 @@ iframe.show-bg-video {
     transform: translateX(45%) rotate(8deg);
   }
 }
+/* Spectral atmosphere: continuous layers, never remounted for each sample. */
+@property --bass {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --mid {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --high {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --air {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+.show-output .vibe-halo,
+.show-output .vibe-aurora {
+  background: none;
+  animation: none;
+  contain: paint;
+  opacity: calc(var(--spectral-light, 0) * (0.25 + var(--vibe-power) * 0.65));
+  mix-blend-mode: screen;
+  transition:
+    --bass 170ms ease-out,
+    --mid 240ms ease-out,
+    --high 120ms ease-out,
+    --air 100ms ease-out,
+    opacity 240ms ease;
+}
+.show-output .vibe-halo:after {
+  content: none;
+}
+.vibe-halo i,
+.vibe-aurora i {
+  position: absolute;
+  width: 80vmax;
+  height: 80vmax;
+  left: -22%;
+  top: -35%;
+  border-radius: 50%;
+  transform: scale(calc(0.8 + var(--bass) * 0.75));
+}
+.vibe-halo i:before,
+.vibe-aurora i:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse at 45% 50%,
+    #fee18500 8%,
+    #fee18565 30%,
+    #fee18510 49%,
+    transparent 67%
+  );
+  animation: spectral-orbit 19s ease-in-out infinite alternate;
+}
+.vibe-halo i:nth-child(2),
+.vibe-aurora i:nth-child(2) {
+  left: 45%;
+  top: 15%;
+  transform: translate(calc(var(--mid) * -13vw), calc(var(--mid) * -8vh))
+    scale(calc(0.7 + var(--mid) * 0.8));
+}
+.vibe-halo i:nth-child(2):before,
+.vibe-aurora i:nth-child(2):before {
+  background: radial-gradient(
+    ellipse,
+    #b2a3ff00 8%,
+    #a397ff80 32%,
+    #7b6bdd15 55%,
+    transparent 70%
+  );
+  animation-duration: 23s;
+  animation-delay: -9s;
+}
+.vibe-halo i:nth-child(3),
+.vibe-aurora i:nth-child(3) {
+  left: 10%;
+  top: 20%;
+  width: 70vmax;
+  height: 50vmax;
+  transform: translate(calc(var(--high) * 15vw), calc(var(--high) * -12vh))
+    rotate(calc(var(--high) * 45deg));
+  opacity: calc(0.2 + var(--high) * 0.65);
+}
+.vibe-halo i:nth-child(3):before,
+.vibe-aurora i:nth-child(3):before {
+  background: radial-gradient(
+    ellipse,
+    #fff8da00 24%,
+    #fff5d470 34%,
+    transparent 45%
+  );
+  animation-duration: 13s;
+  animation-delay: -4s;
+}
+.vibe-halo i:nth-child(4),
+.vibe-aurora i:nth-child(4) {
+  left: 40%;
+  top: -20%;
+  width: 70vmax;
+  height: 70vmax;
+  transform: rotate(calc(var(--air) * -65deg))
+    scale(calc(0.8 + var(--air) * 0.8));
+  opacity: calc(var(--air) * 0.85);
+}
+.vibe-halo i:nth-child(4):before,
+.vibe-aurora i:nth-child(4):before {
+  background: repeating-conic-gradient(
+    from 20deg,
+    transparent 0deg 39deg,
+    #fff7da40 40deg 41deg,
+    transparent 42deg 60deg
+  );
+  mask-image: radial-gradient(
+    ellipse,
+    transparent 15%,
+    #000 35%,
+    transparent 70%
+  );
+  animation: spectral-spin 38s linear infinite;
+}
+.vibe-halo i:nth-child(n + 5),
+.vibe-aurora i:nth-child(n + 5) {
+  left: 5%;
+  top: 10%;
+  width: 80%;
+  height: 80%;
+  border: 1px solid #fee18535;
+  transform: rotate(calc(var(--mid) * 20deg))
+    scale(calc(0.9 + var(--bass) * 0.2));
+}
+.vibe-halo i:nth-child(n + 5):before,
+.vibe-aurora i:nth-child(n + 5):before {
+  inset: -10%;
+  background: none;
+  border: 2px solid #b2a3ff30;
+  animation: spectral-orbit 17s ease-in-out infinite alternate;
+}
+.vibe-halo i:nth-child(6),
+.vibe-aurora i:nth-child(6) {
+  left: 12%;
+  top: 17%;
+  width: 65%;
+  height: 65%;
+  opacity: calc(0.2 + var(--high));
+}
+.vibe-halo i:nth-child(6):before,
+.vibe-aurora i:nth-child(6):before {
+  animation-delay: -7s;
+  animation-duration: 21s;
+}
+.vibe-halo i:nth-child(7),
+.vibe-aurora i:nth-child(7) {
+  left: -15%;
+  top: 30%;
+  width: 120%;
+  height: 25%;
+  border: 0;
+  transform: translateY(calc(var(--mid) * -15vh));
+}
+.vibe-halo i:nth-child(7):before,
+.vibe-aurora i:nth-child(7):before {
+  border: 0;
+  background: radial-gradient(ellipse, #fee18550, transparent 65%);
+  animation-duration: 15s;
+}
+.vibe-halo i:nth-child(8),
+.vibe-aurora i:nth-child(8) {
+  left: 30%;
+  top: -20%;
+  width: 65%;
+  height: 120%;
+  border: 0;
+  transform: rotate(calc(-35deg + var(--high) * 40deg));
+}
+.vibe-halo i:nth-child(8):before,
+.vibe-aurora i:nth-child(8):before {
+  border: 0;
+  background: radial-gradient(ellipse, #8d80ff40, transparent 65%);
+  animation-duration: 25s;
+  animation-delay: -13s;
+}
+.vibe-aurora i:before {
+  border-radius: 30% 70% 20% 80%;
+  filter: hue-rotate(calc(var(--mid) * 70deg));
+}
+.vibe-aurora i:nth-child(1):before {
+  background: conic-gradient(
+    from 40deg,
+    transparent,
+    #fee18580,
+    transparent,
+    #8e80ff70,
+    transparent
+  );
+  mask-image: radial-gradient(
+    ellipse,
+    transparent 12%,
+    #000 35%,
+    transparent 70%
+  );
+  animation: spectral-curtain 16s ease-in-out infinite alternate;
+}
+.vibe-aurora i:nth-child(2):before {
+  background: conic-gradient(
+    from 180deg,
+    transparent,
+    #81e7c470,
+    transparent,
+    #b2a3ff90,
+    transparent
+  );
+  mask-image: radial-gradient(
+    ellipse,
+    transparent 12%,
+    #000 40%,
+    transparent 70%
+  );
+  animation-name: spectral-curtain;
+}
+@keyframes spectral-orbit {
+  0% {
+    translate: -8% -4%;
+    rotate: -12deg;
+    scale: 0.85;
+  }
+  50% {
+    translate: 5% 7%;
+    rotate: 7deg;
+    scale: 1.05;
+  }
+  100% {
+    translate: 10% -8%;
+    rotate: 20deg;
+    scale: 1.2;
+  }
+}
+@keyframes spectral-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes spectral-curtain {
+  from {
+    transform: rotate(-18deg) scale(0.75, 1.1);
+    border-radius: 20% 70% 30% 90%;
+  }
+  to {
+    transform: rotate(38deg) scale(1.3, 0.8);
+    border-radius: 80% 30% 70% 20%;
+  }
+}
+.voice-coverage {
+  padding: 8px 0;
+  border-bottom: 1px solid #ffffff14;
+}
+.spectral-meters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 6px 0;
+}
+.spectral-meters small {
+  font-size: 10px;
+}
+.spectral-meters span {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #ffffff15;
+}
+.spectral-meters i {
+  display: block;
+  height: 100%;
+  background: #fee185;
+  transition: width 100ms linear;
+}
+.spectral-meters > :nth-child(2) i {
+  background: #b2a3ff;
+}
+.spectral-meters > :nth-child(3) i {
+  background: #81e7c4;
+}
+.spectral-meters > :nth-child(4) i {
+  background: #fff6dd;
+}

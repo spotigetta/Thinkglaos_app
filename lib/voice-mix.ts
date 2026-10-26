@@ -1,4 +1,4 @@
-import { analyserEnergy } from "./music-vibes";
+import { analyserEnergy, analyserSpectrum } from "./music-vibes";
 
 export function normalizedVoiceUrl(source: string) {
   return "./media/voces-master-v1/" + source.split("/").pop();
@@ -55,6 +55,10 @@ export class VoiceMix {
 
   energy() {
     return analyserEnergy(this.analyser, this.bins, this.context.sampleRate);
+  }
+
+  spectrum() {
+    return analyserSpectrum(this.analyser, this.bins, this.context.sampleRate);
   }
 
   close() {

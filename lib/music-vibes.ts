@@ -1,4 +1,5 @@
 ﻿export type VibesStyle =
+  | "aurora"
   | "halo"
   | "contrast"
   | "shapes"
@@ -26,6 +27,8 @@ export type MusicPulse = {
   time: number;
   preview?: boolean;
   intensity?: number;
+  bands?: MusicBands;
+  ambient?: boolean;
 };
 export const defaultVibes: VibesSettings = {
   enabled: false,
@@ -137,6 +140,7 @@ export function flashDuration(intensity: number) {
 export const vibeStyles = [
   { id: "contrast", name: "Inversión total" },
   { id: "halo", name: "Halos" },
+  { id: "aurora", name: "Aurora espectral" },
   { id: "shapes", name: "Anillos" },
   { id: "wave", name: "Ondas" },
   { id: "prism", name: "Prisma" },
@@ -229,4 +233,40 @@ export class VibesDirector {
     if (song) this.song = song;
     return this.style!;
   }
+}
+
+export type MusicBands = {
+  bass: number;
+  mid: number;
+  high: number;
+  air: number;
+};
+export const silentBands: MusicBands = { bass: 0, mid: 0, high: 0, air: 0 };
+export function analyserSpectrum(
+  analyser: AnalyserNode,
+  bins: Float32Array<ArrayBuffer>,
+  sampleRate: number,
+): MusicBands {
+  analyser.getFloatFrequencyData(bins);
+  const band = (lowHz: number, highHz: number) => {
+    const low = Math.max(1, Math.ceil((lowHz * analyser.fftSize) / sampleRate));
+    const high = Math.min(
+      bins.length - 1,
+      Math.floor((highHz * analyser.fftSize) / sampleRate),
+    );
+    let power = 0;
+    for (let i = low; i <= high; i++)
+      if (Number.isFinite(bins[i])) power += 10 ** (bins[i] / 10);
+    if (!power || high < low) return 0;
+    return Math.max(
+      0,
+      Math.min(1, (10 * Math.log10(power / (high - low + 1)) + 60) / 60),
+    );
+  };
+  return {
+    bass: band(45, 150),
+    mid: band(150, 900),
+    high: band(900, 4000),
+    air: band(4000, 12000),
+  };
 }

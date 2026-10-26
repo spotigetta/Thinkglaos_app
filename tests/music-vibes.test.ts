@@ -64,7 +64,7 @@ import {
   proportionalIntensity,
 } from "../lib/music-vibes";
 test("La selección múltiple migra mezclas antiguas y nunca queda vacía", () => {
-  assert.equal(selectedVibes({ style: "mixed" }).length, 7);
+  assert.equal(selectedVibes({ style: "mixed" }).length, 8);
   assert.deepEqual(selectedVibes({ styles: ["wave", "wave", "halo"] }), [
     "wave",
     "halo",
@@ -107,4 +107,28 @@ test("La dirección mantiene tramos, cambia por canción o minutos y no recorre 
     m.choose(musical, "song-a", i * 25);
   }
   assert.notEqual(m.choose(musical, "song-a", 30000), quiet);
+});
+import { analyserSpectrum } from "../lib/music-vibes";
+test("Las cuatro bandas espectrales son independientes y no confunden agudos con graves", () => {
+  const bins = new Float32Array(1024);
+  let hz = 80;
+  const analyser = {
+    fftSize: 2048,
+    getFloatFrequencyData: (b: Float32Array) => {
+      b.fill(-Infinity);
+      b[Math.round((hz * 2048) / 48000)] = -12;
+    },
+  } as unknown as AnalyserNode;
+  for (const [frequency, band] of [
+    [80, "bass"],
+    [400, "mid"],
+    [2000, "high"],
+    [8000, "air"],
+  ] as const) {
+    hz = frequency;
+    const spectrum = analyserSpectrum(analyser, bins, 48000);
+    assert.ok(spectrum[band] > 0.2);
+    for (const other of ["bass", "mid", "high", "air"] as const)
+      if (other !== band) assert.equal(spectrum[other], 0);
+  }
 });

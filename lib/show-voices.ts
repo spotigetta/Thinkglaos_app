@@ -53,23 +53,10 @@ export function pizzasPace(
   cues: ShowCue[],
   played: ReadonlySet<string>,
   elapsed: number,
+  coverage = 1,
 ) {
   const secondsLeft = Math.max(0, 3600 - elapsed);
-  const remaining = sceneCues(cues, "pizzas").filter(
-    (cue) => !played.has(cue.url),
-  );
-  const audioSeconds = remaining.reduce(
-    (sum, cue) => sum + Math.max(0, cue.end - cue.start),
-    0,
-  );
-  return {
-    secondsLeft,
-    remaining,
-    audioSeconds,
-    gap: remaining.length
-      ? Math.max(0, (secondsLeft - audioSeconds) / remaining.length)
-      : 0,
-  };
+  return timedVoicePace(cues, "pizzas", played, secondsLeft, coverage);
 }
 
 /** Distribute each remaining montage cue once across the time left until 19:25 Madrid time. */
@@ -77,6 +64,7 @@ export function montagePace(
   cues: ShowCue[],
   played: ReadonlySet<string>,
   now: Date,
+  coverage = 1,
 ) {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/Madrid",
@@ -93,19 +81,73 @@ export function montagePace(
       25 * 60 -
       (part("hour") * 3600 + part("minute") * 60 + part("second")),
   );
-  const remaining = sceneCues(cues, "montaje").filter(
-    (cue) => !played.has(cue.url),
+  return timedVoicePace(cues, "montaje", played, secondsLeft, coverage);
+}
+
+export type VoiceCoverage = Record<"montaje" | "ambiente" | "pizzas", number>;
+export function readVoiceCoverage(
+  input: Partial<VoiceCoverage> = {},
+): VoiceCoverage {
+  const clean = (n: unknown) =>
+    typeof n === "number" && Number.isFinite(n)
+      ? Math.max(0, Math.min(1, n))
+      : 1;
+  return {
+    montaje: clean(input.montaje),
+    ambiente: clean(input.ambiente),
+    pizzas: clean(input.pizzas),
+  };
+}
+export function timedVoicePace(
+  cues: ShowCue[],
+  phase: string,
+  played: ReadonlySet<string>,
+  seconds: number,
+  coverage = 1,
+) {
+  const pool = sceneCues(cues, phase),
+    total = pool.length;
+  const target = Math.round(total * Math.max(0, Math.min(1, coverage)));
+  const completed = pool.filter((c) => played.has(c.url)).length;
+  const available = pool.filter((c) => !played.has(c.url));
+  const count = Math.max(0, Math.min(available.length, target - completed));
+  // Stable, evenly distributed subset; changing the slider never replays completed cues.
+  const preferred = Array.from(
+    { length: target },
+    (_, i) => pool[Math.floor((i * total) / target)],
   );
+  const remaining = preferred.filter((c) => !played.has(c.url)).slice(0, count);
+  for (const cue of available)
+    if (remaining.length < count && !remaining.includes(cue))
+      remaining.push(cue);
+  remaining.sort((a, b) => pool.indexOf(a) - pool.indexOf(b));
+  const secondsLeft = Math.max(0, seconds);
   const audioSeconds = remaining.reduce(
-    (sum, cue) => sum + Math.max(0, cue.end - cue.start),
+    (sum, c) => sum + Math.max(0, c.end - c.start),
     0,
   );
   return {
     secondsLeft,
     remaining,
     audioSeconds,
-    gap: remaining.length
-      ? Math.max(0, (secondsLeft - audioSeconds) / remaining.length)
-      : 0,
+    total,
+    target,
+    completed,
+    gap: count ? Math.max(0, (secondsLeft - audioSeconds) / count) : 0,
   };
+}
+export function ambientPace(
+  cues: ShowCue[],
+  played: ReadonlySet<string>,
+  elapsed: number,
+  minutes = 30,
+  coverage = 1,
+) {
+  return timedVoicePace(
+    cues,
+    "ambiente",
+    played,
+    Math.max(0, minutes * 60 - 180 - elapsed),
+    coverage,
+  );
 }

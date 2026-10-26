@@ -7,6 +7,9 @@ import {
   selectedVibes,
   proportionalIntensity,
   analyserEnergy,
+  analyserSpectrum,
+  silentBands,
+  type MusicBands,
   bassDecibels,
   vibesInScene,
   flashDuration,
@@ -25,6 +28,9 @@ class CapturedMusic {
   }
   energy() {
     return analyserEnergy(this.analyser, this.bins, this.context.sampleRate);
+  }
+  spectrum() {
+    return analyserSpectrum(this.analyser, this.bins, this.context.sampleRate);
   }
   close() {
     this.stream.getTracks().forEach((t) => t.stop());
@@ -57,7 +63,9 @@ export function MusicVibesControl({
   const capture = useRef<CapturedMusic | null>(null),
     detector = useRef(new BeatDetector()),
     director = useRef(new VibesDirector()),
-    sequence = useRef(0);
+    sequence = useRef(0),
+    previewUntil = useRef(0);
+  const [spectrum, setSpectrum] = useState<MusicBands>(silentBands);
   const [level, setLevel] = useState(0),
     [source, setSource] = useState("Música local al sentarse"),
     [connected, setConnected] = useState(false),
@@ -67,6 +75,7 @@ export function MusicVibesControl({
     capture.current = null;
     setConnected(false);
     setLevel(0);
+    setSpectrum(silentBands);
   };
   useEffect(() => {
     if (!settings.enabled) disconnect();
@@ -82,12 +91,14 @@ export function MusicVibesControl({
       }
       const local =
         music.current && !music.current.paused && music.current.volume > 0.001;
-      const energy = local
-        ? mix.current?.energy() || 0
-        : capture.current?.energy() || 0;
+      const bands = local
+        ? mix.current?.spectrum() || silentBands
+        : capture.current?.spectrum() || silentBands;
+      const energy = bands.bass;
       director.current.sample(energy, Date.now());
       if (frame++ % 3 === 0) {
         setLevel(energy);
+        setSpectrum(bands);
         setSource(
           local
             ? "Música local en directo"
@@ -96,24 +107,34 @@ export function MusicVibesControl({
               : "Conecta una pestaña o reproduce música local",
         );
       }
-      if (
-        vibesInScene(settings, phase) &&
-        detector.current.sample(energy, settings.threshold, Date.now())
-      )
+      if (!vibesInScene(settings, phase) || Date.now() < previewUntil.current)
+        return;
+      const beat = detector.current.sample(
+        energy,
+        settings.threshold,
+        Date.now(),
+      );
+      const style = director.current.choose(
+        settings,
+        local
+          ? music.current?.currentSrc || "local"
+          : latest.current.trackKey || "",
+        Date.now(),
+      );
+      const spectral = style === "halo" || style === "aurora";
+      if (beat || (spectral && frame % 4 === 0))
         onPulse({
-          id: ++sequence.current,
+          id: beat ? ++sequence.current : sequence.current,
           time: Date.now(),
           power: energy,
-          style: director.current.choose(
-            settings,
-            local
-              ? music.current?.currentSrc || "local"
-              : latest.current.trackKey || "",
-            Date.now(),
-          ),
+          style,
+          bands,
+          ambient: !beat,
           intensity: proportionalIntensity(
             settings.intensity,
-            energy,
+            spectral
+              ? Math.max(bands.bass, bands.mid, bands.high, bands.air)
+              : energy,
             settings.threshold,
           ),
         });
@@ -304,6 +325,33 @@ export function MusicVibesControl({
             <i style={{ width: `${level * 100}%` }} />
             <b style={{ left: `${settings.threshold * 100}%` }} />
           </div>
+          <div className="spectral-meters" aria-label="Espectro musical">
+            {(
+              [
+                ["bass", "Graves"],
+                ["mid", "Medios"],
+                ["high", "Presencia"],
+                ["air", "Aire"],
+              ] as const
+            ).map(([band, label]) => (
+              <div key={band}>
+                <small>{label}</small>
+                <span
+                  role="meter"
+                  aria-label={"Banda " + label}
+                  aria-valuemin={0}
+                  aria-valuemax={1}
+                  aria-valuenow={spectrum[band]}
+                >
+                  <i style={{ width: spectrum[band] * 100 + "%" }} />
+                </span>
+              </div>
+            ))}
+          </div>
+          <small>
+            Halos y Aurora: graves expanden · medios desplazan · agudos
+            iluminan.
+          </small>
           <small>{source}</small>
           <div className="transport-buttons">
             <button onClick={connected ? disconnect : () => void connect()}>
@@ -314,6 +362,7 @@ export function MusicVibesControl({
             <button
               onClick={() => {
                 onActivate();
+                previewUntil.current = Date.now() + 1200;
                 latest.current.onPulse({
                   id: ++sequence.current,
                   time: Date.now(),
@@ -328,6 +377,7 @@ export function MusicVibesControl({
                     1,
                     settings.threshold,
                   ),
+                  bands: { bass: 0.85, mid: 0.6, high: 0.7, air: 0.45 },
                   preview: true,
                 });
               }}
@@ -363,7 +413,7 @@ export function MusicVibesOverlay({
     (pulse.preview || vibesInScene(settings, phase)) &&
     Date.now() - pulse.time <= 1600;
   useEffect(() => {
-    if (!visible || !pulse || !settings.text) return;
+    if (!visible || !pulse || pulse.ambient || !settings.text) return;
     const root = document.querySelector(".show-output");
     const power =
       pulse.intensity ??
@@ -423,13 +473,20 @@ export function MusicVibesOverlay({
     proportionalIntensity(settings.intensity, pulse.power, settings.threshold);
   return (
     <div
-      key={pulse.id}
+      key={style === "halo" || style === "aurora" ? style : pulse.id}
       className={"music-vibes vibe-" + style}
       data-testid="music-vibes"
       aria-hidden="true"
       style={
         {
           "--vibe-power": intensity,
+          "--bass": pulse.bands?.bass || 0,
+          "--mid": pulse.bands?.mid || 0,
+          "--high": pulse.bands?.high || 0,
+          "--air": pulse.bands?.air || 0,
+          "--spectral-light": Math.max(
+            ...Object.values(pulse.bands || silentBands),
+          ),
           "--vibe-flash-duration": `${flashDuration(intensity)}ms`,
           "--vibe-turn": `${(pulse.id * 47) % 360}deg`,
         } as React.CSSProperties
@@ -439,6 +496,14 @@ export function MusicVibesOverlay({
       <i />
       <i />
       <i />
+      {(style === "halo" || style === "aurora") && (
+        <>
+          <i />
+          <i />
+          <i />
+          <i />
+        </>
+      )}
     </div>
   );
 }

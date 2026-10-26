@@ -795,3 +795,107 @@ test("Selección múltiple, variación por minutos, persistencia y nuevos grafis
     ).toBeGreaterThan(0);
   }
 });
+test("Los tres porcentajes de locuciones se guardan y cero cancela nuevas frases automáticas", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  await page.getByRole("button", { name: "Ambientillo", exact: true }).click();
+  for (const scene of ["Montaje", "Ambientillo", "Pizzas"])
+    await page
+      .getByLabel("Cantidad de frases de " + scene, { exact: true })
+      .fill("67");
+  await expect(
+    page.locator(".voice-coverage").filter({ hasText: "Ambientillo" }),
+  ).toContainText("67%");
+  await expect(page.locator(".montage-pace")).toContainText("Ambientillo");
+  await page
+    .getByLabel("Cantidad de frases de Ambientillo", { exact: true })
+    .fill("0");
+  await expect(page.locator(".voice-now")).toContainText(
+    "selección completada",
+  );
+  await page.reload();
+  await expect(
+    page.getByLabel("Cantidad de frases de Montaje", { exact: true }),
+  ).toHaveValue("67");
+  await expect(
+    page.getByLabel("Cantidad de frases de Ambientillo", { exact: true }),
+  ).toHaveValue("0");
+  await expect(
+    page.getByLabel("Cantidad de frases de Pizzas", { exact: true }),
+  ).toHaveValue("67");
+});
+test("Aurora reacciona a medios y agudos con capas continuas sin reiniciar en cada muestra", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getDisplayMedia = async () => {
+      const ac = new AudioContext(),
+        osc = ac.createOscillator(),
+        gain = ac.createGain(),
+        out = ac.createMediaStreamDestination();
+      osc.frequency.value = 2000;
+      gain.gain.value = 0.8;
+      osc.connect(gain).connect(out);
+      osc.start();
+      await ac.resume();
+      (window as any).__spectralTest = { ac, osc, gain };
+      return out.stream;
+    };
+  });
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page.getByLabel("Aurora espectral", { exact: true }).check();
+  await page.getByLabel("Inversión total", { exact: true }).uncheck();
+  await page.getByLabel("Escenas de vibes").selectOption("all");
+  await page
+    .getByRole("button", {
+      name: "Conectar audio de YouTube / Spotify",
+      exact: true,
+    })
+    .click();
+  await expect(out.locator(".vibe-aurora > i")).toHaveCount(8);
+  await expect
+    .poll(async () =>
+      Number(
+        await page
+          .getByRole("meter", { name: "Banda Presencia", exact: true })
+          .getAttribute("aria-valuenow"),
+      ),
+    )
+    .toBeGreaterThan(0.1);
+  const values = await out.locator(".vibe-aurora").evaluate((el) => {
+    (el as any).__identity = "same-node";
+    return {
+      high: Number((el as HTMLElement).style.getPropertyValue("--high")),
+      bass: Number((el as HTMLElement).style.getPropertyValue("--bass")),
+    };
+  });
+  expect(values.high).toBeGreaterThan(0.1);
+  expect(values.bass).toBeLessThan(0.02);
+  await out.waitForTimeout(400);
+  expect(
+    await out.locator(".vibe-aurora").evaluate((el) => (el as any).__identity),
+  ).toBe("same-node");
+  await page.evaluate(() =>
+    (window as any).__spectralTest.osc.frequency.setValueAtTime(
+      80,
+      (window as any).__spectralTest.ac.currentTime,
+    ),
+  );
+  await expect
+    .poll(async () =>
+      Number(
+        await page
+          .getByRole("meter", { name: "Banda Graves", exact: true })
+          .getAttribute("aria-valuenow"),
+      ),
+    )
+    .toBeGreaterThan(0.2);
+  await out.screenshot({ path: ".local/aurora-spectral.png" });
+  await page.getByLabel("Vibes al ritmo de la música").uncheck();
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+});

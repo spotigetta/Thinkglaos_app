@@ -119,3 +119,53 @@ test("Las pizzas distribuyen las voces una sola vez durante 60 minutos", () => {
   assert.equal(pizzasPace(all, played, elapsed).remaining.length, 0);
   assert.equal(pizzasPace(all, new Set(), 3601).secondsLeft, 0);
 });
+import { ambientPace, readVoiceCoverage } from "../lib/show-voices";
+test("Dos tercios de cada banco se distribuyen una vez hasta su límite de tiempo", () => {
+  for (const phase of ["montaje", "ambiente", "pizzas"]) {
+    const played = new Set<string>();
+    let elapsed = 0;
+    const start = new Date("2026-10-29T17:00:00+01:00").getTime();
+    const target = Math.round((sceneCues(all, phase).length * 2) / 3);
+    for (let i = 0; i < target; i++) {
+      const pace =
+        phase === "montaje"
+          ? montagePace(all, played, new Date(start + elapsed * 1000), 2 / 3)
+          : phase === "pizzas"
+            ? pizzasPace(all, played, elapsed, 2 / 3)
+            : ambientPace(all, played, elapsed, 30, 2 / 3);
+      assert.equal(pace.remaining.length, target - i);
+      const cue = pace.remaining[0];
+      assert.ok(!played.has(cue.url));
+      elapsed += pace.gap + cue.end - cue.start;
+      played.add(cue.url);
+    }
+    assert.equal(played.size, target);
+    assert.ok(
+      Math.abs(
+        elapsed -
+          (phase === "montaje" ? 8700 : phase === "pizzas" ? 3600 : 1620),
+      ) < 1,
+    );
+    const plan = ambientPace(all, played, elapsed, 30, 0);
+    assert.equal(plan.remaining.length, 0);
+  }
+});
+test("Cambiar el porcentaje respeta lo ya reproducido y cero detiene nuevas locuciones", () => {
+  const played = new Set(
+    sceneCues(all, "ambiente")
+      .slice(0, 6)
+      .map((c) => c.url),
+  );
+  const smaller = ambientPace(all, played, 500, 30, 0.4);
+  assert.equal(
+    smaller.remaining.length,
+    Math.max(0, Math.round(smaller.total * 0.4) - 6),
+  );
+  assert.ok(smaller.remaining.every((c) => !played.has(c.url)));
+  assert.equal(ambientPace(all, played, 500, 30, 0).remaining.length, 0);
+  assert.equal(ambientPace(all, played, 1621, 30).secondsLeft, 0);
+  assert.deepEqual(
+    readVoiceCoverage({ montaje: -2, ambiente: NaN, pizzas: 2 }),
+    { montaje: 0, ambiente: 1, pizzas: 1 },
+  );
+});

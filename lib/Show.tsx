@@ -1,4 +1,4 @@
-import { MusicVibesControl, MusicVibesOverlay } from "./MusicVibes";
+﻿import { MusicVibesControl, MusicVibesOverlay } from "./MusicVibes";
 import {
   defaultVibes,
   readVibes,
@@ -18,9 +18,13 @@ import {
 import "./show.css";
 import {
   nextCue,
+  sceneCues,
   cueScenes,
-  montagePace,
-  pizzasPace,
+  montagePace as createMontagePace,
+  pizzasPace as createPizzasPace,
+  ambientPace,
+  readVoiceCoverage,
+  type VoiceCoverage,
   voiceGap,
   voiceSceneLabels,
   type ShowCue,
@@ -63,6 +67,7 @@ type State = {
   autoVoice: boolean;
   internalMusic: boolean;
   voiceGap: number;
+  voiceCoverage: VoiceCoverage;
   motion: boolean;
   counterDark: boolean;
   videoCues: boolean;
@@ -86,6 +91,7 @@ const defaults: State = {
   autoVoice: true,
   internalMusic: false,
   voiceGap: 60,
+  voiceCoverage: readVoiceCoverage(),
   motion: true,
   counterDark: false,
   videoCues: false,
@@ -124,6 +130,7 @@ export default function Show() {
           );
           saved = {
             voiceGap: voiceGap(p.voiceGap),
+            voiceCoverage: readVoiceCoverage(p.voiceCoverage),
             motion: p.motion !== false,
             counterDark: p.counterDark === true,
             voiceBoost: clampVoiceBoost(p.voiceBoost),
@@ -210,6 +217,7 @@ export default function Show() {
   const nextVoiceAt = useRef(5);
   const montagePlayed = useRef(new Set<string>());
   const pizzasPlayed = useRef(new Set<string>());
+  const ambientPlayed = useRef(new Set<string>());
   const automaticCue = useRef<Cue | null>(null);
   const cuesRef = useRef<Cue[]>([]);
   const gratitudePending = useRef(false);
@@ -235,6 +243,7 @@ export default function Show() {
         "ittt-show-preferences-v1",
         JSON.stringify({
           voiceGap: s.voiceGap,
+          voiceCoverage: s.voiceCoverage,
           motion: s.motion,
           counterDark: s.counterDark,
           voiceBoost: s.voiceBoost,
@@ -247,6 +256,7 @@ export default function Show() {
       );
   }, [
     s.voiceGap,
+    s.voiceCoverage,
     s.motion,
     s.voiceBoost,
     s.duckLevel,
@@ -299,6 +309,7 @@ export default function Show() {
     lastPhaseClick.current = Date.now();
     if (p === "montaje") montagePlayed.current.clear();
     if (p === "pizzas") pizzasPlayed.current.clear();
+    if (p === "ambiente") ambientPlayed.current.clear();
     automaticCue.current = null;
     if (p === "llamada" && music.current) music.current.currentTime = 0;
     videoActive.current = false;
@@ -388,32 +399,42 @@ export default function Show() {
     foreground.current = false;
     reconcileMix();
   }
+  function montagePace(c: Cue[], p: ReadonlySet<string>, n: Date) {
+    return createMontagePace(c, p, n, current.current.voiceCoverage.montaje);
+  }
+  function pizzasPace(c: Cue[], p: ReadonlySet<string>, t: number) {
+    return createPizzasPace(c, p, t, current.current.voiceCoverage.pizzas);
+  }
+  function voicePlan(state = current.current) {
+    return state.phase === "montaje"
+      ? montagePace(cuesRef.current, montagePlayed.current, new Date())
+      : state.phase === "pizzas"
+        ? pizzasPace(cuesRef.current, pizzasPlayed.current, elapsed(state))
+        : state.phase === "ambiente"
+          ? ambientPace(
+              cuesRef.current,
+              ambientPlayed.current,
+              elapsed(state),
+              state.minutes,
+              state.voiceCoverage.ambiente,
+            )
+          : null;
+  }
+  function playedVoices() {
+    return current.current.phase === "ambiente"
+      ? ambientPlayed
+      : current.current.phase === "pizzas"
+        ? pizzasPlayed
+        : montagePlayed;
+  }
   function scheduleNextVoice() {
     const state = current.current;
-    const gap =
-      state.phase === "montaje"
-        ? (() => {
-            const pace = montagePace(
-              cuesRef.current,
-              montagePlayed.current,
-              new Date(),
-            );
-            return pace.secondsLeft && pace.remaining.length
-              ? pace.gap
-              : Infinity;
-          })()
-        : state.phase === "pizzas"
-          ? (() => {
-              const pace = pizzasPace(
-                cuesRef.current,
-                pizzasPlayed.current,
-                elapsed(state),
-              );
-              return pace.secondsLeft && pace.remaining.length
-                ? pace.gap
-                : Infinity;
-            })()
-          : voiceGap(state.voiceGap);
+    const plan = voicePlan(state);
+    const gap = plan
+      ? plan.secondsLeft && plan.remaining.length
+        ? plan.gap
+        : Infinity
+      : voiceGap(state.voiceGap);
     nextVoiceAt.current = elapsed(state) + gap;
   }
   useEffect(() => {
@@ -456,10 +477,7 @@ export default function Show() {
       if (generation !== voiceGeneration.current) return;
       gratitudePending.current = false;
       if (automaticCue.current?.url === cue?.url && cue)
-        (current.current.phase === "pizzas"
-          ? pizzasPlayed
-          : montagePlayed
-        ).current.add(cue.url);
+        playedVoices().current.add(cue.url);
       automaticCue.current = null;
       note("Audio bloqueado o no disponible. Vuelve a pulsar la frase.");
       restore();
@@ -673,12 +691,21 @@ export default function Show() {
   useEffect(() => {
     if (s.phase === "montaje") montagePlayed.current.clear();
     if (s.phase === "pizzas") pizzasPlayed.current.clear();
+    if (s.phase === "ambiente") ambientPlayed.current.clear();
     lastCue.current = "";
     scheduleNextVoice();
   }, [s.phase]);
   useEffect(() => {
     if (voice.current?.paused) scheduleNextVoice();
-  }, [s.voiceGap, s.offset, s.autoVoice, s.running, cues]);
+  }, [
+    s.voiceGap,
+    s.voiceCoverage,
+    s.minutes,
+    s.offset,
+    s.autoVoice,
+    s.running,
+    cues,
+  ]);
   useEffect(() => {
     if (
       projection ||
@@ -691,17 +718,10 @@ export default function Show() {
       t < nextVoiceAt.current
     )
       return;
-    if (s.phase === "montaje") {
-      const pace = montagePace(cues, montagePlayed.current, new Date(now));
-      const cue = pace.remaining.find(
-        (candidate) => candidate.end - candidate.start <= pace.secondsLeft,
-      );
-      if (cue) speak(cue, true);
-      else nextVoiceAt.current = Infinity;
-    } else if (s.phase === "pizzas") {
-      const pace = pizzasPace(cues, pizzasPlayed.current, t);
-      const cue = pace.remaining.find(
-        (c) => c.end - c.start <= pace.secondsLeft,
+    const plan = voicePlan();
+    if (plan) {
+      const cue = plan.remaining.find(
+        (c) => c.end - c.start <= plan.secondsLeft,
       );
       if (cue) speak(cue, true);
       else nextVoiceAt.current = Infinity;
@@ -1167,12 +1187,9 @@ export default function Show() {
           gratitudePending.current = false;
           if (
             automaticCue.current &&
-            ["montaje", "pizzas"].includes(current.current.phase)
+            ["montaje", "ambiente", "pizzas"].includes(current.current.phase)
           )
-            (current.current.phase === "pizzas"
-              ? pizzasPlayed
-              : montagePlayed
-            ).current.add(automaticCue.current.url);
+            playedVoices().current.add(automaticCue.current.url);
           automaticCue.current = null;
           restore();
           if (advance) phase("ambiente");
@@ -1180,12 +1197,9 @@ export default function Show() {
         onError={() => {
           if (
             automaticCue.current &&
-            ["montaje", "pizzas"].includes(current.current.phase)
+            ["montaje", "ambiente", "pizzas"].includes(current.current.phase)
           )
-            (current.current.phase === "pizzas"
-              ? pizzasPlayed
-              : montagePlayed
-            ).current.add(automaticCue.current.url);
+            playedVoices().current.add(automaticCue.current.url);
           automaticCue.current = null;
           note("No se pudo cargar la voz.");
           restore();
@@ -1280,6 +1294,7 @@ export default function Show() {
                 pausedVoice.current = false;
                 if (s.phase === "montaje") montagePlayed.current.clear();
                 if (s.phase === "pizzas") pizzasPlayed.current.clear();
+                if (s.phase === "ambiente") ambientPlayed.current.clear();
                 voice.current?.pause();
                 restore();
                 send({ type: "reset" });
@@ -1505,33 +1520,36 @@ export default function Show() {
             {speaking ||
               (s.intervention
                 ? "Vídeo en proyección"
-                : s.phase === "montaje" && !montagePlan.remaining.length
-                  ? "Montaje completo · todas las frases reproducidas"
-                  : s.phase === "pizzas" &&
-                      (!pizzasPlan.remaining.length || !pizzasPlan.secondsLeft)
-                    ? "Pizzas · locuciones de la hora completadas"
-                    : s.phase === "montaje" && !montagePlan.secondsLeft
-                      ? "19:25 · locuciones de montaje finalizadas"
-                      : armed && s.autoVoice
-                        ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
-                        : "Listo para empezar")}
+                : s.phase === "ambiente" &&
+                    (!voicePlan()?.remaining.length ||
+                      !voicePlan()?.secondsLeft)
+                  ? "Ambientillo · selección completada"
+                  : s.phase === "montaje" && !montagePlan.remaining.length
+                    ? "Montaje completo · selección reproducida"
+                    : s.phase === "pizzas" &&
+                        (!pizzasPlan.remaining.length ||
+                          !pizzasPlan.secondsLeft)
+                      ? "Pizzas · locuciones de la hora completadas"
+                      : s.phase === "montaje" && !montagePlan.secondsLeft
+                        ? "19:25 · locuciones de montaje finalizadas"
+                        : armed && s.autoVoice
+                          ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
+                          : "Listo para empezar")}
           </div>
           <div className="transport-buttons">
             <button
               onClick={() => {
                 activate();
                 const cue =
-                  s.phase === "montaje"
-                    ? montagePace(cues, montagePlayed.current, new Date())
-                        .remaining[0]
-                    : s.phase === "pizzas"
-                      ? pizzasPace(
-                          cues,
-                          pizzasPlayed.current,
-                          elapsed(current.current),
-                        ).remaining[0]
-                      : nextCue(cues, s.phase, lastCue.current);
-                if (cue) speak(cue, ["montaje", "pizzas"].includes(s.phase));
+                  voicePlan()?.remaining[0] ||
+                  (!["montaje", "ambiente", "pizzas"].includes(s.phase)
+                    ? nextCue(cues, s.phase, lastCue.current)
+                    : undefined);
+                if (cue)
+                  speak(
+                    cue,
+                    ["montaje", "ambiente", "pizzas"].includes(s.phase),
+                  );
               }}
             >
               Siguiente voz ▶
@@ -1558,6 +1576,32 @@ export default function Show() {
               Manolo
             </button>
           </div>
+          {(["montaje", "ambiente", "pizzas"] as const).map((scene) => (
+            <label className="voice-coverage" key={scene}>
+              {voiceSceneLabels[scene]} ·{" "}
+              {Math.round(s.voiceCoverage[scene] * 100)}% ·{" "}
+              {Math.round(
+                sceneCues(cues, scene).length * s.voiceCoverage[scene],
+              )}
+              /{sceneCues(cues, scene).length} frases
+              <input
+                aria-label={"Cantidad de frases de " + voiceSceneLabels[scene]}
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value={Math.round(s.voiceCoverage[scene] * 100)}
+                onChange={(e) =>
+                  update({
+                    voiceCoverage: {
+                      ...s.voiceCoverage,
+                      [scene]: Number(e.target.value) / 100,
+                    },
+                  })
+                }
+              />
+            </label>
+          ))}
           {s.phase === "montaje" ? (
             <p className="montage-pace" role="status">
               <b>Montaje · hasta las 19:25</b>
@@ -1578,6 +1622,17 @@ export default function Show() {
               </span>
               <small>
                 Reparto automático durante 60 minutos, sin repetir frases.
+              </small>
+            </p>
+          ) : s.phase === "ambiente" ? (
+            <p className="montage-pace" role="status">
+              <b>Ambientillo · reparto hasta A sentarse</b>
+              <span>
+                {voicePlan()?.remaining.length || 0} frases pendientes · pausa
+                calculada {fmt(voicePlan()?.gap || 0)}
+              </span>
+              <small>
+                Últimos tres minutos reservados a A sentarse. Sin repeticiones.
               </small>
             </p>
           ) : (
@@ -1650,7 +1705,7 @@ export default function Show() {
                     activate();
                     speak(
                       c,
-                      ["montaje", "pizzas"].includes(s.phase) &&
+                      ["montaje", "ambiente", "pizzas"].includes(s.phase) &&
                         cueScenes(c).includes(s.phase as any),
                     );
                   }}
