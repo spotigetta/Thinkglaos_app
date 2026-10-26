@@ -1,5 +1,6 @@
 let armed = false,
   lastTarget = 1,
+  lastStop = false,
   announced = false,
   revision = Date.now();
 const nextRevision = () => (revision = Math.max(revision + 1, Date.now()));
@@ -13,8 +14,14 @@ window.addEventListener("message", (event) => {
   if (type === "ITTT_MUSIC_ARM") {
     if (armed && !event.data.enabled) {
       lastTarget = 1;
+      lastStop = false;
       chrome.runtime
-        .sendMessage({ level: 1, ms: 1400, revision: nextRevision() })
+        .sendMessage({
+          level: 1,
+          ms: 1400,
+          stopPlayback: false,
+          revision: nextRevision(),
+        })
         .catch(() => {});
     }
     armed = event.data.enabled === true;
@@ -25,6 +32,7 @@ window.addEventListener("message", (event) => {
       chrome.runtime
         .sendMessage({
           level: lastTarget,
+          stopPlayback: lastStop,
           ms: lastTarget === 0 ? 250 : 1000,
           revision: nextRevision(),
         })
@@ -32,7 +40,7 @@ window.addEventListener("message", (event) => {
     if (!announced) {
       announced = true;
       window.postMessage(
-        { type: "ITTT_MUSIC_READY", version: 2.1 },
+        { type: "ITTT_MUSIC_READY", version: 2.2 },
         location.origin,
       );
     }
@@ -49,19 +57,26 @@ window.addEventListener("message", (event) => {
   }
   if (armed && type === "ITTT_MUSIC_TARGET") {
     lastTarget = event.data.level;
+    lastStop = event.data.stopPlayback === true;
     chrome.runtime
       .sendMessage({
         level: lastTarget,
+        stopPlayback: lastStop,
         ms: event.data.ms,
         revision: nextRevision(),
       })
       .catch(() => {});
   }
 });
-window.postMessage({ type: "ITTT_MUSIC_READY", version: 2.1 }, location.origin);
+window.postMessage({ type: "ITTT_MUSIC_READY", version: 2.2 }, location.origin);
 window.addEventListener("pagehide", () => {
   if (armed)
     chrome.runtime
-      .sendMessage({ level: 1, ms: 1000, revision: nextRevision() })
+      .sendMessage({
+        level: 1,
+        ms: 1000,
+        stopPlayback: false,
+        revision: nextRevision(),
+      })
       .catch(() => {});
 });

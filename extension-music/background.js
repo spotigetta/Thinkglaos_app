@@ -1,4 +1,5 @@
-﻿chrome.runtime.onMessage.addListener((message, sender, respond) => {
+if (typeof importScripts === "function") importScripts("playback-lock.js");
+chrome.runtime.onMessage.addListener((message, sender, respond) => {
   if (!sender.tab) return;
   const origin = new URL(sender.url || sender.tab.url || "about:blank");
   if (
@@ -19,10 +20,22 @@
     revision = Number.isFinite(message.revision)
       ? message.revision
       : Date.now();
-  (async () => {
+  const run = async () => {
     const tabs = await chrome.tabs.query({
       url: ["https://music.youtube.com/*", "https://open.spotify.com/*"],
     });
+    if (!message.status && typeof message.stopPlayback === "boolean") {
+      const accepted = await setPlaybackLock(
+        tabs.filter((t) => t.id !== sender.tab.id),
+        message.stopPlayback,
+        revision,
+        sender.tab.id,
+      );
+      if (!accepted) {
+        respond(null);
+        return;
+      }
+    }
     const results = await Promise.allSettled(
       tabs
         .filter((t) => t.id !== sender.tab.id)
@@ -95,6 +108,10 @@
           volume: 0,
         },
     );
-  })().catch(() => respond(null));
+  };
+  (typeof queueMusicOperation === "function"
+    ? queueMusicOperation(run)
+    : run()
+  ).catch(() => respond(null));
   return true;
 });

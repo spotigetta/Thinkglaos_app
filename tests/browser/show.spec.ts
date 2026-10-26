@@ -399,6 +399,7 @@ test("Pausar, reiniciar o ajustar no libera la música externa de la escena", as
       if (e.source === window && e.data?.type === "ITTT_MUSIC_TARGET") {
         (window as any).__mixOrders.push(e.data.level);
         (window as any).__lastMixGoal = e.data.level;
+        (window as any).__lastPlaybackStop = e.data.stopPlayback;
       }
     });
   });
@@ -406,15 +407,16 @@ test("Pausar, reiniciar o ajustar no libera la música externa de la escena", as
   await page.getByRole("button", { name: "Activar mesa", exact: true }).click();
   await page.evaluate(() =>
     window.postMessage(
-      { type: "ITTT_MUSIC_READY", version: 2.1 },
+      { type: "ITTT_MUSIC_READY", version: 2.2 },
       location.origin,
     ),
   );
-  for (const scene of ["Charla", "Preguntas", "A sentarse"]) {
+  for (const scene of ["Intro", "Charla", "Preguntas", "A sentarse"]) {
     await page.getByRole("button", { name: scene, exact: true }).click();
     await expect
       .poll(() => page.evaluate(() => (window as any).__lastMixGoal))
       .toBe(0);
+    expect(await page.evaluate(() => (window as any).__lastPlaybackStop)).toBe(scene !== "A sentarse");
     await page.evaluate(() => ((window as any).__mixOrders = []));
     await page.getByRole("button", { name: "Pausar", exact: true }).click();
     await page.getByLabel("Posición de la fase").fill("30");
@@ -488,7 +490,7 @@ test("Pausar una locución conserva la música baja y continuar retoma esa voz",
   await page.getByLabel("Voces automáticas", { exact: true }).uncheck();
   await page.evaluate(() =>
     window.postMessage(
-      { type: "ITTT_MUSIC_READY", version: 2.1 },
+      { type: "ITTT_MUSIC_READY", version: 2.2 },
       location.origin,
     ),
   );

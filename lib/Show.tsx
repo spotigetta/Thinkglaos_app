@@ -357,7 +357,13 @@ export default function Show() {
       }
       ramp(mix.local, mix.ms);
     }
-    const key = JSON.stringify([mix.external, mix.ms, externalEnabled.current]);
+    const stopPlayback = ["intro", "charla", "preguntas"].includes(state.phase);
+    const key = JSON.stringify([
+      mix.external,
+      mix.ms,
+      externalEnabled.current,
+      stopPlayback,
+    ]);
     if (key !== lastExternal.current) {
       lastExternal.current = key;
       window.postMessage(
@@ -366,7 +372,12 @@ export default function Show() {
       );
       if (externalEnabled.current)
         window.postMessage(
-          { type: "ITTT_MUSIC_TARGET", level: mix.external, ms: mix.ms },
+          {
+            type: "ITTT_MUSIC_TARGET",
+            level: mix.external,
+            ms: mix.ms,
+            stopPlayback,
+          },
           location.origin,
         );
     }
@@ -518,13 +529,13 @@ export default function Show() {
     }
     const external = (e: MessageEvent) => {
       if (e.source === window && e.data?.type === "ITTT_MUSIC_READY") {
-        if (e.data.version >= 2.1) {
+        if (e.data.version >= 2.2) {
           setBridge(true);
           lastExternal.current = "";
           reconcileMix();
         } else
           note(
-            "Actualiza la extensión de música a la versión 2.1 y recarga esta mesa.",
+            "Actualiza la extensión de música a la versión 2.2 y recarga esta mesa.",
           );
       }
       if (

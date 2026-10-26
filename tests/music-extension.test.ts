@@ -94,3 +94,79 @@ test("Extensión: objetivos idempotentes, nivel original conservado y origen val
   await Promise.resolve();
   assert.equal(calls, before);
 });
+test("Native playback lock survives ads, rejects stale release and restores previous mute", async () => {
+  let stored: any = {},
+    updated: any,
+    removed: any;
+  const changes: any[] = [],
+    injections: any[] = [];
+  const context: any = {
+    chrome: {
+      storage: {
+        session: {
+          get: async () => structuredClone(stored),
+          set: async (v: any) => {
+            stored = structuredClone(v);
+          },
+        },
+      },
+      tabs: {
+        update: async (id: number, options: any) =>
+          changes.push({ id, ...options }),
+        onUpdated: { addListener: (cb: any) => (updated = cb) },
+        onRemoved: { addListener: (cb: any) => (removed = cb) },
+      },
+      scripting: {
+        executeScript: async (options: any) => {
+          injections.push(options.args);
+          return [{ result: { wasPlaying: true } }];
+        },
+      },
+    },
+    Date,
+    Promise,
+  };
+  vm.createContext(context);
+  vm.runInContext(
+    fs.readFileSync("extension-music/playback-lock.js", "utf8"),
+    context,
+  );
+  await context.setPlaybackLock(
+    [
+      { id: 11, mutedInfo: { muted: false } },
+      { id: 12, mutedInfo: { muted: true } },
+    ],
+    true,
+    100,
+    99,
+  );
+  assert.equal(stored.itttPlaybackLock.active, true);
+  assert.equal(changes[0].muted, true);
+  updated(
+    11,
+    { mutedInfo: { muted: false } },
+    { id: 11, url: "https://music.youtube.com/", mutedInfo: { muted: false } },
+  );
+  await context.__itttMusicOperations;
+  assert.equal(
+    changes.at(-1).muted,
+    true,
+    "ad or accidental unmute is blocked",
+  );
+  assert.equal(await context.setPlaybackLock([], false, 99, 99), false);
+  assert.equal(stored.itttPlaybackLock.active, true);
+  await context.setPlaybackLock([], false, 101, 99);
+  assert.deepEqual(changes.slice(-2), [
+    { id: 11, muted: false },
+    { id: 12, muted: true },
+  ]);
+  assert.deepEqual(Array.from(injections.at(-1)), [false, true]);
+  await context.setPlaybackLock([{ id: 11 }], true, Date.now() + 10000, 99);
+  removed(99);
+  await context.__itttMusicOperations;
+  assert.equal(
+    stored.itttPlaybackLock.active,
+    false,
+    "closing the desk releases even a future revision",
+  );
+});
