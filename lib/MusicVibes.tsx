@@ -416,7 +416,11 @@ export function MusicVibesControl({
                   power: 1,
                   style: director.current.choose(
                     settings,
-                    latest.current.trackKey || "",
+                    music.current &&
+                      !music.current.paused &&
+                      music.current.volume > 0.001
+                      ? music.current.currentSrc || "local"
+                      : latest.current.trackKey || "",
                     Date.now(),
                   ),
                   intensity: proportionalIntensity(
