@@ -6,8 +6,6 @@ import {
   vibeStyles,
   selectedVibes,
   proportionalIntensity,
-  analyserEnergy,
-  analyserSpectrum,
   silentBands,
   type MusicBands,
   bassDecibels,
@@ -17,26 +15,6 @@ import {
   type MusicPulse,
 } from "./music-vibes";
 
-class CapturedMusic {
-  readonly context = new AudioContext();
-  private analyser = this.context.createAnalyser();
-  private bins = new Float32Array(1024);
-  constructor(readonly stream: MediaStream) {
-    this.analyser.fftSize = 2048;
-    this.analyser.smoothingTimeConstant = 0.25;
-    this.context.createMediaStreamSource(stream).connect(this.analyser);
-  }
-  energy() {
-    return analyserEnergy(this.analyser, this.bins, this.context.sampleRate);
-  }
-  spectrum() {
-    return analyserSpectrum(this.analyser, this.bins, this.context.sampleRate);
-  }
-  close() {
-    this.stream.getTracks().forEach((t) => t.stop());
-    if (this.context.state !== "closed") void this.context.close();
-  }
-}
 export function MusicVibesControl({
   settings,
   onChange,
@@ -60,8 +38,7 @@ export function MusicVibesControl({
 }) {
   const latest = useRef({ settings, phase, onPulse, trackKey });
   latest.current = { settings, phase, onPulse, trackKey };
-  const capture = useRef<CapturedMusic | null>(null),
-    detector = useRef(new BeatDetector()),
+  const detector = useRef(new BeatDetector()),
     director = useRef(new VibesDirector()),
     sequence = useRef(0),
     previewUntil = useRef(0),
@@ -80,8 +57,6 @@ export function MusicVibesControl({
     extensionAt.current = 0;
     if (extensionReady.current)
       window.postMessage({ type: "ITTT_SPECTRUM_STOP" }, location.origin);
-    capture.current?.close();
-    capture.current = null;
     setConnected(false);
     setLevel(0);
     setSpectrum(silentBands);
@@ -155,7 +130,6 @@ export function MusicVibesControl({
     const id = setInterval(() => {
       const { settings, phase, onPulse } = latest.current;
       if (!settings.enabled || !active.current) {
-        if (capture.current) disconnect();
         if (frame++ % 3 === 0) setLevel(0);
         return;
       }
@@ -166,7 +140,7 @@ export function MusicVibesControl({
         ? mix.current?.spectrum() || silentBands
         : externalNative
           ? extensionBands.current
-          : capture.current?.spectrum() || silentBands;
+          : silentBands;
       const energy = bands.bass;
       director.current.sample(energy, Date.now());
       if (frame++ % 3 === 0) {
@@ -177,9 +151,7 @@ export function MusicVibesControl({
             ? "Música local en directo"
             : externalNative
               ? "Audio directo de la extensión · sin compartir pantalla"
-              : capture.current
-                ? "Pestaña musical conectada"
-                : "Conecta una pestaña o reproduce música local",
+              : "Conecta el audio directo o reproduce música local",
         );
       }
       if (!vibesInScene(settings, phase) || Date.now() < previewUntil.current)
@@ -216,54 +188,24 @@ export function MusicVibesControl({
     }, 25);
     return () => {
       clearInterval(id);
-      capture.current?.close();
     };
   }, []);
-  const connect = async (share = false) => {
+  const connect = () => {
     onActivate();
-    externalListening.current = true;
-    if (extensionReady.current && !share) {
-      window.postMessage({ type: "ITTT_SPECTRUM_SUBSCRIBE" }, location.origin);
-      window.postMessage({ type: "ITTT_SPECTRUM_GUIDE" }, location.origin);
+    if (!extensionReady.current) {
       setMessage(
-        "En la pestaña musical, pulsa el icono de la extensión Thinkglaos para activar el audio directo. No compartas pantalla.",
+        "No se detecta la extensión 2.3. Carga la carpeta extension-music como descomprimida en edge://extensions y recarga la mesa. Este botón ya no comparte pantalla.",
       );
       return;
     }
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { displaySurface: "browser" },
-        audio: true,
-        selfBrowserSurface: "exclude",
-        systemAudio: "include",
-      } as DisplayMediaStreamOptions);
-      if (!latest.current.settings.enabled || !active.current) {
-        stream.getTracks().forEach((t) => t.stop());
-        return;
-      }
-      if (!stream.getAudioTracks().length) {
-        stream.getTracks().forEach((t) => t.stop());
-        setMessage("Selecciona la pestaña musical y activa Compartir audio.");
-        return;
-      }
-      disconnect();
-      const next = new CapturedMusic(stream);
-      capture.current = next;
-      await next.context.resume();
-      setConnected(true);
-      setMessage("Audio conectado para los efectos.");
-      stream
-        .getTracks()
-        .forEach((t) =>
-          t.addEventListener("ended", disconnect, { once: true }),
-        );
-    } catch {
-      disconnect();
-      setMessage(
-        "Conexión cancelada. Puedes volver a elegir la pestaña musical.",
-      );
-    }
+    externalListening.current = true;
+    window.postMessage({ type: "ITTT_SPECTRUM_SUBSCRIBE" }, location.origin);
+    window.postMessage({ type: "ITTT_SPECTRUM_GUIDE" }, location.origin);
+    setMessage(
+      "En YouTube Music o Spotify, pulsa el icono ITTT de la extensión. Debe indicar ON. No uses Compartir pantalla.",
+    );
   };
+
   return (
     <div className="vibes-controls">
       <label className="vibes-toggle">
@@ -474,15 +416,15 @@ export function MusicVibesControl({
           </div>
           {nativeAudio && (
             <small>
-              Audio sin barra: activa las vibes y pulsa la extensión desde la
-              pestaña de YouTube Music o Spotify. Detén antes la pantalla
-              compartida que tenías abierta.
+              Extensión 2.3 detectada. Audio sin barra: activa las vibes y pulsa
+              la extensión desde la pestaña de YouTube Music o Spotify. Detén
+              antes la pantalla compartida que tenías abierta.
             </small>
           )}
           {!nativeAudio && (
             <small>
-              Actualiza la extensión a 2.3 para conectar la música sin compartir
-              pantalla.
+              Extensión de audio directo no detectada. Necesitas la versión 2.3;
+              la música local sí funciona.
             </small>
           )}
           <small>
@@ -490,6 +432,9 @@ export function MusicVibesControl({
             crece con la señal. Los cambios musicales mantienen cada estilo al
             menos 20 segundos; estiman tramos, no identifican estribillos.
           </small>
+          <a href="./downloads/thinkglaos-mezclador.zip" download>
+            Descargar extensión de audio directo 2.3
+          </a>
           {message && <small role="status">{message}</small>}
         </>
       )}

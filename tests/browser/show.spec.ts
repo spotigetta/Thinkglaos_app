@@ -1,4 +1,4 @@
-﻿import { test, expect } from "@playwright/test";
+﻿import { test, expect, type Page } from "@playwright/test";
 test("Mesa en una sola vista, mezcla estable y QR al terminar", async ({
   page,
 }) => {
@@ -538,7 +538,7 @@ test("Las vibes reaccionan a audio real de una pestaña, permiten umbral y estil
   page,
 }) => {
   await page.addInitScript(() => {
-    navigator.mediaDevices.getDisplayMedia = async () => {
+    (window as any).__testMusicSource = async () => {
       const ac = new AudioContext(),
         osc = ac.createOscillator(),
         gain = ac.createGain(),
@@ -552,6 +552,7 @@ test("Las vibes reaccionan a audio real de una pestaña, permiten umbral y estil
       return out.stream;
     };
   });
+  await installNativeSpectrumAdapter(page);
   await page.goto("/?control=1");
   const popup = page.waitForEvent("popup");
   await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
@@ -698,7 +699,7 @@ test("Un agudo fuerte no dispara el flash, pero un grave más suave sí", async 
   page,
 }) => {
   await page.addInitScript(() => {
-    navigator.mediaDevices.getDisplayMedia = async () => {
+    (window as any).__testMusicSource = async () => {
       const ac = new AudioContext(),
         osc = ac.createOscillator(),
         gain = ac.createGain(),
@@ -712,6 +713,7 @@ test("Un agudo fuerte no dispara el flash, pero un grave más suave sí", async 
       return out.stream;
     };
   });
+  await installNativeSpectrumAdapter(page);
   await page.goto("/?control=1");
   const popup = page.waitForEvent("popup");
   await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
@@ -829,7 +831,7 @@ test("Aurora reacciona a medios y agudos con capas continuas sin reiniciar en ca
   page,
 }) => {
   await page.addInitScript(() => {
-    navigator.mediaDevices.getDisplayMedia = async () => {
+    (window as any).__testMusicSource = async () => {
       const ac = new AudioContext(),
         osc = ac.createOscillator(),
         gain = ac.createGain(),
@@ -843,6 +845,7 @@ test("Aurora reacciona a medios y agudos con capas continuas sin reiniciar en ca
       return out.stream;
     };
   });
+  await installNativeSpectrumAdapter(page);
   await page.goto("/?control=1");
   const popup = page.waitForEvent("popup");
   await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
@@ -933,7 +936,9 @@ test("Las vibes reciben audio directo de la extensión sin pedir compartir panta
     })
     .click();
   await expect(
-    page.getByText("En la pestaña musical, pulsa el icono", { exact: false }),
+    page.getByText("En YouTube Music o Spotify, pulsa el icono", {
+      exact: false,
+    }),
   ).toBeVisible();
   await page.evaluate(() => {
     (window as any).__nativeInterval = setInterval(
@@ -966,4 +971,91 @@ test("Las vibes reciben audio directo de la extensión sin pedir compartir panta
     }),
   ).toBeVisible();
   await page.evaluate(() => clearInterval((window as any).__nativeInterval));
+});
+
+async function installNativeSpectrumAdapter(page: Page) {
+  await page.addInitScript(() => {
+    let timer: ReturnType<typeof setInterval> | undefined,
+      stream: MediaStream | undefined,
+      context: AudioContext | undefined;
+    window.addEventListener("message", async (e) => {
+      if (e.source !== window) return;
+      if (e.data?.type === "ITTT_MUSIC_PING")
+        window.postMessage(
+          { type: "ITTT_MUSIC_READY", version: 2.3 },
+          location.origin,
+        );
+      if (e.data?.type === "ITTT_SPECTRUM_STOP") {
+        clearInterval(timer);
+        stream?.getTracks().forEach((t) => t.stop());
+        void context?.close();
+        context = undefined;
+      }
+      if (e.data?.type !== "ITTT_SPECTRUM_GUIDE") return;
+      stream = await (window as any).__testMusicSource();
+      context = new AudioContext();
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.25;
+      context.createMediaStreamSource(stream!).connect(analyser);
+      await context.resume();
+      const bins = new Float32Array(1024);
+      timer = setInterval(() => {
+        analyser.getFloatFrequencyData(bins);
+        const band = (low: number, high: number) => {
+          let power = 0,
+            count = 0;
+          for (
+            let i = Math.max(1, Math.ceil((low * 2048) / context!.sampleRate));
+            i < Math.min(1024, Math.ceil((high * 2048) / context!.sampleRate));
+            i++
+          ) {
+            count++;
+            if (Number.isFinite(bins[i])) power += 10 ** (bins[i] / 10);
+          }
+          return power && count
+            ? Math.max(
+                0,
+                Math.min(1, (10 * Math.log10(power / count) + 60) / 60),
+              )
+            : 0;
+        };
+        window.postMessage(
+          {
+            type: "ITTT_SPECTRUM_FRAME",
+            bands: {
+              bass: band(45, 150),
+              mid: band(150, 900),
+              high: band(900, 4000),
+              air: band(4000, 12000),
+            },
+          },
+          location.origin,
+        );
+      }, 75);
+    });
+  });
+}
+test("Sin extensión el botón informa y nunca solicita compartir pantalla", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    (window as any).__shareRequests = 0;
+    navigator.mediaDevices.getDisplayMedia = async () => {
+      (window as any).__shareRequests++;
+      throw Error("No compartir");
+    };
+  });
+  await page.goto("/?control=1");
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page
+    .getByRole("button", {
+      name: "Conectar audio de YouTube / Spotify",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByText("No se detecta la extensión 2.3.", { exact: false }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => (window as any).__shareRequests)).toBe(0);
 });

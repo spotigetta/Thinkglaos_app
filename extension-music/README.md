@@ -9,7 +9,7 @@ En `edge://extensions` activa Modo desarrollador y carga descomprimida la carpet
 3. Abre la pestaña de YouTube Music o Spotify y pulsa el icono de esta extensión. Puedes fijarlo en la barra de herramientas. El indicador ON confirma la conexión; una segunda pulsación la detiene.
 4. Vuelve a la mesa. Las bandas se reciben directamente, sin `getDisplayMedia`, sin vídeo ni selección de una pantalla. El sonido de la pestaña continúa por una única salida. No se graba ni se envía audio fuera del navegador.
 
-La web conserva el método anterior como alternativa si no está instalada la versión 2.3; esa alternativa sí muestra la barra de compartir del navegador. No se ocultan indicadores de seguridad del navegador.
+La web ya no recurre a compartir pantalla si la extensión no está instalada: muestra instrucciones de instalación. La música local sigue disponible. No se ocultan indicadores de seguridad del navegador.
 
 ## Proyector
 
