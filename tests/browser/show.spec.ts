@@ -269,7 +269,7 @@ test("Charla y preguntas se pausan, ajustan y terminan sin cambiar de fase, con 
     page.getByText("Tiempo terminado · esperando tu señal"),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Finalizado" })).toBeDisabled();
-  expect(await page.evaluate(() => (window as any).__chimes)).toBe(5);
+  expect(await page.evaluate(() => (window as any).__chimes)).toBe(9);
   await expect(output.locator(".show-output")).toHaveClass(/charla/);
   await expect(output.locator(".show-clock")).toHaveCount(0);
   await output.screenshot({ path: ".local/counter-charla.png" });
@@ -283,10 +283,77 @@ test("Charla y preguntas se pausan, ajustan y terminan sin cambiar de fase, con 
   await page.clock.fastForward(2500);
   await expect(output.locator("h1")).toHaveText("00:00");
   await expect(output.locator(".show-output")).toHaveClass(/preguntas/);
-  expect(await page.evaluate(() => (window as any).__chimes)).toBe(10);
+  expect(await page.evaluate(() => (window as any).__chimes)).toBe(18);
   await page.getByRole("button", { name: "−30 s", exact: true }).click();
   await expect(output.locator("h1")).toHaveText("00:30");
   await expect(
     page.getByRole("button", { name: "Continuar", exact: true }),
   ).toBeEnabled();
+});
+
+test("Intro limpia y cronómetros con amarillo ITTT, modo oscuro sincronizado y persistente", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByRole("button", { name: "Intro", exact: true }).click();
+  await expect(out.locator(".show-intro")).toBeVisible();
+  await expect(out.locator(".show-clock")).toHaveCount(0);
+  await expect(out.locator(".show-brand")).toHaveCount(0);
+  await page.getByRole("button", { name: "Charla", exact: true }).click();
+  await expect(out.locator(".show-output")).toHaveAttribute(
+    "data-counter-theme",
+    "light",
+  );
+  await expect(out.locator(".show-output")).toHaveCSS(
+    "background-color",
+    "rgb(255, 218, 0)",
+  );
+  await out.screenshot({ path: ".local/counter-yellow.png" });
+  await page.getByLabel("Modo oscuro de cronómetros").check();
+  await expect(out.locator(".show-output")).toHaveAttribute(
+    "data-counter-theme",
+    "dark",
+  );
+  await expect(out.locator(".show-output")).toHaveCSS(
+    "background-color",
+    "rgb(16, 16, 16)",
+  );
+  await out.screenshot({ path: ".local/counter-dark.png" });
+  await page.reload();
+  await expect(page.getByLabel("Modo oscuro de cronómetros")).toBeChecked();
+});
+
+test("Pizzas duran una hora y el QR convive con mensajes animados que siguen cambiando", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByRole("button", { name: "Pizzas", exact: true }).click();
+  await expect(
+    page.getByText("Pizzas · una hora", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Posición de la fase")).toHaveAttribute(
+    "max",
+    "3600",
+  );
+  await expect(page.getByLabel("Pausa entre locuciones")).toHaveCount(0);
+  await expect(out.getByAltText("QR del grupo de WhatsApp")).toBeVisible();
+  await expect(out.locator(".qr-live-copy")).toBeVisible();
+  const qr = await out.getByAltText("QR del grupo de WhatsApp").boundingBox(),
+    copy = await out.locator(".qr-live-copy").boundingBox();
+  expect(qr!.x).toBeGreaterThan(copy!.x + copy!.width);
+  await out.screenshot({ path: ".local/community-pizzas.png" });
+  await page.getByRole("button", { name: "Charla", exact: true }).click();
+  await page.getByLabel("Posición de la fase").fill("1080");
+  await expect(out.locator(".community-scene")).toBeVisible();
+  const before = await out.locator(".qr-live-copy h2").textContent();
+  await out.clock.install();
+  await out.clock.fastForward(15000);
+  await expect(out.locator(".qr-live-copy h2")).not.toHaveText(before!);
+  await expect(out.locator(".show-output")).not.toHaveClass(/scene-paused/);
 });

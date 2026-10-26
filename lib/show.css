@@ -1893,3 +1893,364 @@ iframe.show-bg-video {
     max-height: none;
   }
 }
+/* Counter identity: bright ITTT yellow, ink-black figures, optional black stage. */
+.show-output.charla,
+.show-output.preguntas {
+  --counter-yellow: #ffda00;
+  --counter-ink: #101010;
+  --counter-bg: #ffda00;
+  background: var(--counter-bg);
+  color: var(--counter-ink);
+}
+.show-output[data-counter-theme="dark"].charla,
+.show-output[data-counter-theme="dark"].preguntas {
+  --counter-bg: #101010;
+  --counter-ink: #ffda00;
+  background: #101010;
+  color: #ffda00;
+}
+.show-output.charla .show-wash,
+.show-output.preguntas .show-wash {
+  display: none;
+}
+.show-output.charla::before,
+.show-output.preguntas::before {
+  inset: -30%;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 150px,
+    #0000000a 150px 153px
+  );
+  opacity: 1;
+  animation: ittt-lines 36s ease-in-out infinite alternate;
+}
+.show-output.charla::after,
+.show-output.preguntas::after {
+  inset: 17vh -3vw -40vh 54vw;
+  border: clamp(30px, 4vw, 65px) solid var(--counter-ink);
+  border-radius: 50%;
+  box-shadow: none;
+  opacity: 0.11;
+  transform: rotate(15deg);
+  animation: ittt-ring 18s ease-in-out infinite alternate;
+}
+.show-output.charla main h1,
+.show-output.preguntas main h1 {
+  background: none;
+  color: var(--counter-ink);
+  filter: none;
+  text-shadow: none;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+.show-output.charla main small,
+.show-output.preguntas main small,
+.show-output.charla main p,
+.show-output.preguntas main p {
+  color: var(--counter-ink);
+  opacity: 1;
+}
+.show-output.charla .show-speaker,
+.show-output.preguntas .show-speaker {
+  color: var(--counter-ink);
+}
+.show-output.charla .show-speaker img,
+.show-output.preguntas .show-speaker img {
+  border: 5px solid var(--counter-ink);
+  box-shadow: 14px 14px 0 var(--counter-ink);
+  border-radius: 4px;
+  animation: poster-hover 14s ease-in-out infinite alternate;
+}
+.show-output.charla .show-brand span,
+.show-output.preguntas .show-brand span {
+  color: var(--counter-ink);
+  opacity: 1;
+}
+.show-output.intro .show-brand,
+.show-output.intro .show-clock,
+.show-output.intro .continuous-ticker {
+  display: none !important;
+}
+.show-output.intro .show-intro {
+  z-index: 100;
+}
+@keyframes ittt-lines {
+  to {
+    transform: translate3d(3%, 2%, 0) rotate(2deg);
+  }
+}
+@keyframes ittt-ring {
+  to {
+    transform: translate3d(-3%, -3%, 0) rotate(-6deg);
+  }
+}
+/* Community scene: a stable, scannable QR and live editorial copy beside it. */
+.community-scene {
+  position: absolute;
+  inset: 18vh 5vw 12vh;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(290px, 0.85fr);
+  gap: 5vw;
+  align-items: center;
+  pointer-events: none;
+}
+.show-output:has(.community-scene) > main,
+.show-output:has(.community-scene) > .scene-side-note,
+.show-output.charla:has(.community-scene) > .show-speaker {
+  visibility: hidden;
+}
+.show-output:has(.community-scene) .show-orbit {
+  display: block;
+  opacity: 0.35;
+  color: inherit;
+}
+.qr-live-copy {
+  color: #fff3c4;
+  animation: community-arrive 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.qr-live-copy small {
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  background: #ffda00;
+  color: #111;
+  padding: 8px 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.qr-live-copy h2 {
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-size: clamp(48px, 6.5vw, 120px);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 22px 0 18px;
+  max-width: 100%;
+  text-wrap: balance;
+}
+.qr-live-copy p {
+  font-size: clamp(17px, 1.65vw, 29px);
+  line-height: 1.4;
+  max-width: 35em;
+}
+.community-tag {
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  display: block;
+  margin-top: 25px;
+  border-top: 3px solid currentColor;
+  width: max-content;
+  padding-top: 12px;
+}
+.show-output.charla .qr-live-copy {
+  color: var(--counter-ink);
+}
+.show-output.charla .qr-live-copy small {
+  background: var(--counter-ink);
+  color: var(--counter-bg);
+}
+.community-scene .whatsapp-stage {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffda00;
+  color: #111;
+  border: 4px solid #111;
+  border-radius: 5px;
+  padding: 22px 24px;
+  box-shadow: 12px 12px 0 #111;
+  transform: rotate(1.4deg);
+  width: 100%;
+  animation: card-settle 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.community-scene .whatsapp-stage img {
+  width: min(26vw, 39vh);
+  height: min(26vw, 39vh);
+  border-radius: 5px;
+  border: 7px solid #fff;
+  object-fit: contain;
+  max-width: 100%;
+}
+.community-scene .whatsapp-stage h2 {
+  color: #111;
+  font:
+    800 clamp(22px, 2.2vw, 38px)/1.03 "Barlow Condensed",
+    Impact,
+    sans-serif;
+  text-align: center;
+  margin: 5px 0;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+.community-scene .whatsapp-stage p {
+  color: #111;
+  font-size: 14px;
+  text-align: center;
+  margin: 0;
+  line-height: 1.3;
+}
+.qr-card-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+  border-bottom: 2px solid #111;
+  padding-bottom: 8px;
+}
+@keyframes community-arrive {
+  from {
+    opacity: 0.5;
+    transform: translate3d(-36px, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes card-settle {
+  from {
+    transform: translate3d(20px, 15px, 0) rotate(4deg);
+  }
+  to {
+    transform: translate3d(0, 0, 0) rotate(1.4deg);
+  }
+}
+/* Eight continuous word movements; text remains readable through every cycle. */
+.show-output .kinetic-0 .kinetic-word {
+  animation: word-buoy 9s ease-in-out infinite alternate;
+}
+.show-output .kinetic-1 .kinetic-word {
+  animation: word-glide 11s ease-in-out infinite alternate;
+}
+.show-output .kinetic-2 .kinetic-word {
+  animation: word-breathe 10s ease-in-out infinite alternate;
+}
+.show-output .kinetic-3 .kinetic-word {
+  animation: word-pendulum 12s ease-in-out infinite alternate;
+}
+.show-output .kinetic-4 .kinetic-word {
+  animation: word-orbit 9s ease-in-out infinite alternate;
+}
+.show-output .kinetic-5 .kinetic-word {
+  animation: word-lift 8s ease-in-out infinite alternate;
+}
+.show-output .kinetic-6 .kinetic-word {
+  animation: word-sail 13s ease-in-out infinite alternate;
+}
+.show-output .kinetic-7 .kinetic-word {
+  animation: word-soft-zoom 10s ease-in-out infinite alternate;
+}
+.show-output .kinetic-word {
+  animation-delay: calc(var(--word) * -650ms) !important;
+  will-change: transform;
+}
+.show-output .kinetic-letter {
+  animation-duration: 1.8s;
+  animation-delay: calc(var(--letter) * 14ms);
+}
+@keyframes word-buoy {
+  from {
+    transform: translateY(3px);
+  }
+  to {
+    transform: translateY(-12px);
+  }
+}
+@keyframes word-glide {
+  from {
+    transform: translate(-5px, 2px);
+  }
+  to {
+    transform: translate(9px, -7px);
+  }
+}
+@keyframes word-breathe {
+  from {
+    transform: scale(0.99);
+  }
+  to {
+    transform: scale(1.018);
+  }
+}
+@keyframes word-pendulum {
+  from {
+    transform: rotate(-0.6deg) translateY(3px);
+  }
+  to {
+    transform: rotate(0.6deg) translateY(-5px);
+  }
+}
+@keyframes word-orbit {
+  from {
+    transform: translate(-5px, -3px) rotate(-0.3deg);
+  }
+  to {
+    transform: translate(5px, 6px) rotate(0.4deg);
+  }
+}
+@keyframes word-lift {
+  from {
+    transform: translateY(4px) scale(0.997);
+  }
+  to {
+    transform: translateY(-9px) scale(1.01);
+  }
+}
+@keyframes word-sail {
+  from {
+    transform: skewX(-0.5deg) translate(-4px, 2px);
+  }
+  to {
+    transform: skewX(0.5deg) translate(5px, -7px);
+  }
+}
+@keyframes word-soft-zoom {
+  from {
+    transform: scale(0.995) translateY(2px);
+  }
+  to {
+    transform: scale(1.012) translateY(-8px);
+  }
+}
+.show-output.llamada .kinetic-word {
+  animation-duration: 4.2s;
+}
+.montage-pace {
+  font-size: 12px;
+  border-left: 3px solid #ffda00;
+  padding-left: 10px;
+}
+.montage-pace b,
+.montage-pace span,
+.montage-pace small {
+  display: block;
+}
+@media (max-width: 800px) {
+  .community-scene {
+    gap: 3vw;
+    grid-template-columns: 1.1fr 0.9fr;
+    inset: 24vh 4vw 13vh;
+  }
+  .community-scene .whatsapp-stage {
+    padding: 12px;
+    box-shadow: 6px 6px 0 #111;
+  }
+  .community-scene .whatsapp-stage img {
+    width: 30vw;
+    height: 30vw;
+  }
+  .qr-live-copy h2 {
+    font-size: 6.4vw;
+  }
+  .qr-live-copy p {
+    font-size: 14px;
+  }
+  .community-tag {
+    font-size: 9px;
+  }
+  .qr-card-label {
+    font-size: 8px;
+  }
+}

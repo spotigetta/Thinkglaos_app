@@ -49,6 +49,29 @@ export function voiceGap(value: number) {
   return Math.max(10, Math.min(240, Number.isFinite(value) ? value : 60));
 }
 
+export function pizzasPace(
+  cues: ShowCue[],
+  played: ReadonlySet<string>,
+  elapsed: number,
+) {
+  const secondsLeft = Math.max(0, 3600 - elapsed);
+  const remaining = sceneCues(cues, "pizzas").filter(
+    (cue) => !played.has(cue.url),
+  );
+  const audioSeconds = remaining.reduce(
+    (sum, cue) => sum + Math.max(0, cue.end - cue.start),
+    0,
+  );
+  return {
+    secondsLeft,
+    remaining,
+    audioSeconds,
+    gap: remaining.length
+      ? Math.max(0, (secondsLeft - audioSeconds) / remaining.length)
+      : 0,
+  };
+}
+
 /** Distribute each remaining montage cue once across the time left until 19:25 Madrid time. */
 export function montagePace(
   cues: ShowCue[],

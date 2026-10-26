@@ -8,6 +8,7 @@ import {
   nextCue,
   cueScenes,
   montagePace,
+  pizzasPace,
   voiceGap,
   voiceSceneLabels,
   type ShowCue,
@@ -45,6 +46,7 @@ type State = {
   internalMusic: boolean;
   voiceGap: number;
   motion: boolean;
+  counterDark: boolean;
   videoCues: boolean;
   intervention: string;
 };
@@ -65,6 +67,7 @@ const defaults: State = {
   internalMusic: false,
   voiceGap: 60,
   motion: true,
+  counterDark: false,
   videoCues: false,
   intervention: "",
 };
@@ -76,6 +79,20 @@ const fmt = (s: number) =>
     .padStart(2, "0")}:${Math.floor(Math.max(0, s) % 60)
     .toString()
     .padStart(2, "0")}`;
+const communityMessages = [
+  "La próxima empieza aquí.",
+  "La pizza se acaba. La conversación no.",
+  "Cambia de corrillo. Amplía el mundo.",
+  "La salsa también está en el grupo.",
+  "Tu próxima gran pregunta tiene compañía.",
+  "Nos vemos en el siguiente thinkglao.",
+  "Una cerveza. Dos ideas. Un nuevo amigo.",
+  "No te vayas sin conocer a alguien.",
+  "Desliza menos. Conversa más.",
+  "Un último trozo. Una primera conversación.",
+  "Lo mejor de hoy puede seguir mañana.",
+  "Haz sitio. Aquí cabemos todos.",
+];
 export default function Show() {
   const projection = new URLSearchParams(location.search).has("projection");
   const [s, set] = useState<State>(() => {
@@ -88,6 +105,7 @@ export default function Show() {
           saved = {
             voiceGap: voiceGap(p.voiceGap),
             motion: p.motion !== false,
+            counterDark: p.counterDark === true,
             voiceBoost: clampVoiceBoost(p.voiceBoost),
             duckLevel:
               typeof p.duckLevel === "number"
@@ -157,6 +175,7 @@ export default function Show() {
   const voiceMix = useRef<VoiceMix | null>(null);
   const nextVoiceAt = useRef(5);
   const montagePlayed = useRef(new Set<string>());
+  const pizzasPlayed = useRef(new Set<string>());
   const automaticCue = useRef<Cue | null>(null);
   const cuesRef = useRef<Cue[]>([]);
   const gratitudePending = useRef(false);
@@ -169,11 +188,12 @@ export default function Show() {
         JSON.stringify({
           voiceGap: s.voiceGap,
           motion: s.motion,
+          counterDark: s.counterDark,
           voiceBoost: s.voiceBoost,
           duckLevel: s.duckLevel,
         }),
       );
-  }, [s.voiceGap, s.motion, s.voiceBoost, s.duckLevel]);
+  }, [s.voiceGap, s.motion, s.voiceBoost, s.duckLevel, s.counterDark]);
   current.current = s;
   cuesRef.current = cues;
   const send = (m: { type: string; [key: string]: unknown }) => {
@@ -195,6 +215,7 @@ export default function Show() {
       return;
     lastPhaseClick.current = Date.now();
     if (p === "montaje") montagePlayed.current.clear();
+    if (p === "pizzas") pizzasPlayed.current.clear();
     automaticCue.current = null;
     if (p === "llamada" && music.current) music.current.currentTime = 0;
     videoActive.current = false;
@@ -285,7 +306,18 @@ export default function Show() {
               ? pace.gap
               : Infinity;
           })()
-        : voiceGap(state.voiceGap);
+        : state.phase === "pizzas"
+          ? (() => {
+              const pace = pizzasPace(
+                cuesRef.current,
+                pizzasPlayed.current,
+                elapsed(state),
+              );
+              return pace.secondsLeft && pace.remaining.length
+                ? pace.gap
+                : Infinity;
+            })()
+          : voiceGap(state.voiceGap);
     nextVoiceAt.current = elapsed(state) + gap;
   }
   useEffect(() => {
@@ -326,7 +358,10 @@ export default function Show() {
       if (generation !== voiceGeneration.current) return;
       gratitudePending.current = false;
       if (automaticCue.current?.url === cue?.url && cue)
-        montagePlayed.current.add(cue.url);
+        (current.current.phase === "pizzas"
+          ? pizzasPlayed
+          : montagePlayed
+        ).current.add(cue.url);
       automaticCue.current = null;
       note("Audio bloqueado o no disponible. Vuelve a pulsar la frase.");
       restore();
@@ -499,11 +534,13 @@ export default function Show() {
         ? 1080
         : s.phase === "preguntas"
           ? 2700
-          : s.phase === "intro"
-            ? levels.introDuration
-            : s.phase === "salida"
-              ? 8
-              : s.minutes * 60;
+          : s.phase === "pizzas"
+            ? 3600
+            : s.phase === "intro"
+              ? levels.introDuration
+              : s.phase === "salida"
+                ? 8
+                : s.minutes * 60;
   useEffect(() => {
     if (voice.current) voice.current.volume = s.voiceVolume;
   }, [s.voiceVolume]);
@@ -528,6 +565,7 @@ export default function Show() {
   }, [now]);
   useEffect(() => {
     if (s.phase === "montaje") montagePlayed.current.clear();
+    if (s.phase === "pizzas") pizzasPlayed.current.clear();
     lastCue.current = "";
     scheduleNextVoice();
   }, [s.phase]);
@@ -550,6 +588,13 @@ export default function Show() {
       const pace = montagePace(cues, montagePlayed.current, new Date(now));
       const cue = pace.remaining.find(
         (candidate) => candidate.end - candidate.start <= pace.secondsLeft,
+      );
+      if (cue) speak(cue, true);
+      else nextVoiceAt.current = Infinity;
+    } else if (s.phase === "pizzas") {
+      const pace = pizzasPace(cues, pizzasPlayed.current, t);
+      const cue = pace.remaining.find(
+        (c) => c.end - c.start <= pace.secondsLeft,
       );
       if (cue) speak(cue, true);
       else nextVoiceAt.current = Infinity;
@@ -708,10 +753,13 @@ export default function Show() {
     return (
       <div
         data-motion={s.motion ? "full" : "off"}
+        data-counter-theme={s.counterDark ? "dark" : "light"}
         className={
           "show-output " +
           s.phase +
-          (s.running ? "" : " scene-paused") +
+          (s.running || (s.phase === "charla" && t >= duration)
+            ? ""
+            : " scene-paused") +
           " visual-layout-" +
           scene.layout +
           " visual-accent-" +
@@ -752,11 +800,13 @@ export default function Show() {
             />
           )}
         <div className="show-wash" />
-        <div className="show-brand">
-          <img src="./assets/ittt.png" alt="IT’S TIME TO THINK" />
-          <span>TOLEDO · EN VIVO</span>
-        </div>
-        {!["charla", "preguntas"].includes(s.phase) && (
+        {s.phase !== "intro" && (
+          <div className="show-brand">
+            <img src="./assets/ittt.png" alt="IT’S TIME TO THINK" />
+            <span>TOLEDO · EN VIVO</span>
+          </div>
+        )}
+        {!["charla", "preguntas", "intro"].includes(s.phase) && (
           <time className="show-clock">{madridClock(new Date(now)).time}</time>
         )}
         {["charla", "preguntas"].includes(s.phase) && (
@@ -876,18 +926,35 @@ export default function Show() {
           </div>
         )}
         {(s.phase === "pizzas" || (s.phase === "charla" && t >= 1080)) && (
-          <aside className="whatsapp-stage">
-            <img src={qr} alt="QR del grupo de WhatsApp" />
-            <div>
+          <div className="community-scene">
+            <section className="qr-live-copy" key={Math.floor(now / 14000)}>
               <small>LA CONVERSACIÓN SIGUE</small>
               <h2>
-                Únete al grupo
-                <br />
-                de WhatsApp
+                <KineticText
+                  text={
+                    communityMessages[
+                      Math.floor(now / 14000) % communityMessages.length
+                    ]
+                  }
+                  effect={Math.floor(now / 14000) % 8}
+                />
               </h2>
-              <p>Escanea · entra · comparte</p>
-            </div>
-          </aside>
+              <p>
+                {s.phase === "pizzas"
+                  ? "Coge pizza. Cambia de corrillo. Conoce a alguien."
+                  : "Una idea termina. Mil conversaciones empiezan."}
+              </p>
+              <span className="community-tag">THINK · MEET · REPEAT</span>
+            </section>
+            <aside className="whatsapp-stage">
+              <span className="qr-card-label">
+                QUE NO SE QUEDE EN ESTA NOCHE ↗
+              </span>
+              <img src={qr} alt="QR del grupo de WhatsApp" />
+              <h2>Únete al grupo para enterarte de los siguientes.</h2>
+              <p>Escanea y entra en la comunidad.</p>
+            </aside>
+          </div>
         )}
       </div>
     );
@@ -954,6 +1021,7 @@ export default function Show() {
     ["pizzas", "Pizzas"],
   ];
   const montagePlan = montagePace(cues, montagePlayed.current, new Date(now));
+  const pizzasPlan = pizzasPace(cues, pizzasPlayed.current, t);
   const timedPhase = ["charla", "preguntas"].includes(s.phase);
   const timerEnded = timedPhase && t >= duration;
   function seekTime(seconds: number) {
@@ -972,15 +1040,27 @@ export default function Show() {
         onEnded={() => {
           const advance = gratitudePending.current;
           gratitudePending.current = false;
-          if (automaticCue.current && current.current.phase === "montaje")
-            montagePlayed.current.add(automaticCue.current.url);
+          if (
+            automaticCue.current &&
+            ["montaje", "pizzas"].includes(current.current.phase)
+          )
+            (current.current.phase === "pizzas"
+              ? pizzasPlayed
+              : montagePlayed
+            ).current.add(automaticCue.current.url);
           automaticCue.current = null;
           restore();
           if (advance) phase("ambiente");
         }}
         onError={() => {
-          if (automaticCue.current && current.current.phase === "montaje")
-            montagePlayed.current.add(automaticCue.current.url);
+          if (
+            automaticCue.current &&
+            ["montaje", "pizzas"].includes(current.current.phase)
+          )
+            (current.current.phase === "pizzas"
+              ? pizzasPlayed
+              : montagePlayed
+            ).current.add(automaticCue.current.url);
           automaticCue.current = null;
           note("No se pudo cargar la voz.");
           restore();
@@ -1067,6 +1147,7 @@ export default function Show() {
             <button
               onClick={() => {
                 if (s.phase === "montaje") montagePlayed.current.clear();
+                if (s.phase === "pizzas") pizzasPlayed.current.clear();
                 voice.current?.pause();
                 restore();
                 send({ type: "reset" });
@@ -1092,6 +1173,25 @@ export default function Show() {
               value={Math.min(duration, t)}
               onChange={(e) => seekTime(Number(e.target.value))}
             />
+          </label>
+          {timedPhase && (
+            <button
+              className="alarm-preview"
+              onClick={() => {
+                activate();
+                if (voiceMix.current) playTimerChime(voiceMix.current.context);
+              }}
+            >
+              Probar alarma ♪
+            </button>
+          )}
+          <label>
+            <input
+              type="checkbox"
+              checked={s.counterDark}
+              onChange={(e) => update({ counterDark: e.target.checked })}
+            />
+            Modo oscuro de cronómetros
           </label>
           <div className="automatic-options">
             <label>
@@ -1249,11 +1349,14 @@ export default function Show() {
                 ? "Vídeo en proyección"
                 : s.phase === "montaje" && !montagePlan.remaining.length
                   ? "Montaje completo · todas las frases reproducidas"
-                  : s.phase === "montaje" && !montagePlan.secondsLeft
-                    ? "19:25 · locuciones de montaje finalizadas"
-                    : armed && s.autoVoice
-                      ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
-                      : "Listo para empezar")}
+                  : s.phase === "pizzas" &&
+                      (!pizzasPlan.remaining.length || !pizzasPlan.secondsLeft)
+                    ? "Pizzas · locuciones de la hora completadas"
+                    : s.phase === "montaje" && !montagePlan.secondsLeft
+                      ? "19:25 · locuciones de montaje finalizadas"
+                      : armed && s.autoVoice
+                        ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
+                        : "Listo para empezar")}
           </div>
           <div className="transport-buttons">
             <button
@@ -1263,8 +1366,14 @@ export default function Show() {
                   s.phase === "montaje"
                     ? montagePace(cues, montagePlayed.current, new Date())
                         .remaining[0]
-                    : nextCue(cues, s.phase, lastCue.current);
-                if (cue) speak(cue, s.phase === "montaje");
+                    : s.phase === "pizzas"
+                      ? pizzasPace(
+                          cues,
+                          pizzasPlayed.current,
+                          elapsed(current.current),
+                        ).remaining[0]
+                      : nextCue(cues, s.phase, lastCue.current);
+                if (cue) speak(cue, ["montaje", "pizzas"].includes(s.phase));
               }}
             >
               Siguiente voz ▶
@@ -1299,6 +1408,17 @@ export default function Show() {
               </span>
               <small>
                 Se reajusta al empezar, pausar o terminar cada locución.
+              </small>
+            </p>
+          ) : s.phase === "pizzas" ? (
+            <p className="montage-pace" role="status">
+              <b>Pizzas · una hora</b>
+              <span>
+                {pizzasPlan.remaining.length} frases pendientes · pausa
+                calculada {fmt(pizzasPlan.gap)}
+              </span>
+              <small>
+                Reparto automático durante 60 minutos, sin repetir frases.
               </small>
             </p>
           ) : (
@@ -1371,7 +1491,8 @@ export default function Show() {
                     activate();
                     speak(
                       c,
-                      s.phase === "montaje" && cueScenes(c).includes("montaje"),
+                      ["montaje", "pizzas"].includes(s.phase) &&
+                        cueScenes(c).includes(s.phase as any),
                     );
                   }}
                 >

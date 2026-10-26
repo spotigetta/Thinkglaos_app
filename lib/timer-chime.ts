@@ -1,30 +1,51 @@
-/** Short original cartoon cue: two chirps and a soft falling "boing". */
+﻿/** Original comic fanfare, with a little kazoo, slide whistle and final boing. */
 export function playTimerChime(context: AudioContext) {
   void context.resume().then(() => {
     const start = context.currentTime + 0.03;
-    const notes = [
-      { at: 0, from: 660, to: 880, length: 0.14, type: "sine" as const },
-      { at: 0.22, from: 740, to: 990, length: 0.14, type: "sine" as const },
-      { at: 0.5, from: 880, to: 390, length: 0.46, type: "triangle" as const },
-      { at: 1.13, from: 530, to: 790, length: 0.16, type: "sine" as const },
-      { at: 1.36, from: 740, to: 300, length: 0.49, type: "triangle" as const },
+    const master = context.createGain(),
+      limiter = context.createDynamicsCompressor();
+    master.gain.value = 0.85;
+    limiter.threshold.value = -3;
+    limiter.knee.value = 2;
+    limiter.ratio.value = 16;
+    limiter.attack.value = 0.003;
+    limiter.release.value = 0.12;
+    master.connect(limiter).connect(context.destination);
+    const notes: [number, number, number, number, OscillatorType][] = [
+      [0, 523, 523, 0.19, "triangle"],
+      [0.22, 659, 659, 0.19, "triangle"],
+      [0.44, 784, 1046, 0.34, "triangle"],
+      [0.92, 1046, 440, 0.45, "sine"],
+      [1.4, 392, 523, 0.22, "square"],
+      [1.66, 523, 659, 0.22, "square"],
+      [1.92, 784, 1174, 0.28, "triangle"],
+      [2.28, 1200, 330, 0.45, "sine"],
+      [2.86, 620, 95, 0.74, "triangle"],
     ];
-    for (const note of notes) {
-      const oscillator = context.createOscillator();
-      const volume = context.createGain();
-      const begin = start + note.at;
-      oscillator.type = note.type;
-      oscillator.frequency.setValueAtTime(note.from, begin);
-      oscillator.frequency.exponentialRampToValueAtTime(
-        note.to,
-        begin + note.length,
-      );
+    for (const [at, from, to, length, type] of notes) {
+      const oscillator = context.createOscillator(),
+        volume = context.createGain(),
+        begin = start + at;
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(from, begin);
+      oscillator.frequency.exponentialRampToValueAtTime(to, begin + length);
       volume.gain.setValueAtTime(0.0001, begin);
-      volume.gain.exponentialRampToValueAtTime(0.17, begin + 0.018);
-      volume.gain.exponentialRampToValueAtTime(0.0001, begin + note.length);
-      oscillator.connect(volume).connect(context.destination);
+      volume.gain.exponentialRampToValueAtTime(
+        type === "square" ? 0.2 : 0.58,
+        begin + 0.018,
+      );
+      volume.gain.setValueAtTime(
+        type === "square" ? 0.16 : 0.42,
+        begin + length * 0.55,
+      );
+      volume.gain.exponentialRampToValueAtTime(0.0001, begin + length);
+      oscillator.connect(volume).connect(master);
       oscillator.start(begin);
-      oscillator.stop(begin + note.length + 0.02);
+      oscillator.stop(begin + length + 0.02);
     }
+    setTimeout(() => {
+      master.disconnect();
+      limiter.disconnect();
+    }, 4200);
   });
 }

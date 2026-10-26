@@ -6,6 +6,7 @@ import {
   nextCue,
   voiceGap,
   montagePace,
+  pizzasPace,
   type ShowCue,
 } from "../lib/show-voices";
 const extra: ShowCue[] = JSON.parse(
@@ -101,4 +102,20 @@ test("El montaje reparte cada audio y sus pausas hasta las 19:25, incluso tras d
       .secondsLeft,
     0,
   );
+});
+
+test("Las pizzas distribuyen las voces una sola vez durante 60 minutos", () => {
+  const pool = sceneCues(all, "pizzas"),
+    played = new Set<string>();
+  let elapsed = 0;
+  for (const cue of pool) {
+    const pace = pizzasPace(all, played, elapsed);
+    assert.ok(pace.gap > 0);
+    assert.equal(pace.remaining[0].url, cue.url);
+    elapsed += pace.gap + cue.end - cue.start;
+    played.add(cue.url);
+  }
+  assert.ok(Math.abs(elapsed - 3600) < 0.001);
+  assert.equal(pizzasPace(all, played, elapsed).remaining.length, 0);
+  assert.equal(pizzasPace(all, new Set(), 3601).secondsLeft, 0);
 });
