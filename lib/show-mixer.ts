@@ -16,6 +16,7 @@ export function mixPolicy(
     "pizzas",
     "agradecimiento",
   ].includes(s.phase);
+  // These scenes own the room's sound even with a paused timer or disabled local bed.
   const takeover = [
     "llamada",
     "salida",
@@ -27,13 +28,7 @@ export function mixPolicy(
   const factor = foreground ? s.duckLevel : 1;
   return {
     local: s.running && s.internalMusic && bed ? s.volume * factor : 0,
-    external:
-      (takeover && s.internalMusic) ||
-      ["salida", "intro", "charla", "preguntas"].includes(s.phase)
-        ? 0
-        : foreground
-          ? factor
-          : 1,
+    external: takeover ? 0 : foreground ? factor : 1,
     ms: s.phase === "salida" ? 7500 : foreground ? 450 : 1400,
   };
 }

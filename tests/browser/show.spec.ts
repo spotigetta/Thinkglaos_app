@@ -389,3 +389,143 @@ test("El aviso musical dura 30 segundos y se puede detener sin cambiar el contad
     0,
   );
 });
+
+test("Pausar, reiniciar o ajustar no libera la música externa de la escena", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    (window as any).__mixOrders = [];
+    window.addEventListener("message", (e) => {
+      if (e.source === window && e.data?.type === "ITTT_MUSIC_TARGET") {
+        (window as any).__mixOrders.push(e.data.level);
+        (window as any).__lastMixGoal = e.data.level;
+      }
+    });
+  });
+  await page.goto("/?control=1");
+  await page.getByRole("button", { name: "Activar mesa", exact: true }).click();
+  await page.evaluate(() =>
+    window.postMessage(
+      { type: "ITTT_MUSIC_READY", version: 2.1 },
+      location.origin,
+    ),
+  );
+  for (const scene of ["Charla", "Preguntas", "A sentarse"]) {
+    await page.getByRole("button", { name: scene, exact: true }).click();
+    await expect
+      .poll(() => page.evaluate(() => (window as any).__lastMixGoal))
+      .toBe(0);
+    await page.evaluate(() => ((window as any).__mixOrders = []));
+    await page.getByRole("button", { name: "Pausar", exact: true }).click();
+    await page.getByLabel("Posición de la fase").fill("30");
+    await page.getByRole("button", { name: "Reiniciar", exact: true }).click();
+    await page
+      .locator("audio")
+      .first()
+      .evaluate((a) => a.dispatchEvent(new Event("ended")));
+    await page.waitForTimeout(250);
+    expect(
+      await page.evaluate(() =>
+        (window as any).__mixOrders.every((v: number) => v === 0),
+      ),
+    ).toBe(true);
+  }
+});
+
+test("La intro usa su master normalizado y tiene un volumen independiente de las voces", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  await page.getByLabel("Volumen de voces").fill("0.2");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByRole("button", { name: "Intro", exact: true }).click();
+  await expect(out.locator(".show-intro")).toHaveAttribute(
+    "src",
+    "./media/intro-thunder-master-v1.mp4",
+  );
+  await expect
+    .poll(() =>
+      out.locator(".show-intro").evaluate((v: HTMLVideoElement) => v.volume),
+    )
+    .toBe(1);
+  await expect
+    .poll(
+      () =>
+        page
+          .getByRole("meter", { name: "Intro · señal" })
+          .getAttribute("aria-valuenow"),
+      { timeout: 10000 },
+    )
+    .not.toBe("0");
+  await page.getByLabel("Volumen de intro").fill("0.8");
+  await expect
+    .poll(() =>
+      out.locator(".show-intro").evaluate((v: HTMLVideoElement) => v.volume),
+    )
+    .toBe(0.8);
+  await expect(page.getByLabel("Volumen de voces")).toHaveValue("0.2");
+  await page.getByRole("button", { name: "Pausar", exact: true }).click();
+  await expect
+    .poll(() =>
+      out.locator(".show-intro").evaluate((v: HTMLVideoElement) => v.paused),
+    )
+    .toBe(true);
+});
+
+test("Pausar una locución conserva la música baja y continuar retoma esa voz", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.addEventListener("message", (e) => {
+      if (e.source === window && e.data?.type === "ITTT_MUSIC_TARGET")
+        (window as any).__goal = e.data.level;
+    });
+  });
+  await page.goto("/?control=1");
+  await page.getByRole("button", { name: "Activar mesa", exact: true }).click();
+  await page.getByLabel("Voces automáticas", { exact: true }).uncheck();
+  await page.evaluate(() =>
+    window.postMessage(
+      { type: "ITTT_MUSIC_READY", version: 2.1 },
+      location.origin,
+    ),
+  );
+  await page.getByLabel("Buscar frase").fill("Esta noche está permitido");
+  await page.locator(".show-cues button").click();
+  await expect
+    .poll(() =>
+      page
+        .locator("audio")
+        .first()
+        .evaluate((a: HTMLAudioElement) => a.currentTime),
+    )
+    .toBeGreaterThan(0);
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__goal))
+    .toBe(0.12);
+  await page.getByRole("button", { name: "Pausar", exact: true }).click();
+  const frozen = await page
+    .locator("audio")
+    .first()
+    .evaluate((a: HTMLAudioElement) => a.currentTime);
+  await page.waitForTimeout(600);
+  expect(await page.evaluate(() => (window as any).__goal)).toBe(0.12);
+  expect(
+    await page
+      .locator("audio")
+      .first()
+      .evaluate((a: HTMLAudioElement) => a.paused),
+  ).toBe(true);
+  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  await expect
+    .poll(() =>
+      page
+        .locator("audio")
+        .first()
+        .evaluate((a: HTMLAudioElement) => a.currentTime),
+    )
+    .toBeGreaterThan(frozen + 0.05);
+  expect(await page.evaluate(() => (window as any).__goal)).toBe(0.12);
+});

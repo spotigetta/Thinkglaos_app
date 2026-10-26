@@ -68,6 +68,23 @@ test("Extensión: objetivos idempotentes, nivel original conservado y origen val
   now += 1500;
   [...timers.values()].forEach((cb) => cb());
   assert.ok(Math.abs(media.volume - 0.7) < 0.0001);
+  await dispatch({ level: 0, revision: 10000 });
+  now += 2000;
+  [...timers.values()].forEach((cb) => cb());
+  assert.equal(media.volume, 0);
+  media.volume = 0.7; // El reproductor web intenta restaurarse por su cuenta.
+  await dispatch({ level: 0, revision: 10001 });
+  now += 2000;
+  [...timers.values()].forEach((cb) => cb());
+  assert.equal(media.volume, 0, "el objetivo de silencio se vuelve a imponer");
+  await dispatch({ level: 1, revision: 9999 });
+  now += 2000;
+  [...timers.values()].forEach((cb) => cb());
+  assert.equal(
+    media.volume,
+    0,
+    "una restauración antigua no puede anular el silencio",
+  );
   const before = calls;
   listener(
     { level: 0 },

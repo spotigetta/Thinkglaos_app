@@ -41,6 +41,7 @@ type State = {
   volume: number;
   duckLevel: number;
   voiceVolume: number;
+  introVolume: number;
   voiceBoost: number;
   track: string;
   minutes: number;
@@ -62,6 +63,7 @@ const defaults: State = {
   volume: 0.65,
   duckLevel: 0.12,
   voiceVolume: 1,
+  introVolume: 1,
   voiceBoost: 1.5,
   track: "./media/levels.mp3",
   minutes: 30,
@@ -111,6 +113,10 @@ export default function Show() {
             motion: p.motion !== false,
             counterDark: p.counterDark === true,
             voiceBoost: clampVoiceBoost(p.voiceBoost),
+            introVolume:
+              typeof p.introVolume === "number"
+                ? Math.max(0, Math.min(1, p.introVolume))
+                : 1,
             duckLevel:
               typeof p.duckLevel === "number"
                 ? Math.max(0, Math.min(1, p.duckLevel))
@@ -158,6 +164,8 @@ export default function Show() {
     videoActive = useRef(false),
     lastPhaseClick = useRef(0);
   const lastExternal = useRef("");
+  const pausedExternal = useRef<number | null>(null);
+  const pausedVoice = useRef(false);
   const [armed, setArmed] = useState(false);
   const [qr, setQr] = useState("");
   useEffect(() => {
@@ -210,10 +218,18 @@ export default function Show() {
           motion: s.motion,
           counterDark: s.counterDark,
           voiceBoost: s.voiceBoost,
+          introVolume: s.introVolume,
           duckLevel: s.duckLevel,
         }),
       );
-  }, [s.voiceGap, s.motion, s.voiceBoost, s.duckLevel, s.counterDark]);
+  }, [
+    s.voiceGap,
+    s.motion,
+    s.voiceBoost,
+    s.duckLevel,
+    s.counterDark,
+    s.introVolume,
+  ]);
   current.current = s;
   cuesRef.current = cues;
   const send = (m: { type: string; [key: string]: unknown }) => {
@@ -222,6 +238,13 @@ export default function Show() {
     bus.current?.postMessage(m);
   };
   function update(fields: Partial<State>) {
+    if (fields.phase !== undefined || fields.running === true)
+      pausedExternal.current = null;
+    else if (fields.running === false && current.current.running)
+      pausedExternal.current = mixPolicy(
+        current.current,
+        foreground.current || videoActive.current,
+      ).external;
     const next = { ...current.current, ...fields };
     current.current = next;
     set(next);
@@ -248,6 +271,7 @@ export default function Show() {
     )
       return;
     stopAlarm();
+    pausedVoice.current = false;
     lastPhaseClick.current = Date.now();
     if (p === "montaje") montagePlayed.current.clear();
     if (p === "pizzas") pizzasPlayed.current.clear();
@@ -258,7 +282,6 @@ export default function Show() {
     voiceGeneration.current++;
     voice.current?.pause();
     gratitudePending.current = false;
-    restore();
     send({ type: "reset" });
     update({
       phase: p,
@@ -273,6 +296,7 @@ export default function Show() {
       running: true,
       autoVoice: ["montaje", "ambiente", "llamada", "pizzas"].includes(p),
     });
+    restore();
     if (p === "agradecimiento") {
       const speech = cues.find((c) => cueScenes(c).includes("agradecimiento"));
       if (speech) {
@@ -291,6 +315,8 @@ export default function Show() {
     if (projection || !ownsDesk.current) return;
     const state = current.current;
     const mix = mixPolicy(state, foreground.current || videoActive.current);
+    if (!state.running && pausedExternal.current !== null)
+      mix.external = Math.min(mix.external, pausedExternal.current);
     if (music.current) {
       if (state.internalMusic && state.running && mix.local > 0) {
         if (!musicMix.current) {
@@ -369,6 +395,7 @@ export default function Show() {
   function speak(cue?: Cue, automatic = false) {
     if (!voice.current) return;
     stopAlarm();
+    pausedVoice.current = false;
     const generation = ++voiceGeneration.current;
     if (!cue || !cueScenes(cue).includes("agradecimiento"))
       gratitudePending.current = false;
@@ -460,13 +487,13 @@ export default function Show() {
     }
     const external = (e: MessageEvent) => {
       if (e.source === window && e.data?.type === "ITTT_MUSIC_READY") {
-        if (e.data.version >= 2) {
+        if (e.data.version >= 2.1) {
           setBridge(true);
           lastExternal.current = "";
           reconcileMix();
         } else
           note(
-            "Actualiza la extensión de música a la versión 2.0 y recarga esta mesa.",
+            "Actualiza la extensión de música a la versión 2.1 y recarga esta mesa.",
           );
       }
       if (
@@ -655,17 +682,24 @@ export default function Show() {
       if (!s.running) {
         videoActive.current = false;
         if (current.current.intervention) update({ intervention: "" });
+        pausedVoice.current = !voice.current.paused;
         voice.current.pause();
-        restore();
+        // Keep the scene's existing music target while the clock is paused.
+        reconcileMix();
+      } else if (pausedVoice.current) {
+        pausedVoice.current = false;
+        foreground.current = true;
+        reconcileMix();
+        void voice.current.play().catch(() => restore());
       }
     }
   }, [s.running]);
   useEffect(() => {
     if (!projection) return;
     if (intro.current) {
-      intro.current.volume = s.voiceVolume;
+      intro.current.volume = s.introVolume;
       if (!introMix.current) {
-        introMix.current = new VoiceMix(intro.current);
+        introMix.current = new VoiceMix(intro.current, -1);
         introMix.current.setBoost(1);
       }
       void introMix.current.resume().catch(() => {});
@@ -684,7 +718,7 @@ export default function Show() {
     s.running,
     s.volume,
     s.track,
-    s.voiceVolume,
+    s.introVolume,
     s.internalMusic,
     s.duckLevel,
   ]);
@@ -861,7 +895,7 @@ export default function Show() {
           <video
             className="show-intro"
             ref={intro}
-            src="./media/intro-thunder.mp4"
+            src="./media/intro-thunder-master-v1.mp4"
             autoPlay
             playsInline
             onEnded={() => send({ type: "intro-ended" })}
@@ -1016,6 +1050,7 @@ export default function Show() {
     note("Mesa activada. Automatismos preparados.");
   }
   function stopAll() {
+    pausedVoice.current = false;
     stopAlarm();
     voice.current?.pause();
     gratitudePending.current = false;
@@ -1192,6 +1227,7 @@ export default function Show() {
             <button
               onClick={() => {
                 stopAlarm();
+                pausedVoice.current = false;
                 if (s.phase === "montaje") montagePlayed.current.clear();
                 if (s.phase === "pizzas") pizzasPlayed.current.clear();
                 voice.current?.pause();
@@ -1325,7 +1361,7 @@ export default function Show() {
             />
           </label>
           <label>
-            Voces e intro · {Math.round(s.voiceVolume * 100)}%
+            Voces · {Math.round(s.voiceVolume * 100)}%
             <input
               aria-label="Volumen de voces"
               type="range"
@@ -1334,6 +1370,18 @@ export default function Show() {
               step=".01"
               value={s.voiceVolume}
               onChange={(e) => update({ voiceVolume: Number(e.target.value) })}
+            />
+          </label>
+          <label>
+            Intro · {Math.round(s.introVolume * 100)}%
+            <input
+              aria-label="Volumen de intro"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+              value={s.introVolume}
+              onChange={(e) => update({ introVolume: Number(e.target.value) })}
             />
           </label>
           <label>
@@ -1426,6 +1474,7 @@ export default function Show() {
             </button>
             <button
               onClick={() => {
+                pausedVoice.current = false;
                 voice.current?.pause();
                 gratitudePending.current = false;
                 restore();

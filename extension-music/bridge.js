@@ -1,6 +1,8 @@
 let armed = false,
   lastTarget = 1,
-  announced = false;
+  announced = false,
+  revision = Date.now();
+const nextRevision = () => (revision = Math.max(revision + 1, Date.now()));
 window.addEventListener("message", (event) => {
   if (event.source !== window || event.origin !== location.origin) return;
   const type = event.data?.type;
@@ -11,16 +13,26 @@ window.addEventListener("message", (event) => {
   if (type === "ITTT_MUSIC_ARM") {
     if (armed && !event.data.enabled) {
       lastTarget = 1;
-      chrome.runtime.sendMessage({ level: 1, ms: 1400 }).catch(() => {});
+      chrome.runtime
+        .sendMessage({ level: 1, ms: 1400, revision: nextRevision() })
+        .catch(() => {});
     }
     armed = event.data.enabled === true;
     return;
   }
   if (type === "ITTT_MUSIC_PING") {
+    if (armed && lastTarget < 1)
+      chrome.runtime
+        .sendMessage({
+          level: lastTarget,
+          ms: lastTarget === 0 ? 250 : 1000,
+          revision: nextRevision(),
+        })
+        .catch(() => {});
     if (!announced) {
       announced = true;
       window.postMessage(
-        { type: "ITTT_MUSIC_READY", version: 2 },
+        { type: "ITTT_MUSIC_READY", version: 2.1 },
         location.origin,
       );
     }
@@ -38,11 +50,18 @@ window.addEventListener("message", (event) => {
   if (armed && type === "ITTT_MUSIC_TARGET") {
     lastTarget = event.data.level;
     chrome.runtime
-      .sendMessage({ level: lastTarget, ms: event.data.ms })
+      .sendMessage({
+        level: lastTarget,
+        ms: event.data.ms,
+        revision: nextRevision(),
+      })
       .catch(() => {});
   }
 });
-window.postMessage({ type: "ITTT_MUSIC_READY", version: 2 }, location.origin);
+window.postMessage({ type: "ITTT_MUSIC_READY", version: 2.1 }, location.origin);
 window.addEventListener("pagehide", () => {
-  if (armed) chrome.runtime.sendMessage({ level: 1, ms: 1000 }).catch(() => {});
+  if (armed)
+    chrome.runtime
+      .sendMessage({ level: 1, ms: 1000, revision: nextRevision() })
+      .catch(() => {});
 });

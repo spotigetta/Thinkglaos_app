@@ -15,7 +15,10 @@
   )
     return;
   const level = Math.max(0, Math.min(1, message.level ?? 1)),
-    ms = Math.max(200, Math.min(8000, message.ms || 1400));
+    ms = Math.max(200, Math.min(8000, message.ms || 1400)),
+    revision = Number.isFinite(message.revision)
+      ? message.revision
+      : Date.now();
   (async () => {
     const tabs = await chrome.tabs.query({
       url: ["https://music.youtube.com/*", "https://open.spotify.com/*"],
@@ -27,11 +30,12 @@
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             world: "MAIN",
-            args: [!!message.status, level, ms],
-            func: (status, level, ms) => {
+            args: [!!message.status, level, ms, revision],
+            func: (status, level, ms, revision) => {
               const data = window.__itttMix || (window.__itttMix = new Map());
               const medias = [...document.querySelectorAll("audio,video")];
-              if (!status)
+              if (!status && revision >= (window.__itttMixRevision || 0)) {
+                window.__itttMixRevision = revision;
                 medias.forEach((media) => {
                   let saved = data.get(media);
                   if (!saved) {
@@ -40,7 +44,11 @@
                     data.set(media, saved);
                   }
                   const target = saved.original * level;
-                  if (saved.target === target) return;
+                  if (
+                    saved.target === target &&
+                    (saved.timer || Math.abs(media.volume - target) < 0.002)
+                  )
+                    return;
                   saved.target = target;
                   clearInterval(saved.timer);
                   const from = media.volume,
@@ -53,12 +61,14 @@
                     );
                     if (p === 1) {
                       clearInterval(saved.timer);
+                      saved.timer = 0;
                       if (level === 1) data.delete(media);
                     }
                   };
                   saved.timer = setInterval(step, 40);
                   step();
                 });
+              }
               const media = medias.find((m) => !m.paused) || medias[0],
                 meta = navigator.mediaSession?.metadata;
               return {

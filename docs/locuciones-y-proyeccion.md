@@ -57,3 +57,8 @@ Pizzas reparte sus locuciones durante 60 minutos de escena, contando las duracio
 
 ### Paleta del logo y aviso de treinta segundos
 El color de fondo se ha medido en `Logo.jpg`: RGB 254, 225, 133 (`#FEE185`), con negro (`#000000`). Ese amarillo se aplica al fondo en modo claro y a las cifras en modo oscuro. La melodía de fin dura 30 segundos. El botón **Detener aviso** está en la cabecera fija y cancela tanto las notas actuales como las programadas, con un fundido breve. También la detienen Reiniciar, ajustar el tiempo, cambiar de escena y Parar todo. Es una composición original de aire de cuento.
+
+### Pausas e intro con volumen equilibrado
+La mezcla de Intro, Charla, Preguntas, A sentarse y Pantalla compartida conserva la música externa a cero, independientemente del estado del reloj y del interruptor de música local. Si se pausa una locución de otra escena, mantiene la música baja y Continúa retoma esa misma voz. La extensión 2.1 reafirma periódicamente el objetivo de volumen y rechaza restauraciones antiguas. Hay que recargarla en edge://extensions y recargar la mesa.
+
+La intro se reproduce desde `media/intro-thunder-master-v1.mp4`: vídeo copiado sin recodificar y audio equilibrado por tramos. La narración inicial pasa de −28,07 a −14,38 LUFS; el tramo musical queda en −13,04 LUFS y el pico máximo en −1,65 dBTP. Se preserva el silencio intermedio. El reporte `media/intro-master-v1.json` contiene medidas y hashes; `scripts/normalize-show-intro.py` reproduce el proceso. El deslizador Intro es independiente de Voces. El limitador de la intro funciona a −1 dB para no reducir su volumen como una voz del banco.

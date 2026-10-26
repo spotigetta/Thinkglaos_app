@@ -21,12 +21,30 @@ test("Sentarse toma la música externa y conserva la mezcla local al terminar un
   });
 });
 test("Intro y salida nunca recuperan la música por un ended tardío", () => {
-  for (const phase of ["intro", "salida", "charla", "preguntas"])
-    for (const voice of [true, false]) {
-      const p = mixPolicy({ ...state, phase }, voice);
-      assert.equal(p.local, 0);
-      assert.equal(p.external, 0);
-    }
+  for (const phase of [
+    "intro",
+    "salida",
+    "charla",
+    "preguntas",
+    "llamada",
+    "pantalla",
+  ])
+    for (const running of [true, false])
+      for (const internalMusic of [true, false])
+        for (const voice of [true, false]) {
+          const p = mixPolicy(
+            { ...state, phase, running, internalMusic },
+            voice,
+          );
+          if (
+            ["intro", "salida", "charla", "preguntas", "pantalla"].includes(
+              phase,
+            ) ||
+            !running
+          )
+            assert.equal(p.local, 0);
+          assert.equal(p.external, 0);
+        }
 });
 test("Montaje recupera exactamente el nivel externo y pausa silencia música local", () => {
   assert.equal(

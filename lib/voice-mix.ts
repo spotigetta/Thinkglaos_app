@@ -14,9 +14,9 @@ export class VoiceMix {
   private analyser = this.context.createAnalyser();
   private samples = new Float32Array(1024);
 
-  constructor(audio: HTMLMediaElement) {
+  constructor(audio: HTMLMediaElement, ceilingDB = -5) {
     const source = this.context.createMediaElementSource(audio);
-    this.limiter.threshold.value = -5;
+    this.limiter.threshold.value = ceilingDB;
     this.limiter.knee.value = 0;
     this.limiter.ratio.value = 20;
     this.limiter.attack.value = 0.003;
