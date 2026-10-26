@@ -1,3 +1,5 @@
+import { mixPolicy, VolumeFader } from "./show-mixer";
+import { ChannelMeters, VideoIntervention } from "./ShowChannels";
 import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
 import { VoiceMix, normalizedVoiceUrl, clampVoiceBoost } from "./voice-mix";
@@ -41,6 +43,8 @@ type State = {
   internalMusic: boolean;
   voiceGap: number;
   motion: boolean;
+  videoCues: boolean;
+  intervention: string;
 };
 const defaults: State = {
   phase: "montaje",
@@ -54,11 +58,13 @@ const defaults: State = {
   track: "./media/levels.mp3",
   minutes: 30,
   scheduled: "",
-  autoCall: false,
-  autoVoice: false,
+  autoCall: true,
+  autoVoice: true,
   internalMusic: false,
   voiceGap: 60,
   motion: true,
+  videoCues: false,
+  intervention: "",
 };
 const elapsed = (s: State) =>
   s.offset + (s.running ? (Date.now() - s.started) / 1000 : 0);
@@ -97,6 +103,7 @@ export default function Show() {
       voice: false,
       introTime: 0,
       introDuration: 180,
+      introPeak: 0,
     }),
     [cues, setCues] = useState<Cue[]>([]),
     [photos, setPhotos] = useState<string[]>([]),
@@ -109,24 +116,47 @@ export default function Show() {
     voice = useRef<HTMLAudioElement>(null),
     intro = useRef<HTMLVideoElement>(null),
     screen = useRef<HTMLVideoElement>(null),
-    stream = useRef<MediaStream | null>(null),
-    fade = useRef(0),
-    pending = useRef<ReturnType<typeof setTimeout> | undefined>(undefined),
-    stop = useRef<ReturnType<typeof setTimeout> | undefined>(undefined),
-    duck = useRef(false);
+    stream = useRef<MediaStream | null>(null);
   const [speaking, setSpeaking] = useState(""),
     [query, setQuery] = useState(""),
     [bridge, setBridge] = useState(false);
-  const [externalMusic, setExternalMusic] = useState(false),
-    [advanced, setAdvanced] = useState(false);
+  const [externalMusic, setExternalMusic] = useState(true);
+  const [externalTrack, setExternalTrack] = useState({
+    title: "Abre YouTube Music o Spotify",
+    artist: "",
+    playing: false,
+    volume: 0,
+  });
+  const musicMix = useRef<VoiceMix | null>(null),
+    introMix = useRef<VoiceMix | null>(null);
+  const fader = useRef(new VolumeFader());
+  const foreground = useRef(false),
+    videoActive = useRef(false),
+    lastPhaseClick = useRef(0);
+  const lastExternal = useRef("");
+  const [armed, setArmed] = useState(false);
+  const [qr, setQr] = useState("");
+  useEffect(() => {
+    import("qrcode")
+      .then((q) =>
+        q.toDataURL(
+          "https://chat.whatsapp.com/BhxDspfeSMB9POmHew2zEC?s=cl&p=a&mlu=4&ilr=4",
+          { width: 700, margin: 4, errorCorrectionLevel: "M" },
+        ),
+      )
+      .then(setQr);
+  }, []);
+  const deskId = useRef(crypto.randomUUID()),
+    ownsDesk = useRef(false);
   const externalEnabled = useRef(false);
   externalEnabled.current = externalMusic;
   const lastCue = useRef("");
+  const voiceGeneration = useRef(0);
   const voiceMix = useRef<VoiceMix | null>(null);
   const nextVoiceAt = useRef(5);
   const gratitudePending = useRef(false);
   const [bank, setBank] = useState("todas");
-  const [deck, setDeck] = useState("voces");
+
   useEffect(() => {
     if (!projection)
       localStorage.setItem(
@@ -142,20 +172,38 @@ export default function Show() {
   current.current = s;
   const send = (m: { type: string; [key: string]: unknown }) => {
     if (m.type === "reset") seen.current.clear();
+    if (m.type === "state" && !projection && !ownsDesk.current) return;
     bus.current?.postMessage(m);
   };
   function update(fields: Partial<State>) {
     const next = { ...current.current, ...fields };
+    current.current = next;
     set(next);
     send({ type: "state", state: next });
   }
   function phase(p: Phase) {
+    if (
+      p === current.current.phase &&
+      Date.now() - lastPhaseClick.current < 600
+    )
+      return;
+    lastPhaseClick.current = Date.now();
+    if (p === "llamada" && music.current) music.current.currentTime = 0;
+    videoActive.current = false;
+    update({ intervention: "" });
+    voiceGeneration.current++;
     voice.current?.pause();
     gratitudePending.current = false;
     restore();
     send({ type: "reset" });
     update({
       phase: p,
+      internalMusic:
+        p === "llamada"
+          ? true
+          : ["montaje", "ambiente", "pizzas"].includes(p)
+            ? false
+            : current.current.internalMusic,
       offset: 0,
       started: Date.now(),
       running: true,
@@ -172,68 +220,75 @@ export default function Show() {
         );
     }
   }
-  function ramp(target: number, ms = 1000) {
-    cancelAnimationFrame(fade.current);
-    const start = performance.now(),
-      from = music.current?.volume || 0;
-    function step() {
-      const p = Math.min(1, (performance.now() - start) / ms);
-      if (music.current)
-        music.current.volume = from + (target - from) * (p * p * (3 - 2 * p));
-      if (p < 1) fade.current = requestAnimationFrame(step);
+  function ramp(target: number, ms = 1400) {
+    if (music.current) fader.current.set(music.current, target, ms);
+  }
+  function reconcileMix() {
+    if (projection || !ownsDesk.current) return;
+    const state = current.current;
+    const mix = mixPolicy(state, foreground.current || videoActive.current);
+    if (music.current) {
+      if (state.internalMusic && state.running && mix.local > 0) {
+        if (!musicMix.current) {
+          musicMix.current = new VoiceMix(music.current);
+          musicMix.current.setBoost(1);
+        }
+        void musicMix.current.resume().catch(() => {});
+        void music.current.play().catch(() => {
+          update({ internalMusic: false });
+          note(
+            "No ha podido iniciar la canción local. Música externa recuperada; vuelve a activar la canción.",
+          );
+        });
+      }
+      ramp(mix.local, mix.ms);
     }
-    step();
-  }
-  function restore() {
-    duck.current = false;
-    setSpeaking("");
-    nextVoiceAt.current =
-      elapsed(current.current) + voiceGap(current.current.voiceGap);
-    send({ type: "restore-music" });
-    if (externalEnabled.current)
-      window.postMessage({ type: "ITTT_MUSIC_RESTORE" }, location.origin);
-    ramp(
-      current.current.running &&
-        [
-          "montaje",
-          "ambiente",
-          "llamada",
-          "salida",
-          "pizzas",
-          "agradecimiento",
-        ].includes(current.current.phase)
-        ? current.current.volume
-        : 0,
-    );
-  }
-  useEffect(() => {
-    if (!projection && duck.current) {
-      send({ type: "duck-music" });
+    const key = JSON.stringify([mix.external, mix.ms, externalEnabled.current]);
+    if (key !== lastExternal.current) {
+      lastExternal.current = key;
+      window.postMessage(
+        { type: "ITTT_MUSIC_ARM", enabled: externalEnabled.current },
+        location.origin,
+      );
       if (externalEnabled.current)
         window.postMessage(
-          { type: "ITTT_MUSIC_DUCK", level: s.duckLevel },
+          { type: "ITTT_MUSIC_TARGET", level: mix.external, ms: mix.ms },
           location.origin,
         );
     }
-  }, [s.duckLevel]);
+  }
+  function restore() {
+    setSpeaking("");
+    nextVoiceAt.current =
+      elapsed(current.current) + voiceGap(current.current.voiceGap);
+    foreground.current = false;
+    reconcileMix();
+  }
+  useEffect(() => {
+    reconcileMix();
+  }, [
+    s.phase,
+    s.running,
+    s.volume,
+    s.duckLevel,
+    s.internalMusic,
+    s.track,
+    externalMusic,
+  ]);
   function speak(cue?: Cue) {
     if (!voice.current) return;
+    const generation = ++voiceGeneration.current;
     if (!cue || !cueScenes(cue).includes("agradecimiento"))
       gratitudePending.current = false;
     if (cue) lastCue.current = cue.url;
     nextVoiceAt.current =
       elapsed(current.current) + voiceGap(current.current.voiceGap);
-    clearTimeout(pending.current);
-    pending.current = undefined;
     voice.current.pause();
-    duck.current = true;
     setSpeaking(cue?.text || "Manolo Lama");
-    send({ type: "duck-music" });
-    if (externalEnabled.current)
-      window.postMessage(
-        { type: "ITTT_MUSIC_DUCK", level: current.current.duckLevel },
-        location.origin,
-      );
+    videoActive.current = false;
+    if (current.current.intervention) update({ intervention: "" });
+    foreground.current = true;
+    reconcileMix();
     voice.current.src = normalizedVoiceUrl(
       cue ? cue.url : "./media/audio-manolo-whatsapp.mp3",
     );
@@ -244,6 +299,7 @@ export default function Show() {
       .resume()
       .catch(() => note("Pulsa Probar voz para activar el sonido de la mesa."));
     void voice.current.play().catch(() => {
+      if (generation !== voiceGeneration.current) return;
       gratitudePending.current = false;
       note("Audio bloqueado o no disponible. Vuelve a pulsar la frase.");
       restore();
@@ -256,23 +312,6 @@ export default function Show() {
     channel.onmessage = (e) => {
       const m = e.data;
       if (projection) {
-        if (m.type === "duck-music") {
-          duck.current = true;
-          ramp(
-            current.current.internalMusic
-              ? current.current.volume * current.current.duckLevel
-              : 0,
-            550,
-          );
-        }
-        if (m.type === "restore-music") {
-          duck.current = false;
-          ramp(
-            current.current.running && current.current.internalMusic
-              ? current.current.volume
-              : 0,
-          );
-        }
         if (m.type === "state")
           set({
             ...defaults,
@@ -292,11 +331,26 @@ export default function Show() {
             voice: !!m.voice,
             introTime: m.introTime || 0,
             introDuration: m.introDuration || 180,
+            introPeak: m.introPeak || 0,
           });
-          channel.postMessage({ type: "state", state: current.current });
+          if (ownsDesk.current)
+            channel.postMessage({ type: "state", state: current.current });
         }
         if (m.type === "notice") note(m.text);
-        if (m.type === "intro-ended") phase("charla");
+        if (m.type === "intro-ended" && ownsDesk.current) phase("charla");
+        if (m.type === "intervention-status" && ownsDesk.current) {
+          videoActive.current = m.status === "playing";
+          if (["ended", "error", "blocked"].includes(m.status)) {
+            update({ intervention: "" });
+            nextVoiceAt.current =
+              elapsed(current.current) + voiceGap(current.current.voiceGap);
+            if (m.status !== "ended")
+              note(
+                "Vídeo no reproducible: seguimos con la escena y recuperamos la música.",
+              );
+          }
+          reconcileMix();
+        }
       }
     };
     if (projection) {
@@ -307,20 +361,61 @@ export default function Show() {
       };
     }
     const external = (e: MessageEvent) => {
-      if (e.source === window && e.data?.type === "ITTT_MUSIC_READY")
-        setBridge(true);
+      if (e.source === window && e.data?.type === "ITTT_MUSIC_READY") {
+        if (e.data.version >= 2) {
+          setBridge(true);
+          lastExternal.current = "";
+          reconcileMix();
+        } else
+          note(
+            "Actualiza la extensión de música a la versión 2.0 y recarga esta mesa.",
+          );
+      }
+      if (
+        e.source === window &&
+        e.origin === location.origin &&
+        e.data?.type === "ITTT_MUSIC_STATUS"
+      )
+        setExternalTrack(e.data.track);
     };
     window.addEventListener("message", external);
     window.postMessage({ type: "ITTT_MUSIC_PING" }, location.origin);
+    const relinquish = () => {
+      if (projection || !ownsDesk.current) return;
+      if (localStorage.getItem("ittt-active-desk-v2") === deskId.current)
+        return;
+      ownsDesk.current = false;
+      window.postMessage({ type: "ITTT_MUSIC_RELEASE" }, location.origin);
+      voiceGeneration.current++;
+      voice.current?.pause();
+      music.current?.pause();
+      fader.current.close();
+      foreground.current = false;
+      videoActive.current = false;
+      setArmed(false);
+      setSpeaking("");
+      set((prev) => ({
+        ...prev,
+        running: false,
+        autoVoice: false,
+        intervention: "",
+      }));
+      note(
+        "Otra mesa ha tomado el control. Pulsa Activar mesa para recuperarlo.",
+      );
+    };
+    window.addEventListener("storage", relinquish);
+    let heartbeat = 0;
     const timer = setInterval(() => {
       tick(Date.now());
-      if (!projection)
+      if (!projection && ++heartbeat % 4 === 0)
         window.postMessage({ type: "ITTT_MUSIC_PING" }, location.origin);
       if (projection)
         send({
           type: "ready",
           musicVolume: music.current?.volume,
           voice: voice.current && !voice.current.paused,
+          introPeak: introMix.current?.peak() || 0,
           introTime: intro.current?.currentTime,
           introDuration: intro.current?.duration,
         });
@@ -352,11 +447,17 @@ export default function Show() {
       .catch(() => {});
     return () => {
       clearInterval(timer);
+      window.removeEventListener("storage", relinquish);
       window.removeEventListener("message", external);
       channel.close();
-      cancelAnimationFrame(fade.current);
-      clearTimeout(pending.current);
-      clearTimeout(stop.current);
+      fader.current.close();
+      musicMix.current?.close();
+      introMix.current?.close();
+      if (!projection && ownsDesk.current)
+        window.postMessage(
+          { type: "ITTT_MUSIC_ARM", enabled: false },
+          location.origin,
+        );
       stream.current?.getTracks().forEach((t) => t.stop());
       voiceMix.current?.close();
       voiceMix.current = null;
@@ -408,6 +509,8 @@ export default function Show() {
   useEffect(() => {
     if (
       projection ||
+      !armed ||
+      !!s.intervention ||
       !s.autoVoice ||
       !s.running ||
       !["montaje", "ambiente", "llamada", "pizzas"].includes(s.phase) ||
@@ -430,6 +533,8 @@ export default function Show() {
   useEffect(() => {
     if (!projection && voice.current) {
       if (!s.running) {
+        videoActive.current = false;
+        if (current.current.intervention) update({ intervention: "" });
         voice.current.pause();
         restore();
       }
@@ -437,59 +542,13 @@ export default function Show() {
   }, [s.running]);
   useEffect(() => {
     if (!projection) return;
-    const active =
-      s.internalMusic &&
-      s.running &&
-      [
-        "montaje",
-        "ambiente",
-        "llamada",
-        "salida",
-        "pizzas",
-        "agradecimiento",
-      ].includes(s.phase);
-    if (music.current) {
-      if (active)
-        void music.current.play().catch(() =>
-          send({
-            type: "notice",
-            text: "Pulsa una vez en la proyección para activar sonido y pantalla completa.",
-          }),
-        );
-      ramp(
-        active
-          ? s.phase === "salida"
-            ? 0
-            : duck.current
-              ? s.volume * s.duckLevel
-              : s.volume
-          : 0,
-        s.phase === "salida" ? 7500 : 1000,
-      );
-    }
-    if (
-      !s.running ||
-      !["montaje", "ambiente", "llamada", "agradecimiento", "pizzas"].includes(
-        s.phase,
-      )
-    ) {
-      clearTimeout(pending.current);
-      clearTimeout(stop.current);
-      voice.current?.pause();
-      if (
-        ![
-          "montaje",
-          "ambiente",
-          "llamada",
-          "agradecimiento",
-          "pizzas",
-        ].includes(s.phase)
-      )
-        duck.current = false;
-    } else if (duck.current && voice.current?.paused)
-      void voice.current.play().catch(() => {});
     if (intro.current) {
       intro.current.volume = s.voiceVolume;
+      if (!introMix.current) {
+        introMix.current = new VoiceMix(intro.current);
+        introMix.current.setBoost(1);
+      }
+      void introMix.current.resume().catch(() => {});
       if (s.phase === "intro" && s.running)
         void intro.current.play().catch(() =>
           send({
@@ -510,11 +569,17 @@ export default function Show() {
     s.duckLevel,
   ]);
   useEffect(() => {
+    if (projection && s.phase !== "intro") {
+      introMix.current?.close();
+      introMix.current = null;
+    }
+  }, [s.phase]);
+  useEffect(() => {
     if (projection && intro.current && s.phase === "intro")
       intro.current.currentTime = s.offset;
   }, [s.offset, s.phase]);
   useEffect(() => {
-    if (projection && music.current)
+    if (!projection && music.current)
       music.current.playbackRate =
         s.phase === "salida" ? 1 + Math.min(8, t) * 0.015 : 1;
     if (!s.running) return;
@@ -558,6 +623,17 @@ export default function Show() {
       note("No se compartió ninguna pantalla.");
     }
   }
+  useEffect(() => {
+    if (projection || !s.intervention) return;
+    const timeout = setTimeout(() => {
+      videoActive.current = false;
+      update({ intervention: "" });
+      reconcileMix();
+      nextVoiceAt.current =
+        elapsed(current.current) + voiceGap(current.current.voiceGap);
+    }, 35000);
+    return () => clearTimeout(timeout);
+  }, [s.intervention]);
   const index = Math.floor(t / sceneSeconds(s.phase));
   const scene = visualScene(s.phase, index);
   const graphic = [
@@ -610,7 +686,7 @@ export default function Show() {
           scene.accent
         }
         onClick={() => {
-          if (s.running) void music.current?.play().catch(() => {});
+          void introMix.current?.resume();
           if (s.phase === "intro") void intro.current?.play().catch(() => {});
           void document.documentElement.requestFullscreen?.().catch(() => {});
         }}
@@ -741,18 +817,97 @@ export default function Show() {
             ))}
           </div>
         </div>
-        <audio ref={music} src={s.track} loop />
+        {s.intervention && (
+          <div className="video-takeover">
+            <VideoIntervention
+              id={s.intervention}
+              volume={s.voiceVolume}
+              onState={(status) =>
+                send({ type: "intervention-status", status })
+              }
+            />
+            <strong>UNA IDEA PUEDE CAMBIARLO TODO.</strong>
+          </div>
+        )}
+        {(s.phase === "pizzas" || (s.phase === "charla" && t >= 1080)) && (
+          <aside className="whatsapp-stage">
+            <img src={qr} alt="QR del grupo de WhatsApp" />
+            <div>
+              <small>LA CONVERSACIÓN SIGUE</small>
+              <h2>
+                Únete al grupo
+                <br />
+                de WhatsApp
+              </h2>
+              <p>Escanea · entra · comparte</p>
+            </div>
+          </aside>
+        )}
       </div>
     );
-  return (
-    <div
-      className={
-        "show-desk desktop-desk deck-" +
-        deck +
-        " " +
-        (advanced ? "desk-advanced" : "")
+  function activate() {
+    ownsDesk.current = true;
+    localStorage.setItem("ittt-active-desk-v2", deskId.current);
+    setArmed(true);
+    if (voice.current) {
+      if (!voiceMix.current) voiceMix.current = new VoiceMix(voice.current);
+      void voiceMix.current.resume();
+    }
+    if (music.current) {
+      if (!musicMix.current) {
+        musicMix.current = new VoiceMix(music.current);
+        musicMix.current.setBoost(1);
       }
-    >
+      void musicMix.current.resume();
+    }
+    reconcileMix();
+    note("Mesa activada. Automatismos preparados.");
+  }
+  function stopAll() {
+    voice.current?.pause();
+    gratitudePending.current = false;
+    videoActive.current = false;
+    foreground.current = false;
+    update({
+      intervention: "",
+      autoVoice: false,
+      internalMusic: false,
+      autoCall: false,
+    });
+    setArmed(false);
+    setExternalMusic(false);
+    restore();
+    window.postMessage(
+      { type: "ITTT_MUSIC_ARM", enabled: false },
+      location.origin,
+    );
+  }
+  function testVideo() {
+    if (!online) {
+      note("Abre primero el proyector.");
+      return;
+    }
+    voice.current?.pause();
+    restore();
+    videoActive.current = false;
+    update({
+      intervention:
+        shorts[Math.floor(Math.random() * Math.min(shorts.length, 20))] || "",
+    });
+  }
+  const phases: [Phase, string][] = [
+    ["montaje", "Montaje"],
+    ["agradecimiento", "Gracias"],
+    ["ambiente", "Ambientillo"],
+    ["llamada", "A sentarse"],
+    ["salida", "Acelerar"],
+    ["intro", "Intro"],
+    ["charla", "Charla"],
+    ["preguntas", "Preguntas"],
+    ["pizzas", "Pizzas"],
+  ];
+  return (
+    <div className="dj-console">
       <audio
         ref={voice}
         onEnded={() => {
@@ -762,412 +917,301 @@ export default function Show() {
           if (advance) phase("ambiente");
         }}
         onError={() => {
-          note("No se pudo cargar esta locución.");
+          note("No se pudo cargar la voz.");
           restore();
         }}
       />
-      <div className="dj-live">
-        <b>{speaking || "Voces listas · selecciona una frase"}</b>
-        <label className="voice-boost-control">
-          Refuerzo de voz · {Math.round(s.voiceBoost * 100)}%
-          <input
-            aria-label="Refuerzo de voz"
-            type="range"
-            min=".5"
-            max="3"
-            step=".1"
-            value={s.voiceBoost}
-            onChange={(e) =>
-              update({ voiceBoost: clampVoiceBoost(Number(e.target.value)) })
-            }
-          />
-          <meter
-            aria-label="Nivel real de voz"
-            min="0"
-            max="1"
-            value={voiceMix.current?.peak() || 0}
-          />
-        </label>
+      <audio ref={music} src={s.track} loop />
+      <header className="console-header">
+        <a href="?">← Equipo</a>
+        <img src="./assets/ittt.png" alt="ITTT" />
+        <b>MESA DE DIRECTO</b>
+        <span>{online ? "● Proyector conectado" : "○ Sin proyector"}</span>
         <button
           onClick={() => {
-            voice.current?.pause();
-            gratitudePending.current = false;
-            restore();
-          }}
-        >
-          Parar voz ■
-        </button>
-      </div>
-      <header>
-        <a href="?">← Volver al equipo</a>
-        <h1>Dirección de escena</h1>
-        <button onClick={() => setAdvanced((v) => !v)}>
-          {advanced ? "Cerrar ajustes" : "Ajustes y pantalla compartida"}
-        </button>
-        <p>Una ventana para ti. Otra, limpia, para el público.</p>
-        <button disabled={!cues.length} onClick={() => speak(cues[0])}>
-          Probar voz ▶
-        </button>
-        <button
-          onClick={() => {
+            activate();
             win.current = window.open(
               location.pathname + "?projection=1",
               "ittt-projection",
-            );
-            note(
-              "Arrastra la nueva ventana al segundo monitor y pulsa una vez allí para activar sonido y pantalla completa.",
             );
           }}
         >
           Abrir proyector ↗
         </button>
-        <span>{online ? "● Proyector conectado" : "○ Abre la proyección"}</span>
+        <button onClick={activate}>
+          {armed ? "Audio activado" : "Activar mesa"}
+        </button>
+        <button className="panic" onClick={stopAll}>
+          PARAR TODO
+        </button>
       </header>
-      <nav className="desk-tabs" aria-label="Controles del directo">
-        {["voces", "tiempo", "audio"].map((d) => (
-          <button key={d} aria-pressed={deck === d} onClick={() => setDeck(d)}>
-            {d === "voces"
-              ? "Banco de voces"
-              : d === "tiempo"
-                ? "Tiempo y transporte"
-                : "Mezclador de música"}
+      <nav className="phase-strip" aria-label="Escena">
+        {phases.map(([p, label], i) => (
+          <button
+            key={p}
+            aria-label={label}
+            aria-pressed={s.phase === p}
+            onClick={() => {
+              activate();
+              phase(p);
+            }}
+          >
+            <small>{String(i + 1).padStart(2, "0")}</small>
+            {label}
           </button>
         ))}
       </nav>
-      <section className="show-monitor">
-        <label>
-          Música en proyección <meter min="0" max="1" value={levels.music} />
-          {Math.round(levels.music * 100)}% ·{" "}
-          {speaking ? "Locución en directo" : "Voces listas"}
-        </label>
-        <small>EN PANTALLA · {stageLabels[s.phase]}</small>
-        <strong>
-          {["charla", "preguntas"].includes(s.phase)
-            ? fmt(duration - t)
-            : madridClock(new Date(now)).time}
-        </strong>
-        <span>
-          {fmt(t)} transcurridos · {s.running ? "En marcha" : "Pausado"}
-        </span>
-      </section>
-      <section className="scene-selector">
-        <h2>Elige el momento</h2>
-        <div className="scene-steps">
-          {(["montaje", "ambiente", "llamada"] as Phase[]).map((p, i) => (
+      <main className="console-grid">
+        <section className="console-transport">
+          <small>EN PANTALLA · {stageLabels[s.phase]}</small>
+          <strong>
+            {["charla", "preguntas"].includes(s.phase)
+              ? fmt(duration - t)
+              : madridClock(new Date(now)).time}
+          </strong>
+          <button
+            className="scene-next"
+            onClick={() => {
+              activate();
+              phase(nextStage[s.phase]);
+            }}
+          >
+            {nextText[s.phase]} →
+          </button>
+          <div className="transport-buttons">
             <button
-              key={p}
-              aria-label={
-                p === "ambiente"
-                  ? "Ambiente"
-                  : p === "llamada"
-                    ? "Que se sienten"
-                    : "Montaje"
+              onClick={() =>
+                update({ running: !s.running, offset: t, started: Date.now() })
               }
-              aria-pressed={s.phase === p}
-              onClick={() => phase(p)}
             >
-              <span>0{i + 1}</span>
-              <b>{["Montaje", "Ambientillo", "A sentarse"][i]}</b>
-              <small>
-                {
-                  [
-                    "Suave · mientras preparamos",
-                    "30 min · frases y locuciones",
-                    "Más energía · llamada a sala",
-                  ][i]
-                }
-              </small>
+              {s.running ? "Pausar" : "Continuar"}
             </button>
-          ))}
-        </div>
-        <button
-          className="scene-next"
-          onClick={() => phase(nextStage[s.phase])}
-        >
-          {nextText[s.phase]} <span aria-hidden="true">→</span>
-        </button>
-        <details>
-          <summary>Intro, charla y preguntas · selección directa</summary>
-          <div className="show-actions">
-            {(["salida", "intro", "charla", "preguntas"] as Phase[]).map(
-              (p, i) => (
-                <button
-                  key={p}
-                  aria-pressed={s.phase === p}
-                  onClick={() => phase(p)}
-                >
-                  {
-                    [
-                      "Acelerar → intro",
-                      "Lanzar intro",
-                      "Charla · 18 min",
-                      "Preguntas · 45 min",
-                    ][i]
-                  }
-                </button>
-              ),
-            )}
+            <button
+              onClick={() => {
+                voice.current?.pause();
+                restore();
+                update({ offset: 0, started: Date.now() });
+              }}
+            >
+              Reiniciar
+            </button>
+            <button
+              onClick={() =>
+                update({ offset: Math.max(0, t - 30), started: Date.now() })
+              }
+            >
+              −30 s
+            </button>
+            <button
+              onClick={() => update({ offset: t + 30, started: Date.now() })}
+            >
+              +30 s
+            </button>
           </div>
-        </details>
-        <div className="show-actions voice-moments">
-          <button onClick={() => phase("agradecimiento")}>
-            Agradecimiento · discurso
-          </button>
-          <button onClick={() => phase("pizzas")}>Pizzas · conversación</button>
-        </div>
-        <label>
-          <input
-            type="checkbox"
-            checked={s.motion}
-            onChange={(e) => update({ motion: e.target.checked })}
-          />{" "}
-          Animaciones del proyector
-        </label>
-        <p>
-          El montaje tiene sus propias cuñas. El ambientillo las reparte durante
-          media hora. El agradecimiento da paso al ambientillo al terminar. «A
-          sentarse» activa la llamada. Tú decides cuándo acelerar y lanzar la
-          intro.
-        </p>
-      </section>
-      <section>
-        <h2>2 · Tiempo y directo</h2>
-        <div className="show-actions">
-          <button
-            onClick={() =>
-              update({ running: !s.running, offset: t, started: Date.now() })
-            }
-          >
-            {s.running ? "Pausar" : "Continuar"}
-          </button>
-          <button
-            onClick={() => {
-              send({ type: "reset" });
-              update({ offset: 0, started: Date.now() });
-            }}
-          >
-            Reiniciar fase
-          </button>
-          <button
-            onClick={() => {
-              send({ type: "reset" });
-              update({ offset: Math.max(0, t - 30), started: Date.now() });
-            }}
-          >
-            −30 s
-          </button>
-          <button
-            onClick={() => update({ offset: t + 30, started: Date.now() })}
-          >
-            +30 s
-          </button>
-        </div>
-        <label>
-          Posición · {fmt(t)}
-          <input
-            aria-label="Posición de la fase"
-            type="range"
-            min="0"
-            max={duration}
-            value={Math.min(duration, t)}
-            onChange={(e) => {
-              send({ type: "reset" });
-              update({ offset: Number(e.target.value), started: Date.now() });
-            }}
-          />
-        </label>
-        <details>
-          <summary>Programación y duración del previo</summary>
           <label>
-            Duración del previo (minutos)
+            Posición · {fmt(t)}
             <input
-              type="number"
-              min="10"
-              max="120"
-              value={s.minutes}
+              aria-label="Posición de la fase"
+              type="range"
+              min="0"
+              max={duration}
+              value={Math.min(duration, t)}
               onChange={(e) =>
-                update({ minutes: Math.max(10, Number(e.target.value)) })
+                update({ offset: Number(e.target.value), started: Date.now() })
               }
             />
+          </label>
+          <div className="automatic-options">
+            <label>
+              <input
+                type="checkbox"
+                checked={s.autoVoice}
+                onChange={(e) => update({ autoVoice: e.target.checked })}
+              />
+              Voces automáticas
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={s.autoCall}
+                onChange={(e) => update({ autoCall: e.target.checked })}
+              />
+              Sentarse a 3 min del inicio
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={externalMusic}
+                onChange={(e) => setExternalMusic(e.target.checked)}
+              />
+              Mezclar música externa
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={s.motion}
+                onChange={(e) => update({ motion: e.target.checked })}
+              />
+              Animaciones
+            </label>
+          </div>
+          <label>
+            Inicio programado
+            <input
+              aria-label="Inicio programado"
+              type="datetime-local"
+              value={s.scheduled}
+              onChange={(e) =>
+                update({ scheduled: e.target.value, running: !e.target.value })
+              }
+            />
+          </label>
+          <button onClick={() => void share()}>Proyectar mi pantalla</button>
+        </section>
+        <section className="console-mix">
+          <h2>Mezcla única</h2>
+          <div
+            className={"record " + (externalTrack.playing ? "spinning" : "")}
+          >
+            <div className="record-grooves" />
+            <span>
+              {externalTrack.title}
+              <small>{externalTrack.artist}</small>
+            </span>
+          </div>
+          <small>
+            {bridge
+              ? "Extensión conectada"
+              : "Conecta la extensión para mezclar Spotify / YouTube Music"}{" "}
+            · volumen externo {Math.round(externalTrack.volume * 100)}%
+          </small>
+          <ChannelMeters
+            voice={voiceMix}
+            music={musicMix}
+            intro={levels.introPeak}
+            external={externalTrack.volume}
+          />
+          <small>
+            Señal de la app. La música externa indica volumen, no amplitud.
+          </small>
+          <label>
+            Música local · {Math.round(s.volume * 100)}%
+            <input
+              aria-label="Volumen de música local"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+              value={s.volume}
+              onChange={(e) => update({ volume: Number(e.target.value) })}
+            />
+          </label>
+          <label>
+            Voces e intro · {Math.round(s.voiceVolume * 100)}%
+            <input
+              aria-label="Volumen de voces"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+              value={s.voiceVolume}
+              onChange={(e) => update({ voiceVolume: Number(e.target.value) })}
+            />
+          </label>
+          <label>
+            Refuerzo de voz · {Math.round(s.voiceBoost * 100)}%
+            <input
+              aria-label="Refuerzo de voz"
+              type="range"
+              min=".5"
+              max="3"
+              step=".1"
+              value={s.voiceBoost}
+              onChange={(e) => update({ voiceBoost: Number(e.target.value) })}
+            />
+          </label>
+          <label>
+            Música bajo la voz · {Math.round(s.duckLevel * 100)}%
+            <input
+              aria-label="Nivel bajo de música durante las voces"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+              value={s.duckLevel}
+              onChange={(e) => update({ duckLevel: Number(e.target.value) })}
+            />
+          </label>
+          <label>
+            Canción al sentarse
+            <select
+              value={s.track}
+              onChange={(e) => update({ track: e.target.value })}
+            >
+              <option value="./media/levels.mp3">Levels · Avicii</option>
+              <option value="./media/disco-yes-previa-3min.mp3">
+                Disco Yes · previa 3 min
+              </option>
+              <option value="./media/disco-yes.mp3">
+                Disco Yes · completa
+              </option>
+            </select>
           </label>
           <label>
             <input
               type="checkbox"
-              checked={s.autoCall}
-              onChange={(e) => update({ autoCall: e.target.checked })}
+              checked={s.internalMusic}
+              onChange={(e) => update({ internalMusic: e.target.checked })}
             />
-            Pasar automáticamente a la llamada en los últimos 3 minutos
+            Canción local activa
           </label>
-          <label>
-            Programar inicio (hora local)
-            <input
-              type="datetime-local"
-              value={s.scheduled}
-              onChange={(e) => update({ scheduled: e.target.value })}
-            />
-          </label>
-          <button onClick={() => update({ scheduled: "" })}>
-            Cancelar programación
-          </button>
-        </details>
-      </section>
-      <section>
-        <h2>3 · Mezclador</h2>
-        <label>
-          Música durante la voz · {Math.round(s.duckLevel * 100)}% del nivel
-          normal
-          <input
-            aria-label="Nivel bajo de música durante las voces"
-            type="range"
-            min="0"
-            max="1"
-            step=".01"
-            value={s.duckLevel}
-            onChange={(e) => update({ duckLevel: Number(e.target.value) })}
-          />
-        </label>
-        <small>
-          0% silencia la música; 100% mantiene su nivel. Al terminar la voz
-          vuelve al volumen anterior.
-        </small>
-        <label>
-          <input
-            type="checkbox"
-            checked={externalMusic}
-            disabled={!bridge}
-            onChange={(e) => {
-              setExternalMusic(e.target.checked);
-              window.postMessage(
-                { type: "ITTT_MUSIC_ARM", enabled: e.target.checked },
-                location.origin,
-              );
-            }}
-          />
-          Bajar mi pestaña de música solo mientras habla una voz
-        </label>
-        <button
-          onClick={() => {
-            voice.current?.pause();
-            gratitudePending.current = false;
-            restore();
-            setExternalMusic(false);
-            window.postMessage(
-              { type: "ITTT_MUSIC_ARM", enabled: false },
-              location.origin,
-            );
-            update({ autoVoice: false, internalMusic: false });
-          }}
-        >
-          PARAR AUTOMATISMOS · música libre
-        </button>
-        <details>
-          <summary>Conectar YouTube Music o Spotify web</summary>
-          <p>
-            En Edge abre edge://extensions, activa Modo desarrollador y pulsa
-            Cargar descomprimida. Selecciona la carpeta extension-music del
-            proyecto o descarga y descomprime el archivo siguiente. Abre la
-            música en el mismo navegador y perfil y recarga esta mesa.
-          </p>
           <a href="./downloads/thinkglaos-mezclador.zip" download>
-            Descargar extensión de música
+            Extensión de música · actualizar
           </a>
-        </details>
-        <p>
-          {bridge
-            ? "● Control externo conectado · YouTube Music / Spotify web"
-            : "Control externo sin conectar · carga la extensión de la carpeta extension-music para controlar YouTube Music o Spotify web."}
-        </p>
-        <label>
-          <input
-            type="checkbox"
-            checked={s.internalMusic}
-            onChange={(e) => update({ internalMusic: e.target.checked })}
-          />
-          Activar música interna (opcional)
-        </label>
-        <label>
-          Música (sonido de esta aplicación)
-          <select
-            value={s.track}
-            onChange={(e) => update({ track: e.target.value })}
-          >
-            <option value="./media/levels.mp3">Levels · Avicii</option>
-            <option value="./media/disco-yes.mp3">Disco Yes · Tom Misch</option>
-            <option value="./media/disco-yes-previa-3min.mp3">
-              Disco Yes · previa 3:00 · salida suave
-            </option>
-          </select>
-        </label>
-        <label>
-          Mezcla propia
-          <input
-            type="file"
-            accept="audio/*"
-            onChange={(e) => {
-              if (e.target.files?.[0])
-                update({ track: URL.createObjectURL(e.target.files[0]) });
-            }}
-          />
-        </label>
-        <label>
-          Música · {Math.round(s.volume * 100)}%
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step=".01"
-            value={s.volume}
-            onChange={(e) => update({ volume: Number(e.target.value) })}
-          />
-        </label>
-        <label>
-          Locución · {Math.round(s.voiceVolume * 100)}%
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step=".01"
-            value={s.voiceVolume}
-            onChange={(e) => update({ voiceVolume: Number(e.target.value) })}
-          />
-        </label>
-        <button onClick={() => speak()}>
-          Escuchar a Manolo · bajar música y recuperar
-        </button>
-        <p>
-          Las voces se reproducen desde esta mesa, independientemente de la
-          música. El control externo actúa solo sobre pestañas de YouTube Music
-          y Spotify web cuando la extensión está conectada.
-        </p>
-      </section>
-      <section>
-        <h2>4 · Banco de voces</h2>
-        <label>
-          <input
-            type="checkbox"
-            checked={s.autoVoice}
-            onChange={(e) => update({ autoVoice: e.target.checked })}
-          />
-          Locuciones automáticas en esta escena
-        </label>
-        <input
-          aria-label="Buscar frase"
-          placeholder="Buscar una frase…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <small className="voice-next-status" role="status">
-          {speaking
-            ? "Voz en directo · la pausa comienza al terminar"
-            : s.autoVoice &&
-                s.running &&
-                ["montaje", "ambiente", "llamada", "pizzas"].includes(s.phase)
-              ? `Siguiente cuña en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
-              : "Automatismo desactivado en esta escena"}
-        </small>
-        <div className="voice-frequency">
+        </section>
+        <section className="console-voices">
+          <h2>Intervenciones</h2>
+          <div className="voice-now" role="status">
+            {speaking ||
+              (s.intervention
+                ? "Vídeo en proyección"
+                : armed && s.autoVoice
+                  ? `Siguiente voz en ${fmt(Math.max(0, nextVoiceAt.current - t))}`
+                  : "Listo para empezar")}
+          </div>
+          <div className="transport-buttons">
+            <button
+              onClick={() => {
+                activate();
+                const cue = nextCue(cues, s.phase, lastCue.current);
+                if (cue) speak(cue);
+              }}
+            >
+              Siguiente voz ▶
+            </button>
+            <button
+              onClick={() => {
+                voice.current?.pause();
+                gratitudePending.current = false;
+                restore();
+                update({ intervention: "" });
+                videoActive.current = false;
+                reconcileMix();
+              }}
+            >
+              Parar intervención
+            </button>
+            <button
+              onClick={() => {
+                activate();
+                speak();
+              }}
+            >
+              Manolo
+            </button>
+          </div>
           <label>
-            Frecuencia · pausa entre frases: {s.voiceGap} s
+            Pausa entre frases · {s.voiceGap} s
             <input
               aria-label="Pausa entre locuciones"
               type="range"
@@ -1180,21 +1224,32 @@ export default function Show() {
               }
             />
           </label>
-          <div className="show-actions">
-            <button onClick={() => update({ voiceGap: 120 })}>
-              Menos frases
-            </button>
-            <button onClick={() => update({ voiceGap: 60 })}>Normal</button>
-            <button onClick={() => update({ voiceGap: 20 })}>Más frases</button>
+          <div className="video-switch">
+            <label>
+              <input
+                type="checkbox"
+                checked={s.videoCues}
+                onChange={(e) => {
+                  update({ videoCues: e.target.checked, intervention: "" });
+                  videoActive.current = false;
+                  reconcileMix();
+                }}
+              />
+              Vídeos con voz · prueba
+            </label>
             <button
-              onClick={() => {
-                const c = nextCue(cues, s.phase, lastCue.current);
-                if (c) speak(c);
-              }}
+              disabled={!s.videoCues || !shorts.length}
+              onClick={testVideo}
             >
-              Siguiente frase ▶
+              Probar vídeo · máximo 30 s
             </button>
           </div>
+          <input
+            aria-label="Buscar frase"
+            placeholder="Buscar una frase…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
           <select
             aria-label="Filtrar voces por momento"
             value={bank}
@@ -1207,54 +1262,36 @@ export default function Show() {
               </option>
             ))}
           </select>
-        </div>
-        <p>
-          Voces intercaladas por escena. La pausa cuenta al terminar cada frase:
-          no se cortan ni se superponen. Charla y preguntas siempre sin cuñas
-          automáticas.
-        </p>
-        <div className="show-cues">
-          {cues
-            .map((c, i) => ({ c, i }))
-            .filter(
-              ({ c }) => bank === "todas" || cueScenes(c).includes(bank as any),
-            )
-            .filter(({ c }) =>
-              c.text.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
-            )
-            .map(({ c, i }) => (
-              <button
-                key={i}
-                aria-pressed={speaking === c.text}
-                onClick={() => speak(c)}
-              >
-                <b>
-                  {i + 1} ·{" "}
-                  {cueScenes(c)
-                    .map((p) => voiceSceneLabels[p])
-                    .join(" / ")}{" "}
-                  · {fmt(c.end - c.start)}
-                </b>
-                {c.text}
-                {c.note && (
-                  <small className="cue-recording-note">{c.note}</small>
-                )}
-              </button>
-            ))}
-        </div>
-      </section>
-      <section>
-        <h2>5 · Tu pantalla</h2>
-        <button onClick={() => void share()}>
-          Compartir una ventana o pantalla
-        </button>
-        <p>
-          Regresa a «Ambiente» para ocultarla. Usa «Dejar de compartir» del
-          navegador para terminar la captura.
-        </p>
-      </section>
+          <div className="show-cues">
+            {cues
+              .filter(
+                (c) => bank === "todas" || cueScenes(c).includes(bank as any),
+              )
+              .filter((c) =>
+                c.text.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+              )
+              .map((c) => (
+                <button
+                  key={c.url}
+                  aria-pressed={speaking === c.text}
+                  onClick={() => {
+                    activate();
+                    speak(c);
+                  }}
+                >
+                  <small>
+                    {cueScenes(c)
+                      .map((p) => voiceSceneLabels[p])
+                      .join(" · ")}
+                  </small>
+                  {c.text}
+                </button>
+              ))}
+          </div>
+        </section>
+      </main>
       {notice && (
-        <p className="show-notice" role="status">
+        <p className="console-notice" role="status">
           {notice}
         </p>
       )}

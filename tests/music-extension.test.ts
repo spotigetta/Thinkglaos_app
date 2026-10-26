@@ -1,14 +1,14 @@
-import { test } from "node:test";
+﻿import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
-test("La extensión baja y restaura el volumen original sin aceptar órdenes de otras webs", async () => {
+test("Extensión: objetivos idempotentes, nivel original conservado y origen validado", async () => {
   let listener: any,
     now = 0,
     id = 0,
     calls = 0;
-  const timers = new Map<number, () => void>(),
-    media = { volume: 0.7 };
+  const timers = new Map<number, () => void>();
+  const media = { volume: 0.7, paused: false };
   class Clock extends Date {
     static now() {
       return now;
@@ -21,7 +21,10 @@ test("La extensión baja y restaura el volumen original sin aceptar órdenes de 
     Map,
     Math,
     Promise,
-    document: { querySelectorAll: () => [media] },
+    navigator: {
+      mediaSession: { metadata: { title: "Prueba", artist: "Artista" } },
+    },
+    document: { querySelectorAll: () => [media], title: "Music" },
     setInterval: (cb: () => void) => {
       timers.set(++id, cb);
       return id;
@@ -33,7 +36,7 @@ test("La extensión baja y restaura el volumen original sin aceptar órdenes de 
       scripting: {
         executeScript: async (options: any) => {
           calls++;
-          options.func(...options.args);
+          return [{ result: options.func(...options.args) }];
         },
       },
     },
@@ -46,22 +49,31 @@ test("La extensión baja y restaura el volumen original sin aceptar órdenes de 
     tab: { id: 99 },
     url: "https://spotigetta.github.io/Thinkglaos_app/?control=1",
   };
-  await listener({ duck: true }, sender);
+  const dispatch = (m: any) => new Promise<any>((r) => listener(m, sender, r));
+  await dispatch({ level: 0.12, ms: 500 });
   now += 1000;
   [...timers.values()].forEach((cb) => cb());
-  assert.ok(Math.abs(media.volume - 0.161) < 0.0001);
-  await listener({ duck: true, level: 0.5 }, sender);
-  now += 1000;
+  assert.ok(Math.abs(media.volume - 0.084) < 0.0001);
+  const count = id;
+  await dispatch({ level: 0.12, ms: 500 });
+  assert.equal(id, count, "same target must not restart fade");
+  const status = await dispatch({ status: true });
+  assert.equal(status.title, "Prueba");
+  assert.equal(id, count);
+  await dispatch({ level: 0, ms: 1400 });
+  now += 1500;
   [...timers.values()].forEach((cb) => cb());
-  assert.ok(Math.abs(media.volume - 0.35) < 0.0001);
-  await listener({ duck: false }, sender);
-  now += 1000;
+  assert.equal(media.volume, 0);
+  await dispatch({ level: 1, ms: 1400 });
+  now += 1500;
   [...timers.values()].forEach((cb) => cb());
   assert.ok(Math.abs(media.volume - 0.7) < 0.0001);
   const before = calls;
-  await listener(
-    { duck: true },
+  listener(
+    { level: 0 },
     { tab: { id: 99 }, url: "https://example.com" },
+    () => {},
   );
+  await Promise.resolve();
   assert.equal(calls, before);
 });

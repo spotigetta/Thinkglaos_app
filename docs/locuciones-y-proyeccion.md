@@ -26,3 +26,18 @@ Se publica `public/media/locuciones-oct25.json` y los MP3 correspondientes. Las 
 La mesa reproduce copias en `media/voces-master-v1`, conservando los recortes originales. `scripts/normalize-show-voices.py` mide las 141 cuñas y Manolo, aplica ganancia constante hacia −16 LUFS con un limitador con sobremuestreo y vuelve a medir cada archivo publicado. `media/voice-master-v1.json` registra los niveles anteriores, posteriores y los picos reales. Tras regenerar recortes, hay que regenerar también los masters.
 
 El refuerzo de voz de la mesa va del 50 al 300%, comienza al 150% y usa un compresor para controlar picos. El medidor de la cabecera mide la señal después del refuerzo. El ajuste se recuerda en este navegador. El nivel habitual de música durante las voces comienza al 12% del volumen normal y sigue siendo editable; el volumen de voz y de música tienen recorridos independientes.
+
+## Mesa de directo unificada (26 octubre)
+
+La mesa muestra simultáneamente escena/tiempo, mezcla e intervenciones. Pulsa **Activar mesa** una vez para habilitar audio. Voces automáticas, transición a sentarse y mezcla externa están marcadas inicialmente; los vídeos de prueba están apagados. **PARAR TODO** cancela automatismos y devuelve la música externa a su volumen original.
+
+Al entrar en **A sentarse**, la pestaña musical baja mientras entra la canción local seleccionada. Las voces reducen únicamente esa cama musical; al terminar recuperan el objetivo de la escena, nunca el de una fase anterior. Acelerar funde la canción durante 7,5 segundos; la intro conserva silencio de fondo. Pizzas vuelve a liberar la pestaña musical. La mezcla usa una política única y fundidos por reloj real, independientes del dibujo y del foco de Edge.
+
+### Extensión 2.0
+Recarga la extensión descomprimida en `edge://extensions` (botón circular Actualizar/Recargar en su tarjeta) y recarga la mesa. Si usas el ZIP, sustituye la carpeta extraída por `public/downloads/thinkglaos-mezclador.zip` y recarga la extensión. No uses simultáneamente dos mesas antiguas. La extensión obtiene título/artista de Media Session y controla solo Spotify web/YouTube Music del mismo perfil. No controla el volumen global del ordenador ni Spotify nativo.
+
+Los medidores de voz, música local e intro leen señal real. La salida app representa la suma conservadora de picos de esos canales: no es el volumen del sistema. La pestaña externa muestra su volumen comunicado; no se presenta como una señal medida. El disco gira cuando la extensión informa de reproducción.
+
+El botón de vídeo de prueba reproduce un short del catálogo oficial durante un máximo de 30 s. Baja la cama solo cuando YouTube confirma reproducción, recupera en pausa/buffering/fin/error y permite cortar al instante desmarcando la prueba. El reproductor usa la API oficial: https://developers.google.com/youtube/iframe_api_reference. Si el proveedor bloquea reproducción automática, se cancela la intervención y se recupera la música.
+
+Al agotarse los 18 minutos de charla y durante Pizzas aparece un QR grande generado localmente, con el enlace exacto del grupo de WhatsApp. El logo ITTT permanece visible.
