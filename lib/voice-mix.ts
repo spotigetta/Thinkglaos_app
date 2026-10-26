@@ -1,3 +1,5 @@
+import { analyserEnergy } from "./music-vibes";
+
 export function normalizedVoiceUrl(source: string) {
   return "./media/voces-master-v1/" + source.split("/").pop();
 }
@@ -13,6 +15,7 @@ export class VoiceMix {
   private limiter = this.context.createDynamicsCompressor();
   private analyser = this.context.createAnalyser();
   private samples = new Float32Array(1024);
+  private bins = new Uint8Array(512);
 
   constructor(audio: HTMLMediaElement, ceilingDB = -5) {
     const source = this.context.createMediaElementSource(audio);
@@ -49,7 +52,21 @@ export class VoiceMix {
     );
   }
 
+  energy() {
+    return analyserEnergy(
+      this.analyser,
+      this.samples,
+      this.bins,
+      this.context.sampleRate,
+    );
+  }
+
   close() {
     void this.context.close();
   }
+}
+
+export function introMixLevel(value: number) {
+  const level = Math.max(0, Math.min(3, Number.isFinite(value) ? value : 2));
+  return { volume: Math.min(1, level), boost: Math.max(1, level) };
 }

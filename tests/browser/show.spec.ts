@@ -432,7 +432,7 @@ test("Pausar, reiniciar o ajustar no libera la música externa de la escena", as
   }
 });
 
-test("La intro usa su master normalizado y tiene un volumen independiente de las voces", async ({
+test("La intro conserva el original con un refuerzo general independiente de las voces", async ({
   page,
 }) => {
   await page.goto("/?control=1");
@@ -443,7 +443,7 @@ test("La intro usa su master normalizado y tiene un volumen independiente de las
   await page.getByRole("button", { name: "Intro", exact: true }).click();
   await expect(out.locator(".show-intro")).toHaveAttribute(
     "src",
-    "./media/intro-thunder-master-v1.mp4",
+    "./media/intro-thunder.mp4",
   );
   await expect
     .poll(() =>
@@ -528,4 +528,115 @@ test("Pausar una locución conserva la música baja y continuar retoma esa voz",
     )
     .toBeGreaterThan(frozen + 0.05);
   expect(await page.evaluate(() => (window as any).__goal)).toBe(0.12);
+});
+
+test("Las vibes reaccionan a audio real de una pestaña, permiten umbral y estilos, y se apagan al instante", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getDisplayMedia = async () => {
+      const ac = new AudioContext(),
+        osc = ac.createOscillator(),
+        gain = ac.createGain(),
+        out = ac.createMediaStreamDestination();
+      osc.frequency.value = 80;
+      gain.gain.value = 0.55;
+      osc.connect(gain).connect(out);
+      osc.start();
+      await ac.resume();
+      (window as any).__vibesStream = out.stream;
+      return out.stream;
+    };
+  });
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await expect(
+    page.getByLabel("Vibes al ritmo de la música"),
+  ).not.toBeChecked();
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page.getByLabel("Escenas de vibes").selectOption("all");
+  await page.getByLabel("Umbral de vibes").fill("1");
+  await page
+    .getByRole("button", { name: "Conectar audio de YouTube / Spotify" })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Desconectar pestaña musical" }),
+  ).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .getByRole("meter", { name: "Señal musical para vibes" })
+        .getAttribute("aria-valuenow"),
+    )
+    .not.toBe("0");
+  await page.waitForTimeout(800);
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+  await page.getByLabel("Estilo de vibes").selectOption("contrast");
+  await page.getByLabel("Umbral de vibes").fill("0.02");
+  await expect(out.locator(".vibe-contrast")).toHaveCount(1);
+  await page.getByLabel("Estilo de vibes").selectOption("shapes");
+  await page.getByRole("button", { name: "Probar pulso" }).click();
+  await expect(out.locator(".vibe-shapes")).toHaveCount(1);
+  await out.waitForTimeout(150);
+  await out.screenshot({ path: ".local/vibes-shapes.png" });
+  await page.getByLabel("Vibes al ritmo de la música").uncheck();
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+  expect(
+    await page.evaluate(() =>
+      (window as any).__vibesStream
+        .getTracks()
+        .every((t: MediaStreamTrack) => t.readyState === "ended"),
+    ),
+  ).toBe(true);
+});
+
+test("La intro mantiene el vídeo original y un refuerzo uniforme de 200 por ciento", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  await expect(page.getByLabel("Volumen de intro")).toHaveValue("2");
+  await expect(page.getByLabel("Volumen de intro")).toHaveAttribute("max", "3");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page.getByLabel("Escenas de vibes").selectOption("all");
+  await page.getByRole("button", { name: "Intro", exact: true }).click();
+  await expect(out.locator(".show-intro")).toHaveAttribute(
+    "src",
+    "./media/intro-thunder.mp4",
+  );
+  await page.getByRole("button", { name: "Probar pulso" }).click();
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+});
+
+test("Las vibes de A sentarse leen la música local automáticamente", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await expect(page.getByLabel("Escenas de vibes")).toHaveValue("llamada");
+  await page.getByLabel("Estilo de vibes").selectOption("halo");
+  await page.getByLabel("Umbral de vibes").fill("0.02");
+  await page.getByRole("button", { name: "A sentarse", exact: true }).click();
+  await expect
+    .poll(async () =>
+      Number(
+        await page
+          .getByRole("meter", { name: "Señal musical para vibes" })
+          .getAttribute("aria-valuenow"),
+      ),
+    )
+    .toBeGreaterThan(0);
+  await expect(out.locator(".vibe-halo")).toHaveCount(1, { timeout: 10000 });
+  await page.getByRole("button", { name: "PARAR TODO", exact: true }).click();
+  await expect(
+    page.getByLabel("Vibes al ritmo de la música"),
+  ).not.toBeChecked();
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
 });

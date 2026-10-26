@@ -1,20 +1,16 @@
-﻿import { test } from "node:test";
+import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { createHash } from "node:crypto";
-test("La intro equilibra la voz con la música y conserva el original verificable", () => {
-  const report = JSON.parse(
-    fs.readFileSync("public/media/intro-master-v1.json", "utf8"),
-  );
-  const hash = (url: string) =>
+import { introMixLevel } from "../lib/voice-mix";
+test("La intro conserva el archivo original y aplica un único refuerzo general", () => {
+  assert.equal(
     createHash("sha256")
-      .update(fs.readFileSync("public/" + url.slice(2)))
-      .digest("hex");
-  assert.equal(hash(report.source), report.sourceSHA256);
-  assert.equal(hash(report.url), report.masterSHA256);
-  assert.ok(report.after.spoken.LUFS - report.before.spoken.LUFS > 12);
-  assert.ok(Math.abs(report.after.spoken.LUFS - report.after.music.LUFS) < 2);
-  assert.ok(report.after.whole.truePeakDB < -0.5);
-  assert.ok(report.after.quiet.LUFS < -48);
-  assert.ok(report.videoSHA256.startsWith("SHA256="));
+      .update(fs.readFileSync("public/media/intro-thunder.mp4"))
+      .digest("hex"),
+    "9119380e84c331ff197ca1b365c2d305f71897598dac218c217410205dfb3168",
+  );
+  assert.deepEqual(introMixLevel(2), { volume: 1, boost: 2 });
+  assert.deepEqual(introMixLevel(0.8), { volume: 0.8, boost: 1 });
+  assert.deepEqual(introMixLevel(0), { volume: 0, boost: 1 });
 });

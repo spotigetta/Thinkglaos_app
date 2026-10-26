@@ -1,8 +1,20 @@
+import { MusicVibesControl, MusicVibesOverlay } from "./MusicVibes";
+import {
+  defaultVibes,
+  readVibes,
+  type VibesSettings,
+  type MusicPulse,
+} from "./music-vibes";
 import { mixPolicy, VolumeFader } from "./show-mixer";
 import { ChannelMeters, VideoIntervention } from "./ShowChannels";
 import React, { useEffect, useRef, useState } from "react";
 import { madridClock } from "./event-clock";
-import { VoiceMix, normalizedVoiceUrl, clampVoiceBoost } from "./voice-mix";
+import {
+  VoiceMix,
+  normalizedVoiceUrl,
+  clampVoiceBoost,
+  introMixLevel,
+} from "./voice-mix";
 import "./show.css";
 import {
   nextCue,
@@ -42,6 +54,7 @@ type State = {
   duckLevel: number;
   voiceVolume: number;
   introVolume: number;
+  vibes: VibesSettings;
   voiceBoost: number;
   track: string;
   minutes: number;
@@ -63,7 +76,8 @@ const defaults: State = {
   volume: 0.65,
   duckLevel: 0.12,
   voiceVolume: 1,
-  introVolume: 1,
+  introVolume: 2,
+  vibes: defaultVibes,
   voiceBoost: 1.5,
   track: "./media/levels.mp3",
   minutes: 30,
@@ -114,9 +128,10 @@ export default function Show() {
             counterDark: p.counterDark === true,
             voiceBoost: clampVoiceBoost(p.voiceBoost),
             introVolume:
-              typeof p.introVolume === "number"
-                ? Math.max(0, Math.min(1, p.introVolume))
-                : 1,
+              p.introGainVersion === 2 && typeof p.introVolume === "number"
+                ? Math.max(0, Math.min(3, p.introVolume))
+                : 2,
+            vibes: readVibes(p.vibes),
             duckLevel:
               typeof p.duckLevel === "number"
                 ? Math.max(0, Math.min(1, p.duckLevel))
@@ -167,6 +182,7 @@ export default function Show() {
   const pausedExternal = useRef<number | null>(null);
   const pausedVoice = useRef(false);
   const [armed, setArmed] = useState(false);
+  const [vibePulse, setVibePulse] = useState<MusicPulse | null>(null);
   const [qr, setQr] = useState("");
   useEffect(() => {
     import("qrcode")
@@ -219,6 +235,8 @@ export default function Show() {
           counterDark: s.counterDark,
           voiceBoost: s.voiceBoost,
           introVolume: s.introVolume,
+          introGainVersion: 2,
+          vibes: s.vibes,
           duckLevel: s.duckLevel,
         }),
       );
@@ -229,6 +247,7 @@ export default function Show() {
     s.duckLevel,
     s.counterDark,
     s.introVolume,
+    s.vibes,
   ]);
   current.current = s;
   cuesRef.current = cues;
@@ -437,6 +456,12 @@ export default function Show() {
     channel.onmessage = (e) => {
       const m = e.data;
       if (projection) {
+        if (
+          m.type === "music-pulse" &&
+          m.pulse &&
+          Date.now() - m.pulse.time < 1600
+        )
+          setVibePulse(m.pulse);
         if (m.type === "state")
           set({
             ...defaults,
@@ -444,6 +469,7 @@ export default function Show() {
             motion: m.state.motion ?? defaults.motion,
             voiceGap: voiceGap(m.state.voiceGap),
             voiceBoost: clampVoiceBoost(m.state.voiceBoost),
+            vibes: readVibes(m.state.vibes),
           });
         if (m.type === "manolo") speak();
         if (m.type === "cue") speak(m.cue);
@@ -697,11 +723,13 @@ export default function Show() {
   useEffect(() => {
     if (!projection) return;
     if (intro.current) {
-      intro.current.volume = s.introVolume;
+      const introLevel = introMixLevel(s.introVolume);
+      intro.current.volume = introLevel.volume;
       if (!introMix.current) {
         introMix.current = new VoiceMix(intro.current, -1);
-        introMix.current.setBoost(1);
+        introMix.current.setBoost(introLevel.boost);
       }
+      introMix.current.setBoost(introLevel.boost);
       void introMix.current.resume().catch(() => {});
       if (s.phase === "intro" && s.running)
         void intro.current.play().catch(() =>
@@ -872,6 +900,11 @@ export default function Show() {
             />
           )}
         <div className="show-wash" />
+        <MusicVibesOverlay
+          settings={s.vibes}
+          phase={s.phase}
+          pulse={vibePulse}
+        />
         {s.phase !== "intro" && (
           <div className="show-brand">
             <img src="./assets/ittt.png" alt="IT’S TIME TO THINK" />
@@ -895,7 +928,7 @@ export default function Show() {
           <video
             className="show-intro"
             ref={intro}
-            src="./media/intro-thunder-master-v1.mp4"
+            src="./media/intro-thunder.mp4"
             autoPlay
             playsInline
             onEnded={() => send({ type: "intro-ended" })}
@@ -1061,6 +1094,7 @@ export default function Show() {
       autoVoice: false,
       internalMusic: false,
       autoCall: false,
+      vibes: { ...current.current.vibes, enabled: false },
     });
     setArmed(false);
     setExternalMusic(false);
@@ -1348,6 +1382,19 @@ export default function Show() {
           <small>
             Señal de la app. La música externa indica volumen, no amplitud.
           </small>
+          <div className="vibes-block">
+            <h2>Vibes musicales</h2>
+            <MusicVibesControl
+              onActivate={activate}
+              settings={s.vibes}
+              phase={s.phase}
+              active={ownsDesk}
+              music={music}
+              mix={musicMix}
+              onChange={(vibes) => update({ vibes })}
+              onPulse={(pulse) => send({ type: "music-pulse", pulse })}
+            />
+          </div>
           <label>
             Música local · {Math.round(s.volume * 100)}%
             <input
@@ -1378,7 +1425,7 @@ export default function Show() {
               aria-label="Volumen de intro"
               type="range"
               min="0"
-              max="1"
+              max="3"
               step=".01"
               value={s.introVolume}
               onChange={(e) => update({ introVolume: Number(e.target.value) })}
