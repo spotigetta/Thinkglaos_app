@@ -1,0 +1,43 @@
+{
+  "source": "./media/intro-thunder.mp4",
+  "url": "./media/intro-thunder-master-v1.mp4",
+  "spokenGainDB": 14.07,
+  "musicGainDB": -4.220000000000001,
+  "before": {
+    "spoken": {
+      "LUFS": -28.07,
+      "truePeakDB": -11.25
+    },
+    "music": {
+      "LUFS": -8.78,
+      "truePeakDB": 0.7
+    },
+    "quiet": {
+      "LUFS": -55.25,
+      "truePeakDB": -42.23
+    }
+  },
+  "after": {
+    "spoken": {
+      "LUFS": -14.38,
+      "truePeakDB": -1.88
+    },
+    "music": {
+      "LUFS": -13.04,
+      "truePeakDB": -1.65
+    },
+    "quiet": {
+      "LUFS": -55.29,
+      "truePeakDB": -42.3
+    },
+    "whole": {
+      "LUFS": -13.25,
+      "truePeakDB": -1.65
+    }
+  },
+  "videoCodec": "copy",
+  "audioCodec": "AAC 256k stereo 48kHz",
+  "sourceSHA256": "9119380e84c331ff197ca1b365c2d305f71897598dac218c217410205dfb3168",
+  "masterSHA256": "192b2e7ff5b04eae9b0a9bc83dbbefe422baa8484abb4fef0bbc60a21572ce28",
+  "videoSHA256": "SHA256=6c7f73a53b74d1ddd9d85518c6ab68d5f1743d60239f607b56197f57844d2a10"
+}
