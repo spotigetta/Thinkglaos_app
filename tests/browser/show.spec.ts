@@ -269,7 +269,8 @@ test("Charla y preguntas se pausan, ajustan y terminan sin cambiar de fase, con 
     page.getByText("Tiempo terminado · esperando tu señal"),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Finalizado" })).toBeDisabled();
-  expect(await page.evaluate(() => (window as any).__chimes)).toBe(9);
+  const firstAlarm = await page.evaluate(() => (window as any).__chimes);
+  expect(firstAlarm).toBeGreaterThan(20);
   await expect(output.locator(".show-output")).toHaveClass(/charla/);
   await expect(output.locator(".show-clock")).toHaveCount(0);
   await output.screenshot({ path: ".local/counter-charla.png" });
@@ -283,7 +284,9 @@ test("Charla y preguntas se pausan, ajustan y terminan sin cambiar de fase, con 
   await page.clock.fastForward(2500);
   await expect(output.locator("h1")).toHaveText("00:00");
   await expect(output.locator(".show-output")).toHaveClass(/preguntas/);
-  expect(await page.evaluate(() => (window as any).__chimes)).toBe(18);
+  expect(await page.evaluate(() => (window as any).__chimes)).toBe(
+    firstAlarm * 2,
+  );
   await page.getByRole("button", { name: "−30 s", exact: true }).click();
   await expect(output.locator("h1")).toHaveText("00:30");
   await expect(
@@ -309,7 +312,7 @@ test("Intro limpia y cronómetros con amarillo ITTT, modo oscuro sincronizado y 
   );
   await expect(out.locator(".show-output")).toHaveCSS(
     "background-color",
-    "rgb(255, 218, 0)",
+    "rgb(254, 225, 133)",
   );
   await out.screenshot({ path: ".local/counter-yellow.png" });
   await page.getByLabel("Modo oscuro de cronómetros").check();
@@ -319,7 +322,7 @@ test("Intro limpia y cronómetros con amarillo ITTT, modo oscuro sincronizado y 
   );
   await expect(out.locator(".show-output")).toHaveCSS(
     "background-color",
-    "rgb(16, 16, 16)",
+    "rgb(0, 0, 0)",
   );
   await out.screenshot({ path: ".local/counter-dark.png" });
   await page.reload();
@@ -356,4 +359,33 @@ test("Pizzas duran una hora y el QR convive con mensajes animados que siguen cam
   await out.clock.fastForward(15000);
   await expect(out.locator(".qr-live-copy h2")).not.toHaveText(before!);
   await expect(out.locator(".show-output")).not.toHaveClass(/scene-paused/);
+});
+
+test("El aviso musical dura 30 segundos y se puede detener sin cambiar el contador", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  await page.getByRole("button", { name: "Charla", exact: true }).click();
+  await page.getByRole("button", { name: "Pausar", exact: true }).click();
+  const before = await page.locator(".console-transport strong").textContent();
+  await page
+    .getByRole("button", { name: "Probar aviso musical · 30 s ♪" })
+    .click();
+  await expect(
+    page.getByRole("button", { name: /Detener aviso/ }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /Detener aviso/ }).click();
+  await expect(
+    page.getByRole("button", { name: "Probar aviso musical · 30 s ♪" }),
+  ).toBeVisible();
+  expect(await page.locator(".console-transport strong").textContent()).toBe(
+    before,
+  );
+  await page
+    .getByRole("button", { name: "Probar aviso musical · 30 s ♪" })
+    .click();
+  await page.getByRole("button", { name: "Preguntas", exact: true }).click();
+  await expect(page.getByRole("button", { name: /Detener aviso/ })).toHaveCount(
+    0,
+  );
 });

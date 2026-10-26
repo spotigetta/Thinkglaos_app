@@ -15,7 +15,11 @@ import {
 } from "./show-voices";
 import { KineticText } from "./KineticText";
 import { stageLabels, sceneSeconds, visualScene } from "./show-scenes";
-import { playTimerChime } from "./timer-chime";
+import {
+  playTimerChime,
+  TIMER_MUSIC_SECONDS,
+  type TimerMusic,
+} from "./timer-chime";
 type Phase =
   | "agradecimiento"
   | "pizzas"
@@ -173,6 +177,8 @@ export default function Show() {
   const lastCue = useRef("");
   const voiceGeneration = useRef(0);
   const voiceMix = useRef<VoiceMix | null>(null);
+  const alarmPlayback = useRef<TimerMusic | null>(null);
+  const [alarmUntil, setAlarmUntil] = useState(0);
   const nextVoiceAt = useRef(5);
   const montagePlayed = useRef(new Set<string>());
   const pizzasPlayed = useRef(new Set<string>());
@@ -180,6 +186,20 @@ export default function Show() {
   const cuesRef = useRef<Cue[]>([]);
   const gratitudePending = useRef(false);
   const [bank, setBank] = useState("todas");
+
+  useEffect(() => {
+    if (projection) return;
+    const header = document.querySelector<HTMLElement>(".console-header");
+    if (!header) return;
+    const observer = new ResizeObserver(() => {
+      header.parentElement?.style.setProperty(
+        "--desk-header-height",
+        `${header.getBoundingClientRect().height + 12}px`,
+      );
+    });
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!projection)
@@ -207,12 +227,27 @@ export default function Show() {
     set(next);
     send({ type: "state", state: next });
   }
+  function stopAlarm() {
+    alarmPlayback.current?.stop();
+    alarmPlayback.current = null;
+    setAlarmUntil(0);
+  }
+  function soundAlarm() {
+    if (!voiceMix.current) return;
+    stopAlarm();
+    setAlarmUntil(Date.now() + TIMER_MUSIC_SECONDS * 1000);
+    alarmPlayback.current = playTimerChime(voiceMix.current.context, () => {
+      alarmPlayback.current = null;
+      setAlarmUntil(0);
+    });
+  }
   function phase(p: Phase) {
     if (
       p === current.current.phase &&
       Date.now() - lastPhaseClick.current < 600
     )
       return;
+    stopAlarm();
     lastPhaseClick.current = Date.now();
     if (p === "montaje") montagePlayed.current.clear();
     if (p === "pizzas") pizzasPlayed.current.clear();
@@ -333,6 +368,7 @@ export default function Show() {
   ]);
   function speak(cue?: Cue, automatic = false) {
     if (!voice.current) return;
+    stopAlarm();
     const generation = ++voiceGeneration.current;
     if (!cue || !cueScenes(cue).includes("agradecimiento"))
       gratitudePending.current = false;
@@ -447,6 +483,7 @@ export default function Show() {
       if (localStorage.getItem("ittt-active-desk-v2") === deskId.current)
         return;
       ownsDesk.current = false;
+      stopAlarm();
       window.postMessage({ type: "ITTT_MUSIC_RELEASE" }, location.origin);
       voiceGeneration.current++;
       voice.current?.pause();
@@ -512,6 +549,7 @@ export default function Show() {
       window.removeEventListener("storage", relinquish);
       window.removeEventListener("message", external);
       channel.close();
+      alarmPlayback.current?.stop();
       fader.current.close();
       musicMix.current?.close();
       introMix.current?.close();
@@ -681,7 +719,7 @@ export default function Show() {
       const alarm = `${s.phase}:${s.started}`;
       if (!seen.current.has(alarm)) {
         seen.current.add(alarm);
-        if (voiceMix.current) playTimerChime(voiceMix.current.context);
+        soundAlarm();
       }
       update({ running: false, offset: duration });
     }
@@ -978,6 +1016,7 @@ export default function Show() {
     note("Mesa activada. Automatismos preparados.");
   }
   function stopAll() {
+    stopAlarm();
     voice.current?.pause();
     gratitudePending.current = false;
     videoActive.current = false;
@@ -1025,6 +1064,7 @@ export default function Show() {
   const timedPhase = ["charla", "preguntas"].includes(s.phase);
   const timerEnded = timedPhase && t >= duration;
   function seekTime(seconds: number) {
+    stopAlarm();
     const offset = Math.max(0, Math.min(duration, seconds));
     update({
       offset,
@@ -1089,6 +1129,11 @@ export default function Show() {
         <button onClick={activate}>
           {armed ? "Audio activado" : "Activar mesa"}
         </button>
+        {!!alarmUntil && (
+          <button className="alarm-stop" onClick={stopAlarm}>
+            Detener aviso ■ · {fmt((alarmUntil - now) / 1000)}
+          </button>
+        )}
         <button className="panic" onClick={stopAll}>
           PARAR TODO
         </button>
@@ -1146,6 +1191,7 @@ export default function Show() {
             </button>
             <button
               onClick={() => {
+                stopAlarm();
                 if (s.phase === "montaje") montagePlayed.current.clear();
                 if (s.phase === "pizzas") pizzasPlayed.current.clear();
                 voice.current?.pause();
@@ -1174,15 +1220,15 @@ export default function Show() {
               onChange={(e) => seekTime(Number(e.target.value))}
             />
           </label>
-          {timedPhase && (
+          {timedPhase && !alarmUntil && (
             <button
               className="alarm-preview"
               onClick={() => {
                 activate();
-                if (voiceMix.current) playTimerChime(voiceMix.current.context);
+                soundAlarm();
               }}
             >
-              Probar alarma ♪
+              Probar aviso musical · 30 s ♪
             </button>
           )}
           <label>

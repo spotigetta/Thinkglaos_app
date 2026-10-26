@@ -1893,21 +1893,22 @@ iframe.show-bg-video {
     max-height: none;
   }
 }
+/* Palette sampled from Logo.jpg: RGB(254, 225, 133) and black. */
 /* Counter identity: bright ITTT yellow, ink-black figures, optional black stage. */
 .show-output.charla,
 .show-output.preguntas {
-  --counter-yellow: #ffda00;
-  --counter-ink: #101010;
-  --counter-bg: #ffda00;
+  --counter-yellow: #fee185;
+  --counter-ink: #000000;
+  --counter-bg: #fee185;
   background: var(--counter-bg);
   color: var(--counter-ink);
 }
 .show-output[data-counter-theme="dark"].charla,
 .show-output[data-counter-theme="dark"].preguntas {
-  --counter-bg: #101010;
-  --counter-ink: #ffda00;
-  background: #101010;
-  color: #ffda00;
+  --counter-bg: #000000;
+  --counter-ink: #fee185;
+  background: #000000;
+  color: #fee185;
 }
 .show-output.charla .show-wash,
 .show-output.preguntas .show-wash {
@@ -2012,7 +2013,7 @@ iframe.show-bg-video {
 .qr-live-copy small {
   letter-spacing: 0.2em;
   font-size: 12px;
-  background: #ffda00;
+  background: #fee185;
   color: #111;
   padding: 8px 14px;
   border-radius: 3px;
@@ -2056,7 +2057,7 @@ iframe.show-bg-video {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #ffda00;
+  background: #fee185;
   color: #111;
   border: 4px solid #111;
   border-radius: 5px;
@@ -2219,7 +2220,7 @@ iframe.show-bg-video {
 }
 .montage-pace {
   font-size: 12px;
-  border-left: 3px solid #ffda00;
+  border-left: 3px solid #fee185;
   padding-left: 10px;
 }
 .montage-pace b,
@@ -2253,4 +2254,18 @@ iframe.show-bg-video {
   .qr-card-label {
     font-size: 8px;
   }
+}
+.dj-console .alarm-stop {
+  background: #fee185;
+  color: #000;
+  border-color: #000;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px #fee18555;
+}
+.console-header:has(.alarm-stop) {
+  flex-wrap: wrap;
+}
+.dj-console .phase-strip {
+  top: var(--desk-header-height, 62px);
 }
