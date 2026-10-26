@@ -14,8 +14,8 @@ export class VoiceMix {
   private gain = this.context.createGain();
   private limiter = this.context.createDynamicsCompressor();
   private analyser = this.context.createAnalyser();
-  private samples = new Float32Array(1024);
-  private bins = new Uint8Array(512);
+  private samples = new Float32Array(2048);
+  private bins = new Float32Array(1024);
 
   constructor(audio: HTMLMediaElement, ceilingDB = -5) {
     const source = this.context.createMediaElementSource(audio);
@@ -24,7 +24,7 @@ export class VoiceMix {
     this.limiter.ratio.value = 20;
     this.limiter.attack.value = 0.003;
     this.limiter.release.value = 0.15;
-    this.analyser.fftSize = 1024;
+    this.analyser.fftSize = 2048;
     this.analyser.smoothingTimeConstant = 0.25;
     source
       .connect(this.gain)
@@ -54,12 +54,7 @@ export class VoiceMix {
   }
 
   energy() {
-    return analyserEnergy(
-      this.analyser,
-      this.samples,
-      this.bins,
-      this.context.sampleRate,
-    );
+    return analyserEnergy(this.analyser, this.bins, this.context.sampleRate);
   }
 
   close() {

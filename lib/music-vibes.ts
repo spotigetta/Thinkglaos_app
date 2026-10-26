@@ -77,25 +77,31 @@ export class BeatDetector {
     return false;
   }
 }
-/** Normalize a real music signal to the threshold meter; voices never enter this detector. */
+export const BASS_RANGE = { low: 45, high: 150 };
+export function bassDecibels(level: number) {
+  return Math.round(-60 + level * 60);
+}
+/** Only spectral power in the kick/bass band. Overall volume and higher frequencies do not contribute. */
 export function analyserEnergy(
   analyser: AnalyserNode,
-  samples: Float32Array<ArrayBuffer>,
-  bins: Uint8Array<ArrayBuffer>,
+  bins: Float32Array<ArrayBuffer>,
   sampleRate: number,
 ) {
-  analyser.getFloatTimeDomainData(samples);
-  analyser.getByteFrequencyData(bins);
-  let square = 0;
-  for (const x of samples) square += x * x;
-  const rms = Math.sqrt(square / samples.length);
-  if (rms < 0.0002) return 0;
-  const low = Math.max(1, Math.floor((40 * analyser.fftSize) / sampleRate)),
-    high = Math.max(low + 1, Math.ceil((190 * analyser.fftSize) / sampleRate));
-  let bass = 0;
-  for (let i = low; i < Math.min(high, bins.length); i++) bass += bins[i] / 255;
-  bass /= high - low;
-  return Math.max(0, Math.min(1, 0.3 * Math.min(1, rms * 4) + 0.7 * bass));
+  analyser.getFloatFrequencyData(bins);
+  const low = Math.max(
+    1,
+    Math.ceil((BASS_RANGE.low * analyser.fftSize) / sampleRate),
+  );
+  const high = Math.min(
+    bins.length - 1,
+    Math.floor((BASS_RANGE.high * analyser.fftSize) / sampleRate),
+  );
+  let power = 0;
+  for (let i = low; i <= high; i++)
+    if (Number.isFinite(bins[i])) power += 10 ** (bins[i] / 10);
+  if (power <= 0 || high < low) return 0;
+  const db = 10 * Math.log10(power / (high - low + 1));
+  return Math.max(0, Math.min(1, (db + 60) / 60));
 }
 
 export function flashDuration(intensity: number) {

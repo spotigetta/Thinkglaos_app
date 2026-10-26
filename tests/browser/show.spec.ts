@@ -557,7 +557,7 @@ test("Las vibes reaccionan a audio real de una pestaña, permiten umbral y estil
   ).not.toBeChecked();
   await page.getByLabel("Vibes al ritmo de la música").check();
   await page.getByLabel("Escenas de vibes").selectOption("all");
-  await page.getByLabel("Umbral de vibes").fill("1");
+  await page.getByLabel("Umbral de graves").fill("1");
   await page
     .getByRole("button", { name: "Conectar audio de YouTube / Spotify" })
     .click();
@@ -567,14 +567,14 @@ test("Las vibes reaccionan a audio real de una pestaña, permiten umbral y estil
   await expect
     .poll(() =>
       page
-        .getByRole("meter", { name: "Señal musical para vibes" })
+        .getByRole("meter", { name: "Señal de graves (45–150 Hz)" })
         .getAttribute("aria-valuenow"),
     )
     .not.toBe("0");
   await page.waitForTimeout(800);
   await expect(out.getByTestId("music-vibes")).toHaveCount(0);
   await page.getByLabel("Estilo de vibes").selectOption("contrast");
-  await page.getByLabel("Umbral de vibes").fill("0.02");
+  await page.getByLabel("Umbral de graves").fill("0.02");
   await expect(out.locator(".vibe-contrast")).toHaveCount(1);
   await page.getByLabel("Estilo de vibes").selectOption("shapes");
   await page.getByRole("button", { name: "Probar pulso" }).click();
@@ -622,13 +622,13 @@ test("Las vibes de A sentarse leen la música local automáticamente", async ({
   await page.getByLabel("Vibes al ritmo de la música").check();
   await expect(page.getByLabel("Escenas de vibes")).toHaveValue("llamada");
   await page.getByLabel("Estilo de vibes").selectOption("halo");
-  await page.getByLabel("Umbral de vibes").fill("0.02");
+  await page.getByLabel("Umbral de graves").fill("0.02");
   await page.getByRole("button", { name: "A sentarse", exact: true }).click();
   await expect
     .poll(async () =>
       Number(
         await page
-          .getByRole("meter", { name: "Señal musical para vibes" })
+          .getByRole("meter", { name: "Señal de graves (45–150 Hz)" })
           .getAttribute("aria-valuenow"),
       ),
     )
@@ -680,4 +680,59 @@ test("El flash invierte todos los colores al cien por cien y vuelve limpio en un
   await expect(flash).toHaveCSS("opacity", "0");
   await page.getByLabel("Vibes al ritmo de la música").uncheck();
   await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+});
+
+test("Un agudo fuerte no dispara el flash, pero un grave más suave sí", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getDisplayMedia = async () => {
+      const ac = new AudioContext(),
+        osc = ac.createOscillator(),
+        gain = ac.createGain(),
+        out = ac.createMediaStreamDestination();
+      osc.frequency.value = 2000;
+      gain.gain.value = 0.8;
+      osc.connect(gain).connect(out);
+      osc.start();
+      await ac.resume();
+      (window as any).__bassTest = { ac, osc, gain };
+      return out.stream;
+    };
+  });
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page.getByLabel("Escenas de vibes").selectOption("all");
+  await page.getByLabel("Umbral de graves").fill("0.3");
+  await page
+    .getByRole("button", { name: "Conectar audio de YouTube / Spotify" })
+    .click();
+  await page.waitForTimeout(1000);
+  expect(
+    Number(
+      await page
+        .getByRole("meter", { name: "Señal de graves (45–150 Hz)" })
+        .getAttribute("aria-valuenow"),
+    ),
+  ).toBeLessThan(0.1);
+  await expect(out.getByTestId("music-vibes")).toHaveCount(0);
+  await page.evaluate(() => {
+    const { ac, osc, gain } = (window as any).__bassTest;
+    gain.gain.setValueAtTime(0.15, ac.currentTime);
+    osc.frequency.setValueAtTime(80, ac.currentTime);
+  });
+  await expect(out.locator(".vibe-contrast")).toHaveCount(1);
+  await expect
+    .poll(async () =>
+      Number(
+        await page
+          .getByRole("meter", { name: "Señal de graves (45–150 Hz)" })
+          .getAttribute("aria-valuenow"),
+      ),
+    )
+    .toBeGreaterThan(0.3);
+  await page.getByLabel("Vibes al ritmo de la música").uncheck();
 });

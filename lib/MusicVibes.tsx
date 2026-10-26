@@ -3,6 +3,7 @@ import { VoiceMix } from "./voice-mix";
 import {
   BeatDetector,
   analyserEnergy,
+  bassDecibels,
   vibesInScene,
   flashDuration,
   type VibesSettings,
@@ -12,20 +13,14 @@ import {
 class CapturedMusic {
   readonly context = new AudioContext();
   private analyser = this.context.createAnalyser();
-  private samples = new Float32Array(1024);
-  private bins = new Uint8Array(512);
+  private bins = new Float32Array(1024);
   constructor(readonly stream: MediaStream) {
-    this.analyser.fftSize = 1024;
+    this.analyser.fftSize = 2048;
     this.analyser.smoothingTimeConstant = 0.25;
     this.context.createMediaStreamSource(stream).connect(this.analyser);
   }
   energy() {
-    return analyserEnergy(
-      this.analyser,
-      this.samples,
-      this.bins,
-      this.context.sampleRate,
-    );
+    return analyserEnergy(this.analyser, this.bins, this.context.sampleRate);
   }
   close() {
     this.stream.getTracks().forEach((t) => t.stop());
@@ -196,9 +191,9 @@ export function MusicVibesControl({
             </select>
           </label>
           <label>
-            Umbral de disparo · {Math.round(settings.threshold * 100)}%
+            Umbral de graves · {bassDecibels(settings.threshold)} dB
             <input
-              aria-label="Umbral de vibes"
+              aria-label="Umbral de graves"
               type="range"
               min=".02"
               max="1"
@@ -232,7 +227,7 @@ export function MusicVibesControl({
           <div
             className="vibes-signal"
             role="meter"
-            aria-label="Señal musical para vibes"
+            aria-label="Señal de graves (45–150 Hz)"
             aria-valuemin={0}
             aria-valuemax={1}
             aria-valuenow={level}
@@ -263,8 +258,8 @@ export function MusicVibesControl({
             </button>
           </div>
           <small>
-            Para música externa, elige su pestaña y marca Compartir audio.
-            Umbral bajo: más pulsos.
+            Para música externa, elige su pestaña y marca Compartir audio. Solo
+            bombo y graves de 45–150 Hz. Umbral bajo: más pulsos.
           </small>
           {message && <small role="status">{message}</small>}
         </>

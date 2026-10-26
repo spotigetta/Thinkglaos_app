@@ -42,16 +42,19 @@ test("Las vibes comienzan apagadas, se centran en sentarse y respetan la intro l
   assert.equal(readVibes({ threshold: 3, intensity: -2 }).threshold, 1);
   assert.equal(readVibes({ threshold: NaN }).threshold, 0.38);
 });
-test("El detector distingue silencio de señal musical real", () => {
-  const samples = new Float32Array(1024),
-    bins = new Uint8Array(512);
-  let amplitude = 0;
+test("Solo los graves disparan: los medios y agudos fuertes no contribuyen", () => {
+  const bins = new Float32Array(1024);
+  let activeBin = -1;
   const analyser = {
-    fftSize: 1024,
-    getFloatTimeDomainData: (a: Float32Array) => a.fill(amplitude),
-    getByteFrequencyData: (a: Uint8Array) => a.fill(190),
+    fftSize: 2048,
+    getFloatFrequencyData: (a: Float32Array) => {
+      a.fill(-Infinity);
+      if (activeBin >= 0) a[activeBin] = -12;
+    },
   } as unknown as AnalyserNode;
-  assert.equal(analyserEnergy(analyser, samples, bins, 48000), 0);
-  amplitude = 0.18;
-  assert.ok(analyserEnergy(analyser, samples, bins, 48000) > 0.4);
+  assert.equal(analyserEnergy(analyser, bins, 48000), 0);
+  activeBin = Math.round((2000 * 2048) / 48000); // un sonido agudo muy fuerte
+  assert.equal(analyserEnergy(analyser, bins, 48000), 0);
+  activeBin = Math.round((80 * 2048) / 48000); // golpe de bombo
+  assert.ok(analyserEnergy(analyser, bins, 48000) > 0.6);
 });
