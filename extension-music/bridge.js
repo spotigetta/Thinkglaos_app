@@ -7,6 +7,25 @@ const nextRevision = () => (revision = Math.max(revision + 1, Date.now()));
 window.addEventListener("message", (event) => {
   if (event.source !== window || event.origin !== location.origin) return;
   const type = event.data?.type;
+  if (
+    [
+      "ITTT_SPECTRUM_SUBSCRIBE",
+      "ITTT_SPECTRUM_STOP",
+      "ITTT_SPECTRUM_GUIDE",
+      "ITTT_PROJECTOR_PLACE",
+    ].includes(type)
+  ) {
+    chrome.runtime
+      .sendMessage({ type })
+      .then((result) =>
+        window.postMessage(
+          { type: type + "_RESULT", ...result },
+          location.origin,
+        ),
+      )
+      .catch(() => {});
+    return;
+  }
   if (type === "ITTT_MUSIC_RELEASE") {
     armed = false;
     return;
@@ -40,7 +59,7 @@ window.addEventListener("message", (event) => {
     if (!announced) {
       announced = true;
       window.postMessage(
-        { type: "ITTT_MUSIC_READY", version: 2.2 },
+        { type: "ITTT_MUSIC_READY", version: 2.3 },
         location.origin,
       );
     }
@@ -68,7 +87,7 @@ window.addEventListener("message", (event) => {
       .catch(() => {});
   }
 });
-window.postMessage({ type: "ITTT_MUSIC_READY", version: 2.2 }, location.origin);
+window.postMessage({ type: "ITTT_MUSIC_READY", version: 2.3 }, location.origin);
 window.addEventListener("pagehide", () => {
   if (armed)
     chrome.runtime
@@ -79,4 +98,12 @@ window.addEventListener("pagehide", () => {
         revision: nextRevision(),
       })
       .catch(() => {});
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === "STAGE_SPECTRUM_FRAME")
+    window.postMessage(
+      { type: "ITTT_SPECTRUM_FRAME", bands: message.bands },
+      location.origin,
+    );
 });

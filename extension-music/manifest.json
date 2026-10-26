@@ -1,9 +1,16 @@
 {
   "manifest_version": 3,
   "name": "Thinkglaos · Mezclador de música",
-  "version": "2.2.0",
-  "description": "Mezcla estable para YouTube Music y Spotify web, conservando el silencio de cada escena al pausar los contadores.",
-  "permissions": ["scripting", "storage"],
+  "version": "2.3.0",
+  "description": "Mezclador, audio directo para vibes y proyector a pantalla completa en la segunda pantalla.",
+  "permissions": [
+    "scripting",
+    "storage",
+    "tabCapture",
+    "offscreen",
+    "activeTab",
+    "system.display"
+  ],
   "host_permissions": [
     "https://music.youtube.com/*",
     "https://open.spotify.com/*"
@@ -18,7 +25,20 @@
         "http://127.0.0.1:3000/*",
         "http://localhost:3000/*"
       ],
-      "js": ["bridge.js"]
+      "js": [
+        "bridge.js"
+      ]
     }
-  ]
+  ],
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_title": "Conectar vibes · pulsa aquí desde YouTube Music o Spotify",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
 }

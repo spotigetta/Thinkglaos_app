@@ -64,13 +64,22 @@ export function MusicVibesControl({
     detector = useRef(new BeatDetector()),
     director = useRef(new VibesDirector()),
     sequence = useRef(0),
-    previewUntil = useRef(0);
+    previewUntil = useRef(0),
+    extensionBands = useRef<MusicBands>(silentBands),
+    extensionAt = useRef(0),
+    extensionReady = useRef(false),
+    externalListening = useRef(false);
+  const [nativeAudio, setNativeAudio] = useState(false);
   const [spectrum, setSpectrum] = useState<MusicBands>(silentBands);
   const [level, setLevel] = useState(0),
     [source, setSource] = useState("Música local al sentarse"),
     [connected, setConnected] = useState(false),
     [message, setMessage] = useState("");
   const disconnect = () => {
+    externalListening.current = false;
+    extensionAt.current = 0;
+    if (extensionReady.current)
+      window.postMessage({ type: "ITTT_SPECTRUM_STOP" }, location.origin);
     capture.current?.close();
     capture.current = null;
     setConnected(false);
@@ -80,6 +89,67 @@ export function MusicVibesControl({
   useEffect(() => {
     if (!settings.enabled) disconnect();
   }, [settings.enabled]);
+  useEffect(() => {
+    const receive = (event: MessageEvent) => {
+      if (event.source !== window || event.origin !== location.origin) return;
+      if (
+        event.data?.type === "ITTT_MUSIC_READY" &&
+        event.data.version >= 2.3
+      ) {
+        extensionReady.current = true;
+        setNativeAudio(true);
+      }
+      if (event.data?.type === "ITTT_SPECTRUM_GUIDE_RESULT" && event.data.error)
+        setMessage(event.data.error);
+      if (
+        event.data?.type !== "ITTT_SPECTRUM_FRAME" ||
+        !latest.current.settings.enabled ||
+        !externalListening.current ||
+        !active.current
+      )
+        return;
+      const raw = event.data.bands;
+      if (
+        !raw ||
+        !["bass", "mid", "high", "air"].every(
+          (k) =>
+            typeof raw[k] === "number" &&
+            Number.isFinite(raw[k]) &&
+            raw[k] >= 0 &&
+            raw[k] <= 1,
+        )
+      )
+        return;
+      extensionBands.current = {
+        bass: raw.bass,
+        mid: raw.mid,
+        high: raw.high,
+        air: raw.air,
+      };
+      extensionAt.current = Date.now();
+      setConnected(true);
+    };
+    window.addEventListener("message", receive);
+    window.postMessage({ type: "ITTT_MUSIC_PING" }, location.origin);
+    return () => window.removeEventListener("message", receive);
+  }, []);
+  useEffect(() => {
+    if (!settings.enabled || !nativeAudio) return;
+    externalListening.current = true;
+    const subscribe = () => {
+      if (active.current && externalListening.current)
+        window.postMessage(
+          { type: "ITTT_SPECTRUM_SUBSCRIBE" },
+          location.origin,
+        );
+    };
+    subscribe();
+    const id = setInterval(subscribe, 2000);
+    return () => {
+      clearInterval(id);
+      window.postMessage({ type: "ITTT_SPECTRUM_STOP" }, location.origin);
+    };
+  }, [settings.enabled, nativeAudio]);
   useEffect(() => {
     let frame = 0;
     const id = setInterval(() => {
@@ -91,9 +161,12 @@ export function MusicVibesControl({
       }
       const local =
         music.current && !music.current.paused && music.current.volume > 0.001;
+      const externalNative = Date.now() - extensionAt.current < 1500;
       const bands = local
         ? mix.current?.spectrum() || silentBands
-        : capture.current?.spectrum() || silentBands;
+        : externalNative
+          ? extensionBands.current
+          : capture.current?.spectrum() || silentBands;
       const energy = bands.bass;
       director.current.sample(energy, Date.now());
       if (frame++ % 3 === 0) {
@@ -102,9 +175,11 @@ export function MusicVibesControl({
         setSource(
           local
             ? "Música local en directo"
-            : capture.current
-              ? "Pestaña musical conectada"
-              : "Conecta una pestaña o reproduce música local",
+            : externalNative
+              ? "Audio directo de la extensión · sin compartir pantalla"
+              : capture.current
+                ? "Pestaña musical conectada"
+                : "Conecta una pestaña o reproduce música local",
         );
       }
       if (!vibesInScene(settings, phase) || Date.now() < previewUntil.current)
@@ -144,8 +219,17 @@ export function MusicVibesControl({
       capture.current?.close();
     };
   }, []);
-  const connect = async () => {
+  const connect = async (share = false) => {
     onActivate();
+    externalListening.current = true;
+    if (extensionReady.current && !share) {
+      window.postMessage({ type: "ITTT_SPECTRUM_SUBSCRIBE" }, location.origin);
+      window.postMessage({ type: "ITTT_SPECTRUM_GUIDE" }, location.origin);
+      setMessage(
+        "En la pestaña musical, pulsa el icono de la extensión Thinkglaos para activar el audio directo. No compartas pantalla.",
+      );
+      return;
+    }
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({
         video: { displaySurface: "browser" },
@@ -186,7 +270,10 @@ export function MusicVibesControl({
         <input
           type="checkbox"
           checked={settings.enabled}
-          onChange={(e) => onChange({ ...settings, enabled: e.target.checked })}
+          onChange={(e) => {
+            if (e.target.checked) onActivate();
+            onChange({ ...settings, enabled: e.target.checked });
+          }}
         />
         Vibes al ritmo de la música
       </label>
@@ -385,11 +472,23 @@ export function MusicVibesControl({
               Probar pulso
             </button>
           </div>
+          {nativeAudio && (
+            <small>
+              Audio sin barra: activa las vibes y pulsa la extensión desde la
+              pestaña de YouTube Music o Spotify. Detén antes la pantalla
+              compartida que tenías abierta.
+            </small>
+          )}
+          {!nativeAudio && (
+            <small>
+              Actualiza la extensión a 2.3 para conectar la música sin compartir
+              pantalla.
+            </small>
+          )}
           <small>
-            Para música externa, elige su pestaña y marca Compartir audio. Solo
-            bombo y graves de 45–150 Hz. Umbral bajo: más pulsos. La base crece
-            con la señal. Los cambios musicales mantienen cada estilo al menos
-            20 segundos; estiman tramos, no identifican estribillos.
+            Solo bombo y graves de 45–150 Hz. Umbral bajo: más pulsos. La base
+            crece con la señal. Los cambios musicales mantienen cada estilo al
+            menos 20 segundos; estiman tramos, no identifican estribillos.
           </small>
           {message && <small role="status">{message}</small>}
         </>

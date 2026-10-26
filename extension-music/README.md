@@ -1,13 +1,22 @@
-﻿# Mezclador externo Thinkglaos
+﻿# Mezclador Thinkglaos · versión 2.3
 
-En Edge abre `edge://extensions`, activa Modo desarrollador, pulsa Cargar descomprimida y selecciona esta carpeta `extension-music`. En Chrome se instala desde `chrome://extensions` de la misma manera. Recarga la mesa tras instalarla.
+En `edge://extensions` activa Modo desarrollador y carga descomprimida la carpeta `extension-music`. Si ya está instalada, pulsa Recargar y acepta los permisos nuevos si Edge lo solicita. Recarga mesa y proyector. Funciona en el mismo navegador y perfil que YouTube Music o Spotify web.
 
-Abre YouTube Music o Spotify web en el mismo navegador y perfil que la mesa. El panel mostrará «Control externo conectado». Al sonar una voz se reduce la música al porcentaje elegido con el deslizador «Música durante la voz» y se recupera al terminar o al pulsar Parar voz.
+## Vibes sin compartir pantalla
 
-Solo controla elementos de audio y vídeo de `music.youtube.com` y `open.spotify.com`. No controla Spotify nativo, Windows, otro perfil ni otro navegador. No transmite datos a servicios externos. Las voces siguen sonando aunque la extensión no esté instalada. Los temporizadores de pestañas en segundo plano pueden limitar la suavidad del fundido.
+1. Pulsa **Dejar de compartir** en la captura antigua.
+2. En la mesa, activa las vibes.
+3. Abre la pestaña de YouTube Music o Spotify y pulsa el icono de esta extensión. Puedes fijarlo en la barra de herramientas. El indicador ON confirma la conexión; una segunda pulsación la detiene.
+4. Vuelve a la mesa. Las bandas se reciben directamente, sin `getDisplayMedia`, sin vídeo ni selección de una pantalla. El sonido de la pestaña continúa por una única salida. No se graba ni se envía audio fuera del navegador.
 
-Versión 2.0: recarga la extensión en edge://extensions y después recarga la mesa. La mezcla usa un objetivo único por escena: una intervención ya no puede recuperar música encima de una transición. El título y artista se leen de Media Session. Al sentarse se realiza el relevo desde la pestaña externa a la canción local seleccionada. El volumen externo indicado es el del reproductor; no es un análisis de la forma de onda ni del volumen de Windows.
+La web conserva el método anterior como alternativa si no está instalada la versión 2.3; esa alternativa sí muestra la barra de compartir del navegador. No se ocultan indicadores de seguridad del navegador.
 
-Versión 2.1: recarga la extensión en edge://extensions y después recarga la mesa. La pestaña conserva el objetivo de silencio de Intro, Charla, Preguntas y A sentarse aunque pauses o reinicies el contador. La extensión reafirma ese objetivo si YouTube Music o Spotify cambian el volumen por su cuenta y descarta órdenes antiguas que lleguen tarde. Solo una salida explícita de la escena o Parar todo libera la música.
+## Proyector
 
-Versi?n 2.2: Intro, Charla y Preguntas pausan el reproductor y silencian la pesta?a completa para cubrir anuncios y cambios de reproductor. El bloqueo contin?a al pausar el cron?metro. Al salir se restaura el estado previo de silencio y reproducci?n. Recarga la extensi?n en edge://extensions y despu?s la mesa.
+**Abrir proyector** crea una ventana independiente. La extensión consulta los monitores, elige uno secundario activo y coloca esa ventana a pantalla completa. Usa escritorio ampliado de Windows; con un solo monitor se abre allí. La mesa permanece en su ventana. No hace falta conceder el permiso de pantallas a la web.
+
+## Mezcla
+
+Las locuciones reducen el volumen al nivel del deslizador de la mesa. Intro, Charla y Preguntas pausan y silencian la pestaña y bloquean también la salida de audio capturada; pausar el contador mantiene ese bloqueo. Se conserva el estado anterior de silencio y reproducción al salir. No controla aplicaciones nativas, otros perfiles ni otros navegadores.
+
+Implementado con las APIs oficiales [tabCapture](https://developer.chrome.com/docs/extensions/reference/api/tabCapture), [pantallas](https://developer.chrome.com/docs/extensions/reference/api/system/display) y [ventanas](https://developer.chrome.com/docs/extensions/reference/api/windows). Los permisos de captura se activan al pulsar la extensión en la pestaña musical.

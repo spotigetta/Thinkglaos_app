@@ -1,4 +1,5 @@
-if (typeof importScripts === "function") importScripts("playback-lock.js");
+if (typeof importScripts === "function")
+  importScripts("playback-lock.js", "stage-tools.js");
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
   if (!sender.tab) return;
   const origin = new URL(sender.url || sender.tab.url || "about:blank");
@@ -31,6 +32,15 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
         revision,
         sender.tab.id,
       );
+      if (accepted && typeof chrome.runtime.sendMessage === "function") {
+        try {
+          await chrome.runtime.sendMessage({
+            target: "spectrum",
+            type: "STAGE_AUDIO_GATE",
+            blocked: message.stopPlayback,
+          });
+        } catch {}
+      }
       if (!accepted) {
         respond(null);
         return;

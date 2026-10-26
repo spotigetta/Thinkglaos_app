@@ -121,6 +121,7 @@ const communityMessages = [
 ];
 export default function Show() {
   const projection = new URLSearchParams(location.search).has("projection");
+  const projectorPlaced = useRef(false);
   const [s, set] = useState<State>(() => {
       let saved: Partial<State> = {};
       if (!projection)
@@ -489,6 +490,14 @@ export default function Show() {
     bus.current = channel;
     channel.onmessage = (e) => {
       const m = e.data;
+      if (!projection && m.type === "projector-placement")
+        note(
+          m.error
+            ? "No se pudo colocar el proyector: " + m.error
+            : m.secondary
+              ? "Proyector a pantalla completa en la segunda pantalla."
+              : "Proyector a pantalla completa · solo se ha detectado una pantalla.",
+        );
       if (projection) {
         if (
           m.type === "music-pulse" &&
@@ -546,7 +555,26 @@ export default function Show() {
       };
     }
     const external = (e: MessageEvent) => {
-      if (e.source === window && e.data?.type === "ITTT_MUSIC_READY") {
+      if (
+        projection &&
+        e.source === window &&
+        e.origin === location.origin &&
+        e.data?.type === "ITTT_PROJECTOR_PLACE_RESULT"
+      )
+        send({
+          type: "projector-placement",
+          error: e.data.error,
+          secondary: e.data.secondary,
+        });
+      if (
+        e.source === window &&
+        e.origin === location.origin &&
+        e.data?.type === "ITTT_MUSIC_READY"
+      ) {
+        if (projection && e.data.version >= 2.3 && !projectorPlaced.current) {
+          projectorPlaced.current = true;
+          window.postMessage({ type: "ITTT_PROJECTOR_PLACE" }, location.origin);
+        }
         if (e.data.version >= 2.2) {
           setBridge(true);
           lastExternal.current = "";
@@ -1220,6 +1248,7 @@ export default function Show() {
             win.current = window.open(
               location.pathname + "?projection=1",
               "ittt-projection",
+              "popup=yes,width=1280,height=720",
             );
           }}
         >

@@ -899,3 +899,71 @@ test("Aurora reacciona a medios y agudos con capas continuas sin reiniciar en ca
   await page.getByLabel("Vibes al ritmo de la música").uncheck();
   await expect(out.getByTestId("music-vibes")).toHaveCount(0);
 });
+test("Las vibes reciben audio directo de la extensión sin pedir compartir pantalla", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    (window as any).__shareRequests = 0;
+    navigator.mediaDevices.getDisplayMedia = async () => {
+      (window as any).__shareRequests++;
+      throw Error("No debería compartir");
+    };
+    window.addEventListener("message", (e) => {
+      if (e.source === window && e.data?.type === "ITTT_MUSIC_PING")
+        window.postMessage(
+          { type: "ITTT_MUSIC_READY", version: 2.3 },
+          location.origin,
+        );
+    });
+  });
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page
+    .getByRole("button", { name: "Abrir proyector ↗", exact: true })
+    .click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page.getByLabel("Halos", { exact: true }).check();
+  await page.getByLabel("Inversión total", { exact: true }).uncheck();
+  await page.getByLabel("Escenas de vibes").selectOption("all");
+  await page
+    .getByRole("button", {
+      name: "Conectar audio de YouTube / Spotify",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByText("En la pestaña musical, pulsa el icono", { exact: false }),
+  ).toBeVisible();
+  await page.evaluate(() => {
+    (window as any).__nativeInterval = setInterval(
+      () =>
+        window.postMessage(
+          {
+            type: "ITTT_SPECTRUM_FRAME",
+            bands: { bass: 0.6, mid: 0.4, high: 0.2, air: 0.1 },
+          },
+          location.origin,
+        ),
+      75,
+    );
+  });
+  await expect(
+    page.getByText("Audio directo de la extensión · sin compartir pantalla", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(out.locator(".vibe-halo > i")).toHaveCount(8);
+  expect(await page.evaluate(() => (window as any).__shareRequests)).toBe(0);
+  await page
+    .getByRole("button", { name: "Desconectar pestaña musical", exact: true })
+    .click();
+  await page.waitForTimeout(250);
+  await expect(
+    page.getByRole("button", {
+      name: "Conectar audio de YouTube / Spotify",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.evaluate(() => clearInterval((window as any).__nativeInterval));
+});
