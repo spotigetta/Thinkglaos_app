@@ -2968,3 +2968,47 @@ iframe.show-bg-video {
 .vibes-director small {
   line-height: 1.4;
 }
+.console-title-composer {
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #fee18535;
+  border-radius: 12px;
+  background: #fee18508;
+}
+.console-title-composer summary {
+  cursor: pointer;
+  color: #fee185;
+  font-weight: 700;
+  font-size: 13px;
+}
+.console-title-composer textarea,
+.console-title-composer input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #ffffff25;
+  border-radius: 8px;
+  background: #07130f;
+  color: #fff6dd;
+  padding: 9px;
+  font: inherit;
+  resize: vertical;
+}
+.console-title-composer label {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.custom-title-preview {
+  font-size: 12px;
+  color: #fee185;
+  overflow-wrap: anywhere;
+}
+.show-output .custom-scene-copy h1 {
+  font-size: clamp(38px, 5vw, 92px);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+.show-output .custom-copy-long h1 {
+  font-size: clamp(32px, 3.5vw, 68px);
+}

@@ -301,3 +301,58 @@ test("Mantener efecto no cambia al entrar señal y las memorias se reinician en 
   assert.equal(d.status().confidence, 0);
   assert.ok(!d.status().reason.includes("Vuelve el motivo"));
 });
+import { SpectralAccentDetector } from "../lib/music-vibes";
+test("Los contratiempos agudos se separan del bombo y no producen inversión de color", () => {
+  const a = new SpectralAccentDetector();
+  assert.equal(
+    a.sample({ bass: 0.9, mid: 0.4, high: 0.8, air: 0.7 }, true, 0.38, 120, 0),
+    null,
+  );
+  a.sample(
+    { bass: 0.1, mid: 0.2, high: 0.05, air: 0.04 },
+    false,
+    0.38,
+    120,
+    150,
+  );
+  assert.equal(
+    a.sample(
+      { bass: 0.1, mid: 0.2, high: 0.85, air: 0.75 },
+      false,
+      0.38,
+      120,
+      250,
+    ),
+    "upbeat",
+  );
+  assert.equal(
+    a.sample(
+      { bass: 0.1, mid: 0.2, high: 0.85, air: 0.75 },
+      false,
+      0.38,
+      120,
+      300,
+    ),
+    null,
+  );
+  const settings = readVibes({
+      styles: vibeStyles.map((s) => s.id),
+      rotation: "musical",
+    }),
+    d = new VibesDirector();
+  d.choose(settings, "song", 0);
+  assert.ok(
+    ["shapes", "tunnel", "contrast"].includes(d.accentStyle(settings, "bass")!),
+  );
+  assert.ok(
+    ["rays", "prism", "wave"].includes(d.accentStyle(settings, "upbeat")!),
+  );
+  assert.notEqual(
+    d.accentStyle(settings, "bass"),
+    d.accentStyle(settings, "upbeat"),
+  );
+  assert.equal(
+    d.accentStyle(readVibes({ styles: ["contrast"] }), "upbeat"),
+    null,
+  );
+});

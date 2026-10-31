@@ -1,4 +1,5 @@
-﻿import { MusicVibesControl, MusicVibesOverlay } from "./MusicVibes";
+import { showTracks, readShowTrack } from "./show-tracks";
+import { MusicVibesControl, MusicVibesOverlay } from "./MusicVibes";
 import {
   defaultVibes,
   readVibes,
@@ -61,6 +62,9 @@ type State = {
   vibes: VibesSettings;
   voiceBoost: number;
   track: string;
+  customTitle: string;
+  customSubtitle: string;
+  customEnabled: boolean;
   minutes: number;
   scheduled: string;
   autoCall: boolean;
@@ -85,6 +89,9 @@ const defaults: State = {
   vibes: defaultVibes,
   voiceBoost: 1.5,
   track: "./media/levels.mp3",
+  customTitle: "",
+  customSubtitle: "",
+  customEnabled: false,
   minutes: 30,
   scheduled: "",
   autoCall: true,
@@ -131,6 +138,15 @@ export default function Show() {
           );
           saved = {
             voiceGap: voiceGap(p.voiceGap),
+            track: readShowTrack(p.track),
+            customTitle:
+              typeof p.customTitle === "string"
+                ? p.customTitle.slice(0, 120)
+                : "",
+            customSubtitle:
+              typeof p.customSubtitle === "string"
+                ? p.customSubtitle.slice(0, 240)
+                : "",
             voiceCoverage: readVoiceCoverage(p.voiceCoverage),
             motion: p.motion !== false,
             counterDark: p.counterDark === true,
@@ -216,6 +232,10 @@ export default function Show() {
   const alarmPlayback = useRef<TimerMusic | null>(null);
   const [alarmUntil, setAlarmUntil] = useState(0);
   const nextVoiceAt = useRef(5);
+  const [titleDraft, setTitleDraft] = useState(() => ({
+    title: s.customTitle,
+    subtitle: s.customSubtitle,
+  }));
   const montagePlayed = useRef(new Set<string>());
   const pizzasPlayed = useRef(new Set<string>());
   const ambientPlayed = useRef(new Set<string>());
@@ -244,6 +264,9 @@ export default function Show() {
         "ittt-show-preferences-v1",
         JSON.stringify({
           voiceGap: s.voiceGap,
+          track: s.track,
+          customTitle: s.customTitle,
+          customSubtitle: s.customSubtitle,
           voiceCoverage: s.voiceCoverage,
           motion: s.motion,
           counterDark: s.counterDark,
@@ -257,6 +280,9 @@ export default function Show() {
       );
   }, [
     s.voiceGap,
+    s.track,
+    s.customTitle,
+    s.customSubtitle,
     s.voiceCoverage,
     s.motion,
     s.voiceBoost,
@@ -885,6 +911,10 @@ export default function Show() {
     "pizzas",
     "agradecimiento",
   ].includes(s.phase);
+  const customVisible =
+    s.customEnabled &&
+    !!s.customTitle.trim() &&
+    !["intro", "pantalla", "salida"].includes(s.phase);
   const photoIndex = Math.floor(t / (s.phase === "montaje" ? 36 : 24));
   const photoAt = (i: number) =>
     photos[Math.max(0, i) % Math.max(1, photos.length)] ||
@@ -1007,23 +1037,39 @@ export default function Show() {
           />
         ) : (
           <main
-            className={graphic ? "scene-copy" : ""}
-            key={graphic ? s.phase + index : s.phase}
+            className={
+              (graphic ? "scene-copy" : "") +
+              (graphic && customVisible
+                ? " custom-scene-copy" +
+                  (s.customTitle.length > 60 ? " custom-copy-long" : "")
+                : "")
+            }
+            key={
+              customVisible
+                ? s.phase + s.customTitle
+                : graphic
+                  ? s.phase + index
+                  : s.phase
+            }
           >
             <small>
-              {s.phase === "charla"
-                ? t >= duration
-                  ? "TIEMPO · TÚ DECIDES CUÁNDO SEGUIR"
-                  : "18 MINUTOS. UNA IDEA."
-                : s.phase === "preguntas"
+              {customVisible
+                ? ["charla", "preguntas"].includes(s.phase)
+                  ? s.customTitle
+                  : "MENSAJE EN DIRECTO"
+                : s.phase === "charla"
                   ? t >= duration
-                    ? "PREGUNTAS TERMINADAS · SEGUIMOS JUNTOS"
-                    : "AHORA, TUS PREGUNTAS."
-                  : s.phase === "llamada"
-                    ? "ENCONTRAMOS NUESTRO SITIO"
-                    : s.phase === "salida"
-                      ? "ENCENDEMOS LA BOMBILLA"
-                      : scene.copy[0]}
+                    ? "TIEMPO · TÚ DECIDES CUÁNDO SEGUIR"
+                    : "18 MINUTOS. UNA IDEA."
+                  : s.phase === "preguntas"
+                    ? t >= duration
+                      ? "PREGUNTAS TERMINADAS · SEGUIMOS JUNTOS"
+                      : "AHORA, TUS PREGUNTAS."
+                    : s.phase === "llamada"
+                      ? "ENCONTRAMOS NUESTRO SITIO"
+                      : s.phase === "salida"
+                        ? "ENCENDEMOS LA BOMBILLA"
+                        : scene.copy[0]}
             </small>
             <h1>
               {["charla", "preguntas"].includes(s.phase) ? (
@@ -1031,19 +1077,24 @@ export default function Show() {
               ) : s.phase === "salida" ? (
                 Math.max(1, 8 - Math.floor(t))
               ) : (
-                <KineticText text={scene.copy[1]} effect={scene.effect} />
+                <KineticText
+                  text={customVisible ? s.customTitle : scene.copy[1]}
+                  effect={scene.effect}
+                />
               )}
             </h1>
             <p>
-              {graphic
-                ? scene.copy[2]
-                : ["charla", "preguntas"].includes(s.phase)
-                  ? t >= duration
-                    ? "El contador espera tu señal desde la mesa."
-                    : s.running
-                      ? "La conversación está en marcha."
-                      : "Tiempo en pausa."
-                  : ""}
+              {customVisible
+                ? s.customSubtitle
+                : graphic
+                  ? scene.copy[2]
+                  : ["charla", "preguntas"].includes(s.phase)
+                    ? t >= duration
+                      ? "El contador espera tu señal desde la mesa."
+                      : s.running
+                        ? "La conversación está en marcha."
+                        : "Tiempo en pausa."
+                    : ""}
             </p>
           </main>
         )}
@@ -1284,6 +1335,60 @@ export default function Show() {
       </nav>
       <main className="console-grid">
         <section className="console-transport">
+          <details className="console-title-composer">
+            <summary>Escribir título en pantalla</summary>
+            <label>
+              Título
+              <textarea
+                aria-label="Título para el proyector"
+                maxLength={120}
+                rows={3}
+                value={titleDraft.title}
+                onChange={(e) =>
+                  setTitleDraft({ ...titleDraft, title: e.target.value })
+                }
+                placeholder="Tu mensaje para la sala"
+              />
+            </label>
+            <label>
+              Subtítulo
+              <input
+                aria-label="Subtítulo para el proyector"
+                maxLength={240}
+                value={titleDraft.subtitle}
+                onChange={(e) =>
+                  setTitleDraft({ ...titleDraft, subtitle: e.target.value })
+                }
+              />
+            </label>
+            <div className="transport-buttons">
+              <button
+                disabled={!titleDraft.title.trim()}
+                onClick={() => {
+                  activate();
+                  update({
+                    customTitle: titleDraft.title.trim(),
+                    customSubtitle: titleDraft.subtitle.trim(),
+                    customEnabled: true,
+                  });
+                }}
+              >
+                Mostrar texto
+              </button>
+              <button onClick={() => update({ customEnabled: false })}>
+                Títulos automáticos
+              </button>
+            </div>
+            <small>
+              Se aplica al pulsar Mostrar. Durante los cronómetros aparece junto
+              al tiempo; la intro conserva su vídeo.
+            </small>
+          </details>
+          {customVisible && (
+            <p className="custom-title-preview" role="status">
+              En pantalla: {s.customTitle}
+            </p>
+          )}
           <small>EN PANTALLA · {stageLabels[s.phase]}</small>
           <strong>
             {["charla", "preguntas"].includes(s.phase)
@@ -1519,16 +1624,15 @@ export default function Show() {
           <label>
             Canción al sentarse
             <select
+              aria-label="Canción de previa a la intro"
               value={s.track}
               onChange={(e) => update({ track: e.target.value })}
             >
-              <option value="./media/levels.mp3">Levels · Avicii</option>
-              <option value="./media/disco-yes-previa-3min.mp3">
-                Disco Yes · previa 3 min
-              </option>
-              <option value="./media/disco-yes.mp3">
-                Disco Yes · completa
-              </option>
+              {showTracks.map((track) => (
+                <option key={track.url} value={track.url}>
+                  {track.name}
+                </option>
+              ))}
             </select>
           </label>
           <label>

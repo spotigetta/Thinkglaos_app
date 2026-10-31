@@ -2,6 +2,7 @@
 import { VoiceMix } from "./voice-mix";
 import {
   BeatDetector,
+  SpectralAccentDetector,
   VibesDirector,
   musicalSectionLabels,
   type DirectorStatus,
@@ -41,6 +42,7 @@ export function MusicVibesControl({
   const latest = useRef({ settings, phase, onPulse, trackKey });
   latest.current = { settings, phase, onPulse, trackKey };
   const detector = useRef(new BeatDetector()),
+    accents = useRef(new SpectralAccentDetector()),
     director = useRef(new VibesDirector()),
     sequence = useRef(0),
     previewUntil = useRef(0),
@@ -171,20 +173,35 @@ export function MusicVibesControl({
       }
       if (!vibesInScene(settings, phase) || Date.now() < previewUntil.current)
         return;
+      const highAccent = accents.current.sample(
+        bands,
+        beat,
+        settings.threshold,
+        director.current.status().bpm,
+        stamp,
+      );
+      const accent = beat ? "bass" : highAccent;
+      const accentStyle = accent
+        ? director.current.accentStyle(settings, accent)
+        : null;
       const spectral = style === "halo" || style === "aurora";
-      if (beat || (spectral && frame % 4 === 0))
+      if ((accent && accentStyle) || (spectral && frame % 4 === 0))
         onPulse({
-          id: beat ? ++sequence.current : sequence.current,
+          id: accent && accentStyle ? ++sequence.current : sequence.current,
           time: Date.now(),
           power: energy,
-          style,
+          style: accentStyle || style,
+          baseStyle: style,
+          accent: accent || undefined,
           bands,
-          ambient: !beat,
+          ambient: !(accent && accentStyle),
           intensity: proportionalIntensity(
             settings.intensity,
             spectral
               ? Math.max(bands.bass, bands.mid, bands.high, bands.air)
-              : energy,
+              : accent === "bass"
+                ? energy
+                : Math.max(bands.high, bands.air),
             settings.threshold,
           ),
         });
@@ -305,6 +322,18 @@ export function MusicVibesControl({
                   : "Midiendo estructura y bandas"}
               </span>
               <small>{direction.reason}</small>
+              <small>
+                Bajo:{" "}
+                {vibeStyles.find(
+                  (s) =>
+                    s.id === director.current.accentStyle(settings, "bass"),
+                )?.name || "Sin acento"}{" "}
+                · Contratiempo:{" "}
+                {vibeStyles.find(
+                  (s) =>
+                    s.id === director.current.accentStyle(settings, "upbeat"),
+                )?.name || "Sin acento"}
+              </small>
             </div>
           )}
           {settings.rotation === "minutes" && (
@@ -465,7 +494,7 @@ export function MusicVibesControl({
     </div>
   );
 }
-export function MusicVibesOverlay({
+function MusicVibesLayer({
   settings,
   phase,
   pulse,
@@ -544,6 +573,7 @@ export function MusicVibesOverlay({
       key={style === "halo" || style === "aurora" ? style : pulse.id}
       className={"music-vibes vibe-" + style}
       data-testid="music-vibes"
+      data-accent={pulse.ambient ? "background" : pulse.accent || "bass"}
       aria-hidden="true"
       style={
         {
@@ -573,5 +603,57 @@ export function MusicVibesOverlay({
         </>
       )}
     </div>
+  );
+}
+
+export function MusicVibesOverlay(props: {
+  settings: VibesSettings;
+  phase: string;
+  pulse: MusicPulse | null;
+}) {
+  const [hits, setHits] = useState<{
+    bass: MusicPulse | null;
+    treble: MusicPulse | null;
+  }>({ bass: null, treble: null });
+  useEffect(() => {
+    if (props.pulse && !props.pulse.ambient) {
+      const pulse = props.pulse;
+      setHits((old) => ({
+        ...old,
+        [pulse.accent && pulse.accent !== "bass" ? "treble" : "bass"]: pulse,
+      }));
+    }
+  }, [props.pulse]);
+  const incoming = props.pulse;
+  const bedStyle =
+    incoming?.baseStyle || (incoming?.ambient ? incoming.style : undefined);
+  const bed =
+    bedStyle === "halo" || bedStyle === "aurora"
+      ? {
+          ...incoming!,
+          style: bedStyle,
+          ambient: incoming!.ambient || incoming!.style !== bedStyle,
+        }
+      : null;
+  const visibleHits = [hits.bass, hits.treble].filter(
+    (hit): hit is MusicPulse =>
+      !!hit &&
+      selectedVibes(props.settings).includes(
+        hit.style as Exclude<typeof hit.style, "mixed">,
+      ) &&
+      (!bed || hit.style !== bedStyle) &&
+      Date.now() - hit.time < 1600,
+  );
+  return (
+    <>
+      {bed && <MusicVibesLayer {...props} pulse={bed} />}
+      {visibleHits.map((hit) => (
+        <MusicVibesLayer
+          key={hit.accent && hit.accent !== "bass" ? "treble" : "bass"}
+          {...props}
+          pulse={hit}
+        />
+      ))}
+    </>
   );
 }

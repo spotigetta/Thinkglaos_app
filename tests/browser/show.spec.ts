@@ -1103,3 +1103,110 @@ test("El panel de dirección musical muestra la selección y estima el pulso del
   await expect(status).toHaveCount(0);
   await page.evaluate(() => clearInterval((window as any).__directorSignal));
 });
+test("Títulos desde la mesa se aplican al proyector y respetan intro y cronómetros", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByText("Escribir título en pantalla", { exact: true }).click();
+  await page
+    .getByLabel("Título para el proyector", { exact: true })
+    .fill("BIENVENIDOS AL THINKGLAO");
+  await page
+    .getByLabel("Subtítulo para el proyector")
+    .fill("Coged una cerveza y vuestro sitio");
+  await expect(out.locator("main h1")).not.toContainText("BIENVENIDOS");
+  await page
+    .getByRole("button", { name: "Mostrar texto", exact: true })
+    .click();
+  await expect(out.locator("main h1")).toHaveText("BIENVENIDOS AL THINKGLAO");
+  await expect(out.locator("main > p")).toHaveText(
+    "Coged una cerveza y vuestro sitio",
+  );
+  await page
+    .getByLabel("Título para el proyector", { exact: true })
+    .fill("BORRADOR SIN PUBLICAR");
+  await expect(out.locator("main h1")).toHaveText("BIENVENIDOS AL THINKGLAO");
+  await page.getByRole("button", { name: "Charla", exact: true }).click();
+  await expect(out.locator("main h1")).toHaveText(/\d\d:\d\d/);
+  await expect(out.locator("main > small")).toHaveText(
+    "BIENVENIDOS AL THINKGLAO",
+  );
+  await page.getByRole("button", { name: "Intro", exact: true }).click();
+  await expect(out.locator("main h1")).toHaveCount(0);
+  await page.getByRole("button", { name: "Montaje", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Títulos automáticos", exact: true })
+    .click();
+  await expect(out.locator("main h1")).not.toContainText("BIENVENIDOS");
+});
+test("Las nuevas canciones de previa se reproducen y se recuerda la selección", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  for (const file of ["give-me-everything.mp3", "sexy-bitch.mp3"]) {
+    await page
+      .getByLabel("Canción de previa a la intro")
+      .selectOption("./media/" + file);
+    await page.getByRole("button", { name: "A sentarse", exact: true }).click();
+    const audio = page.locator("audio").nth(1);
+    await expect(audio).toHaveAttribute("src", "./media/" + file);
+    await expect
+      .poll(() =>
+        audio.evaluate((a: HTMLAudioElement) => !a.paused && a.currentTime > 0),
+      )
+      .toBe(true);
+  }
+  await page.reload();
+  await expect(page.getByLabel("Canción de previa a la intro")).toHaveValue(
+    "./media/sexy-bitch.mp3",
+  );
+});
+test("Bajo y contratiempo conservan capas independientes sobre el ambiente", async ({
+  page,
+}) => {
+  await page.goto("/?control=1");
+  const popup = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Abrir proyector ↗" }).click();
+  const out = await popup;
+  await page.getByLabel("Vibes al ritmo de la música").check();
+  await page
+    .getByRole("button", { name: "Seleccionar todos", exact: true })
+    .click();
+  await page.getByLabel("Escenas de vibes").selectOption("all");
+  const send = async (style: string, accent: string, id: number) =>
+    page.evaluate(
+      ({ style, accent, id }) => {
+        const bus = new BroadcastChannel("ittt-show-v1");
+        bus.postMessage({
+          type: "music-pulse",
+          pulse: {
+            id,
+            time: Date.now(),
+            style,
+            baseStyle: "halo",
+            accent,
+            power: 0.8,
+            intensity: 0.7,
+            bands: { bass: 0.8, mid: 0.4, high: 0.6, air: 0.3 },
+          },
+        });
+        bus.close();
+      },
+      { style, accent, id },
+    );
+  await send("shapes", "bass", 101);
+  await expect(out.locator('.vibe-shapes[data-accent="bass"]')).toHaveCount(1);
+  await out
+    .locator(".vibe-shapes")
+    .evaluate((el) => ((el as any).__identity = "preserved"));
+  await send("prism", "upbeat", 102);
+  await expect(out.locator('.vibe-prism[data-accent="upbeat"]')).toHaveCount(1);
+  await expect(out.locator('.vibe-shapes[data-accent="bass"]')).toHaveCount(1);
+  expect(
+    await out.locator(".vibe-shapes").evaluate((el) => (el as any).__identity),
+  ).toBe("preserved");
+  await expect(out.locator(".vibe-halo")).toHaveCount(1);
+});

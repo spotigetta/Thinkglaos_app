@@ -29,6 +29,8 @@ export type MusicPulse = {
   intensity?: number;
   bands?: MusicBands;
   ambient?: boolean;
+  accent?: "bass" | "upbeat" | "treble";
+  baseStyle?: VibesStyle;
 };
 export const defaultVibes: VibesSettings = {
   enabled: false,
@@ -344,6 +346,41 @@ export class VibesDirector {
       this.sectionSince = now;
     }
   }
+  accentStyle(
+    settings: VibesSettings,
+    accent: "bass" | "upbeat" | "treble",
+  ): Effect | null {
+    const options = selectedVibes(settings);
+    if (settings.rotation !== "musical" || options.length === 1)
+      return accent !== "bass" && options[0] === "contrast"
+        ? null
+        : this.style || options[0];
+    if (
+      this.style &&
+      (accent === "bass"
+        ? ["shapes", "tunnel", "contrast"].includes(this.style)
+        : ["rays", "prism", "wave"].includes(this.style))
+    )
+      return this.style;
+    const priority: Effect[] =
+      accent === "bass"
+        ? this.section === "peak" && this.confidence >= 0.55
+          ? [
+              "contrast",
+              "tunnel",
+              "shapes",
+              "wave",
+              "prism",
+              "halo",
+              "aurora",
+              "rays",
+            ]
+          : ["shapes", "tunnel", "wave", "prism", "halo", "aurora", "rays"]
+        : accent === "upbeat"
+          ? ["rays", "prism", "wave", "aurora", "halo", "shapes", "tunnel"]
+          : ["prism", "rays", "aurora", "wave", "halo", "shapes", "tunnel"];
+    return priority.find((s) => options.includes(s)) || null;
+  }
   status(): DirectorStatus {
     return {
       section: this.section,
@@ -642,4 +679,43 @@ export function analyserSpectrum(
     high: band(900, 4000),
     air: band(4000, 12000),
   };
+}
+
+/** Separate high-band attacks from bass hits. Upbeat means an estimated offbeat,
+ * not semantic recognition of the score. Never routes high-only attacks to inversion. */
+export class SpectralAccentDetector {
+  private lastBass = -Infinity;
+  private lastHigh = -Infinity;
+  private previous = 0;
+  private average = 0;
+  private armed = true;
+  sample(
+    bands: MusicBands,
+    bassBeat: boolean,
+    threshold: number,
+    bpm: number | null,
+    now: number,
+  ): "upbeat" | "treble" | null {
+    if (bassBeat) this.lastBass = now;
+    const level = Math.max(bands.high, bands.air),
+      baseline = this.average;
+    this.average = this.average * 0.9 + level * 0.1;
+    const gate = Math.max(
+      0.1,
+      Math.min(threshold * 0.85, baseline * 0.95 + 0.06),
+    );
+    if (level < gate * 0.8) this.armed = true;
+    const onset =
+      this.armed || (level > this.previous + 0.035 && level > baseline * 1.1);
+    this.previous = level;
+    if (level < gate || !onset || now - this.lastHigh < 160) return null;
+    this.armed = false;
+    if (bassBeat || now - this.lastBass < 110) return null;
+    this.lastHigh = now;
+    const period = bpm ? 60000 / bpm : 500,
+      offset = now - this.lastBass;
+    return offset >= period * 0.28 && offset <= period * 0.8
+      ? "upbeat"
+      : "treble";
+  }
 }
